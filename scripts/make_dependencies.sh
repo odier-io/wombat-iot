@@ -13,11 +13,7 @@ do
   THIS_SCRIPT=$(readlink $THIS_SCRIPT)
 done
 
-JEROLIV_CLIENT_HOME=$(cd "$(dirname $THIS_SCRIPT)" && pwd)/..
-
-########################################################################################################################
-
-export PKG_CONFIG_PATH=$JEROLIV_CLIENT_HOME/lib/pkgconfig
+WOMBAT_IOT_HOME=$(cd "$(dirname $THIS_SCRIPT)" && pwd)/..
 
 ########################################################################################################################
 
@@ -29,8 +25,8 @@ echo ''
 
 ########################################################################################################################
 
-rm -fr $JEROLIV_CLIENT_HOME/$PAHO_TARBALL
-rm -fr $JEROLIV_CLIENT_HOME/paho.mqtt.c-*/
+rm -fr $WOMBAT_IOT_HOME/paho.mqtt.c-*/
+rm -fr $WOMBAT_IOT_HOME/share/
 
 ########################################################################################################################
 
@@ -39,13 +35,11 @@ then
 (
   ######################################################################################################################
 
-  cd $JEROLIV_CLIENT_HOME
+  cd $WOMBAT_IOT_HOME
 
   ######################################################################################################################
 
-  curl -O -L https://github.com/eclipse/paho.mqtt.c/archive/$PAHO_TARBALL
-
-  tar xf $PAHO_TARBALL
+  curl -L https://github.com/eclipse/paho.mqtt.c/archive/$PAHO_TARBALL | tar xf -
 
   ######################################################################################################################
 
@@ -56,23 +50,23 @@ then
   if [[ -n $(uname 2>/dev/null | grep Darwin) ]]
   then
     CC=clang CFLAGS="-fPIC -O3" \
-    cmake -DCMAKE_INSTALL_PREFIX=$JEROLIV_CLIENT_HOME -DPAHO_BUILD_SHARED=FALSE -DPAHO_BUILD_STATIC=TRUE -DPAHO_WITH_SSL=TRUE -DPAHO_ENABLE_TESTING=FALSE -DPAHO_ENABLE_CPACK=FALSE ..
+    cmake -DCMAKE_INSTALL_PREFIX=$WOMBAT_IOT_HOME -DPAHO_BUILD_SHARED=FALSE -DPAHO_BUILD_STATIC=TRUE -DPAHO_WITH_SSL=TRUE -DPAHO_ENABLE_TESTING=FALSE -DPAHO_ENABLE_CPACK=FALSE ..
   else
     CC=gcc CFLAGS="-fPIC -O3"
-    cmake -DCMAKE_INSTALL_PREFIX=$JEROLIV_CLIENT_HOME -DPAHO_BUILD_SHARED=FALSE -DPAHO_BUILD_STATIC=TRUE -DPAHO_WITH_SSL=TRUE -DPAHO_ENABLE_TESTING=FALSE -DPAHO_ENABLE_CPACK=FALSE ..
+    cmake -DCMAKE_INSTALL_PREFIX=$WOMBAT_IOT_HOME -DPAHO_BUILD_SHARED=FALSE -DPAHO_BUILD_STATIC=TRUE -DPAHO_WITH_SSL=TRUE -DPAHO_ENABLE_TESTING=FALSE -DPAHO_ENABLE_CPACK=FALSE ..
   fi
 
   make all install
 
   ######################################################################################################################
 
-  rm -fr $JEROLIV_CLIENT_HOME/bin/MQTTVersion
+  rm -fr $WOMBAT_IOT_HOME/bin/MQTTVersion
 
-  rm -fr $JEROLIV_CLIENT_HOME/include/MQTTClient.h
+  rm -fr $WOMBAT_IOT_HOME/include/MQTTClient.h
 
-  rm -fr $JEROLIV_CLIENT_HOME/lib/cmake
-  rm -fr $JEROLIV_CLIENT_HOME/lib/libpaho-mqtt3c.a
-  rm -fr $JEROLIV_CLIENT_HOME/lib/libpaho-mqtt3cs.a
+  rm -fr $WOMBAT_IOT_HOME/lib/cmake
+  rm -fr $WOMBAT_IOT_HOME/lib/libpaho-mqtt3c.a
+  rm -fr $WOMBAT_IOT_HOME/lib/libpaho-mqtt3cs.a
 
   ######################################################################################################################
 ) || exit 1
@@ -80,8 +74,8 @@ fi
 
 ########################################################################################################################
 
-rm -fr $JEROLIV_CLIENT_HOME/$PAHO_TARBALL
-rm -fr $JEROLIV_CLIENT_HOME/paho.mqtt.c-*/
+rm -fr $WOMBAT_IOT_HOME/paho.mqtt.c-*/
+rm -fr $WOMBAT_IOT_HOME/share/
 
 ########################################################################################################################
 
@@ -90,7 +84,5 @@ echo '##########################################################################
 echo ''
 echo 'Done with success :-)'
 echo ''
-
-rm -fr $JEROLIV_CLIENT_HOME/share/
 
 ########################################################################################################################
