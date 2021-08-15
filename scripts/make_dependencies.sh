@@ -79,6 +79,7 @@ fi
 
 rm -fr $JEROLIV_CLIENT_HOME/$PAHO_TARBALL
 rm -fr $JEROLIV_CLIENT_HOME/paho.mqtt.c-*/
+rm -fr $JEROLIV_CLIENT_HOME/paho.mqtt.c-*/lib/libpaho-mqtt3*c.a
 
 ########################################################################################################################
 
