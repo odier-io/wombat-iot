@@ -1,0 +1,12 @@
+.DS_Store
+
+bin
+lib
+
+*.o
+MQTT*.h
+
+wombat-iot-tools.img
+wombat-iot.ini
+wombat-iot.py
+
