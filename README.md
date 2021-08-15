@@ -6,6 +6,8 @@ High availability and low footprint IOT microframework with MQTT and Websocket o
 Installing Wombat-IOT
 =====================
 
+Dependencies: `python3-dev`, ` openssl-dev`.
+
 ```bash
 mkdir wombat-iot
 cd wombat-iot
