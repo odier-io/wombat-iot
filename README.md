@@ -12,7 +12,7 @@ Dependencies: `python3-dev`, ` openssl-dev`.
 mkdir wombat-iot
 cd wombat-iot
 
-curl https://raw.githubusercontent.com/odier-io/wombat-iot/master/tools/wombat-iot.py > wombat-iot.py
+curl https://raw.githubusercontent.com/odier-io/wombat-iot/master/tools/wombat-io.py > wombat-iot.py
 chmod a+x wombat-iot.py
 
 ./wombat-iot.py --setup
