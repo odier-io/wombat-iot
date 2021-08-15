@@ -67,9 +67,12 @@ then
   ######################################################################################################################
 
   rm -fr $JEROLIV_CLIENT_HOME/bin/MQTTVersion
+
+  rm -fr $JEROLIV_CLIENT_HOME/include/MQTTClient.h
+
+  rm -fr $JEROLIV_CLIENT_HOME/lib/cmake
   rm -fr $JEROLIV_CLIENT_HOME/lib/libpaho-mqtt3c.a
   rm -fr $JEROLIV_CLIENT_HOME/lib/libpaho-mqtt3cs.a
-  rm -fr $JEROLIV_CLIENT_HOME/lib/cmake
 
   ######################################################################################################################
 ) || exit 1
