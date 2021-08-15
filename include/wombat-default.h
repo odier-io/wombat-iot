@@ -35,7 +35,7 @@
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-#define IOT_DEFAULT_MQTT_SERVER_URI					"tcp://localhost:1883"
+#define IOT_DEFAULT_MQTT_SERVER_URL					"tcp://localhost:1883"
 #define IOT_DEFAULT_MQTT_SERVER_USER				NULL
 #define IOT_DEFAULT_MQTT_SERVER_PASS				NULL
 #define IOT_DEFAULT_MQTT_CONNECT_TIMEOUT_MS			10000

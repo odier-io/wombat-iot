@@ -129,7 +129,7 @@ int main(int argc, char **argv)
 		iot_config_get_str(&config, "iot::uid", IOT_DEFAULT_IOT_UID),
 		iot_config_get_str(&config, "iot::descr", IOT_DEFAULT_IOT_DESCR),
 		iot_config_get_int(&config, "iot::sleep_ms", IOT_DEFAULT_IOT_SLEEP_MS),
-		iot_config_get_str(&config, "mqtt::server_uri", IOT_DEFAULT_MQTT_SERVER_URI),
+		iot_config_get_str(&config, "mqtt::server_url", IOT_DEFAULT_MQTT_SERVER_URL),
 		iot_config_get_str(&config, "mqtt::server_user", IOT_DEFAULT_MQTT_SERVER_USER),
 		iot_config_get_str(&config, "mqtt::server_pass", IOT_DEFAULT_MQTT_SERVER_PASS),
 		iot_config_get_int(&config, "mqtt::connect_timeout_ms", IOT_DEFAULT_MQTT_CONNECT_TIMEOUT_MS),

@@ -154,15 +154,15 @@ def createIni(verbose):
 
         ################################################################################################################
 
-        print('MQTT URI:')
+        print('MQTT URL:')
 
         try:
 
-            MQTT_URI = raw_input()
+            MQTT_URL = raw_input()
 
         except NameError as e:
 
-            MQTT_URI = input()
+            MQTT_URL = input()
 
         ################################################################################################################
 
@@ -191,7 +191,7 @@ def createIni(verbose):
         ################################################################################################################
 
         saveText(os.path.join(WOMBAT_IOT_DIR, 'wombat-iot.ini'), WOMBAT_IOT_INI % (
-			MQTT_URI,
+			MQTT_URL,
 			MQTT_USERNAME,
 			MQTT_PASSWORD,
 		))
@@ -340,7 +340,7 @@ def iot_delivery(token):
 ########################################################################################################################
 
 WOMBAT_IOT_INI = '''
-mqtt::server_uri=%s
+mqtt::server_url=%s
 mqtt::server_user=%s
 mqtt::server_pass=%s
 '''[1: ]
