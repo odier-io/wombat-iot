@@ -36,7 +36,7 @@ Creating the systemd service file
 ```bash
 sudo wombat-iot.py --create-service
 
-systemctl enable wombat-iot
-systemctl restart wombat-iot
-systemctl status wombat-iot
+sudo systemctl enable wombat-iot
+sudo systemctl restart wombat-iot
+sudo systemctl status wombat-iot
 ```
