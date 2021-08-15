@@ -15,7 +15,7 @@ cd wombat-iot
 curl https://raw.githubusercontent.com/odier-io/wombat-iot/master/tools/setup.py > setup.py
 chmod a+x setup.py
 
-./wombat-iot.py --setup
+./setup.py --setup
 ```
 
 Creating the main Python file
