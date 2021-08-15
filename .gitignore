@@ -6,7 +6,6 @@ lib
 *.o
 MQTT*.h
 
-wombat-iot-tools.img
+wombat-iot.service
 wombat-iot.ini
 wombat-iot.py
-
