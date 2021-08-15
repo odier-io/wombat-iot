@@ -13,7 +13,7 @@ mkdir wombat-iot
 cd wombat-iot
 
 curl https://raw.githubusercontent.com/odier-io/wombat-iot/master/tools/setup.py > setup.py
-chmod a+x wombat-iot.py
+chmod a+x setup.py
 
 ./wombat-iot.py --setup
 ```
@@ -22,21 +22,21 @@ Creating the main Python file
 =============================
 
 ```bash
-./wombat-iot.py --create-py
+./setup.py --create-py
 ```
 
 Creating the configuration file
 ===============================
 
 ```bash
-./wombat-iot.py --create-ini
+./setup.py --create-ini
 ```
 
 Creating the systemd service file
 =================================
 
 ```bash
-sudo ./wombat-iot.py --create-service
+sudo ./setup.py --create-service
 
 sudo systemctl enable wombat-iot
 sudo systemctl restart wombat-iot
