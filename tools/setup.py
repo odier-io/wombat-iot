@@ -122,6 +122,10 @@ def setup(verbose):
 
     os.chmod(os.path.join(binDir, 'wombat-iot'), os.stat(os.path.join(binDir, 'wombat-iot')).st_mode | stat.S_IEXEC)
 
+    ####################################################################################################################
+
+    shutil.rmtree(gitDir)
+
 ########################################################################################################################
 
 def createPy(verbose):
@@ -191,10 +195,10 @@ def createIni(verbose):
         ################################################################################################################
 
         saveText(os.path.join(WOMBAT_IOT_DIR, 'wombat-iot.ini'), WOMBAT_IOT_INI % (
-			MQTT_URL,
-			MQTT_USERNAME,
-			MQTT_PASSWORD,
-		))
+            MQTT_URL,
+            MQTT_USERNAME,
+            MQTT_PASSWORD,
+        ))
 
         ################################################################################################################
 
