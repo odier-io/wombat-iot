@@ -67,9 +67,8 @@ then
   ######################################################################################################################
 
   rm -fr $JEROLIV_CLIENT_HOME/bin/MQTTVersion
-  rm -fr $JEROLIV_CLIENT_HOME/lib/*.dylib
-  rm -fr $JEROLIV_CLIENT_HOME/lib/*.so
-  rm -fr $JEROLIV_CLIENT_HOME/samples
+  rm -fr $JEROLIV_CLIENT_HOME/lib/libpaho-mqtt3c.a
+  rm -fr $JEROLIV_CLIENT_HOME/lib/libpaho-mqtt3cs.a
 
   ######################################################################################################################
 ) || exit 1
@@ -79,7 +78,6 @@ fi
 
 rm -fr $JEROLIV_CLIENT_HOME/$PAHO_TARBALL
 rm -fr $JEROLIV_CLIENT_HOME/paho.mqtt.c-*/
-rm -fr $JEROLIV_CLIENT_HOME/paho.mqtt.c-*/lib/libpaho-mqtt3*c.a
 
 ########################################################################################################################
 
