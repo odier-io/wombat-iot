@@ -46,3 +46,50 @@ sudo systemctl enable wombat-iot
 sudo systemctl restart wombat-iot
 sudo systemctl status wombat-iot
 ```
+
+API
+===
+
+```python
+#############################################################################
+# Service                                                                   #
+#############################################################################
+
+def iot_service_stop()
+def iot_service_restart()
+
+#############################################################################
+# Thing                                                                     #
+#############################################################################
+
+def iot_get_uid()
+def iot_get_descr()
+
+#############################################################################
+# Config                                                                    #
+#############################################################################
+
+def iot_config_get_str(key, val = '')
+def iot_config_get_int(key, val = 0)
+def iot_config_get_flt(key, val = 0.0)
+
+#############################################################################
+# Log                                                                       #
+#############################################################################
+
+def iot_log_debug(message)
+def iot_log_ooops(message)
+def iot_log_error(message)
+def iot_log_fatal(message)
+
+#############################################################################
+# MQTT                                                                      #
+#############################################################################
+
+def iot_mqtt_subscribe(topic, qos)
+def iot_mqtt_unsubscribe(topic)
+
+def iot_mqtt_send(topic, payload, qos, retained, success_callback = None, failure_callback = None)
+
+#############################################################################
+```
