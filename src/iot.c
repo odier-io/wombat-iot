@@ -55,7 +55,7 @@ static PyObject *_iot_service_stop(PyObject *self, PyObject *args)
 {
 	iot_log(IOT_LOG_TYPE_DEBUG, "Stopping service `" IOT_NAME "-iot`...\n");
 
-	system("systemctl stop " IOT_NAME "-iot");
+	system("sudo systemctl stop " IOT_NAME "-iot");
 
 	Py_INCREF(Py_None);
 
@@ -68,7 +68,7 @@ static PyObject *_iot_service_restart(PyObject *self, PyObject *args)
 {
 	iot_log(IOT_LOG_TYPE_DEBUG, "Restarting service `" IOT_NAME "-iot`...\n");
 
-	system("systemctl restart " IOT_NAME "-iot");
+	system("sudo systemctl restart " IOT_NAME "-iot");
 
 	Py_INCREF(Py_None);
 
