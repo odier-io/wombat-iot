@@ -214,12 +214,14 @@ static PyObject *_iot_log_fatal(PyObject *self, PyObject *args)
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-static PyObject *_iot_mqtt_subscribe(PyObject *self, PyObject *args)
+static PyObject *_iot_mqtt_subscribe(PyObject *self, PyObject *args, PyObject *kwargs)
 {
-	STR_t topic = "unknown";
-	int_t qos;
+	STR_t topic;
+	int_t qos = 0;
 
-	if(PyArg_ParseTuple(args, "si", &topic, &qos) != 0 && iot_mqtt_subscribe(
+	static char *arg_names[] = {"topic", "qos", NULL};
+
+	if(PyArg_ParseTupleAndKeywords(args, kwargs, "s|i", arg_names, &topic, &qos) != 0 && iot_mqtt_subscribe(
 		&_python_iot->mqtt,
 		topic,
 		qos
@@ -236,12 +238,14 @@ static PyObject *_iot_mqtt_subscribe(PyObject *self, PyObject *args)
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-static PyObject *_iot_mqtt_unsubscribe(PyObject *self, PyObject *args)
+static PyObject *_iot_mqtt_unsubscribe(PyObject *self, PyObject *args, PyObject *kwargs)
 {
-	STR_t topic = "unknown";
-	/*------*/
+	STR_t topic;
+	int_t qos = 0;
 
-	if(PyArg_ParseTuple(args, "s", &topic) != 0 && iot_mqtt_unsubscribe(
+	static char *arg_names[] = {"topic", "qos", NULL};
+
+	if(PyArg_ParseTupleAndKeywords(args, kwargs, "s|i", arg_names, &topic, &qos) != 0 && iot_mqtt_unsubscribe(
 		&_python_iot->mqtt,
 		topic
 		/**/
@@ -395,8 +399,8 @@ static PyMethodDef _iot_builtins_functions[] = {
 	{"iot_log_error", (PyCFunction) _iot_log_error, METH_VARARGS, ""},
 	{"iot_log_fatal", (PyCFunction) _iot_log_fatal, METH_VARARGS, ""},
 	/**/
-	{"iot_mqtt_subscribe", (PyCFunction) _iot_mqtt_subscribe, METH_VARARGS, ""},
-	{"iot_mqtt_unsubscribe", (PyCFunction) _iot_mqtt_unsubscribe, METH_VARARGS, ""},
+	{"iot_mqtt_subscribe", (PyCFunction) _iot_mqtt_subscribe, METH_VARARGS | METH_KEYWORDS, ""},
+	{"iot_mqtt_unsubscribe", (PyCFunction) _iot_mqtt_unsubscribe, METH_VARARGS | METH_KEYWORDS, ""},
 	/**/
 	{"iot_mqtt_send", (PyCFunction) _iot_mqtt_send, METH_VARARGS | METH_KEYWORDS, ""},
 	/**/
