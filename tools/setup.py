@@ -152,52 +152,40 @@ def createPy(verbose):
 
 ########################################################################################################################
 
-def createIni(verbose, url, username, password):
+def createIni(verbose, mqtt_url, mqtt_username, mqtt_password):
 
     try:
 
         ################################################################################################################
 
-        if url is None:
+        if mqtt_url is None:
 
             print('MQTT URL:')
 
-            MQTT_URL = input()
-
-        else:
-
-            MQTT_URL = url
+            mqtt_url = input()
 
         ################################################################################################################
 
-        if username is None:
+        if mqtt_username is None:
 
             print('MQTT username:')
 
-            MQTT_USERNAME = input()
-
-        else:
-
-            MQTT_USERNAME = username
+            mqtt_username = input()
 
         ################################################################################################################
 
-        if password is None:
+        if mqtt_password is None:
 
             print('MQTT password:')
 
-            MQTT_PASSWORD = input()
-
-        else:
-
-            MQTT_PASSWORD = password
+            mqtt_password = input()
 
         ################################################################################################################
 
         saveText(os.path.join(WOMBAT_IOT_DIR, 'wombat-iot.ini'), WOMBAT_IOT_INI % (
-            MQTT_URL,
-            MQTT_USERNAME,
-            MQTT_PASSWORD,
+            mqtt_url,
+            mqtt_username,
+            mqtt_password,
         ))
 
         ################################################################################################################
@@ -216,13 +204,13 @@ def createIni(verbose, url, username, password):
 
 ########################################################################################################################
 
-def createService(verbose):
+def createService(verbose, service_name):
 
     try:
 
         ################################################################################################################
 
-        saveText('/etc/systemd/system/wombat-iot.service', WOMBAT_IOT_SERVICE % (
+        saveText('/etc/systemd/system/%s.service' % service_name, WOMBAT_IOT_SERVICE % (
             os.path.join(WOMBAT_IOT_DIR, 'bin', 'wombat-iot'),
             os.path.join(WOMBAT_IOT_DIR, 'wombat-iot.ini'),
             os.path.join(WOMBAT_IOT_DIR, 'wombat-iot.py'),
@@ -255,15 +243,17 @@ def main():
 
     parser = argparse.ArgumentParser(formatter_class = argparse.RawTextHelpFormatter, epilog = 'Authors:\n  Jérôme ODIER (jerome@odier.xyz)')
 
-    parser.add_argument('--setup', help = 'setup Wombat-IOT', action = 'store_true')
+    parser.add_argument('--setup', help = 'Setup Wombat-IOT', action = 'store_true')
 
-    parser.add_argument('--create-py'     , help = 'create the main Python file'    , action = 'store_true')
-    parser.add_argument('--create-ini'    , help = 'create the configuration file'  , action = 'store_true')
-    parser.add_argument('--create-service', help = 'create the systemd service file', action = 'store_true')
+    parser.add_argument('--create-py'     , help = 'Create the main Python file'    , action = 'store_true')
+    parser.add_argument('--create-ini'    , help = 'Create the configuration file'  , action = 'store_true')
+    parser.add_argument('--create-service', help = 'Create the systemd service file', action = 'store_true')
 
-    parser.add_argument('--url'     , help = 'MQTT URL (use with --create-ini, default: None)'     , type = str, default = None)
-    parser.add_argument('--username', help = 'MQTT username (use with --create-ini, default: None)', type = str, default = None)
-    parser.add_argument('--password', help = 'MQTT password (use with --create-ini, default: None)', type = str, default = None)
+    parser.add_argument('--mqtt-url'     , help = 'MQTT URL (use with --create-ini, default: None)'     , type = str, default = None)
+    parser.add_argument('--mqtt-username', help = 'MQTT username (use with --create-ini, default: None)', type = str, default = None)
+    parser.add_argument('--mqtt-password', help = 'MQTT password (use with --create-ini, default: None)', type = str, default = None)
+
+    parser.add_argument('--service-name', help = 'Service name (use with --create-service, default: None)', type = str, default = 'wombat-iot')
 
     parser.add_argument('--verbose', help = 'make this tool verbose', action = 'store_true')
 
@@ -282,11 +272,11 @@ def main():
             result = 1
 
     elif args.create_ini:
-        if createIni(args.verbose, args.url, args.username, args.password) != 0:
+        if createIni(args.verbose, args.mqtt_url, args.mqtt_username, args.mqtt_password) != 0:
             result = 1
 
     elif args.create_service:
-        if createService(args.verbose) != 0:
+        if createService(args.verbose, args.service_name) != 0:
             result = 1
 
     ####################################################################################################################
