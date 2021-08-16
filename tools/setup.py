@@ -125,11 +125,23 @@ def setup(verbose):
 
 def createPy(verbose):
 
+    ####################################################################################################################
+
+    fileName = os.path.join(WOMBAT_IOT_DIR, 'wombat-iot.py')
+
+    if not os.path.isfile(fileName):
+
+        print('error: file `%s` already exists' % fileName)
+
+        return 1
+
+    ####################################################################################################################
+
     try:
 
         ################################################################################################################
 
-        saveText(os.path.join(WOMBAT_IOT_DIR, 'wombat-iot.py'), WOMBAT_IOT_PY)
+        saveText(fileName, WOMBAT_IOT_PY)
 
         ################################################################################################################
 
@@ -148,6 +160,18 @@ def createPy(verbose):
 ########################################################################################################################
 
 def createIni(verbose, mqtt_url, mqtt_username, mqtt_password):
+
+    ####################################################################################################################
+
+    fileName = os.path.join(WOMBAT_IOT_DIR, 'wombat-iot.ini')
+
+    if not os.path.isfile(fileName):
+
+        print('error: file `%s` already exists' % fileName)
+
+        return 1
+
+    ####################################################################################################################
 
     try:
 
@@ -177,7 +201,7 @@ def createIni(verbose, mqtt_url, mqtt_username, mqtt_password):
 
         ################################################################################################################
 
-        saveText(os.path.join(WOMBAT_IOT_DIR, 'wombat-iot.ini'), WOMBAT_IOT_INI % (
+        saveText(fileName, WOMBAT_IOT_INI % (
             mqtt_url,
             mqtt_username,
             mqtt_password,
@@ -201,11 +225,23 @@ def createIni(verbose, mqtt_url, mqtt_username, mqtt_password):
 
 def createService(verbose, service_name):
 
+    ####################################################################################################################
+
+    fileName = '/etc/systemd/system/%s.service' % service_name
+
+    if not os.path.isfile(fileName):
+
+        print('error: file `%s` already exists' % fileName)
+
+        return 1
+
+    ####################################################################################################################
+
     try:
 
         ################################################################################################################
 
-        saveText('/etc/systemd/system/%s.service' % service_name, WOMBAT_IOT_SERVICE % (
+        saveText(fileName, WOMBAT_IOT_SERVICE % (
             os.path.join(WOMBAT_IOT_DIR, 'bin', 'wombat-iot'),
             os.path.join(WOMBAT_IOT_DIR, 'wombat-iot.ini'),
             os.path.join(WOMBAT_IOT_DIR, 'wombat-iot.py'),
