@@ -38,6 +38,19 @@ static iot_t *_python_iot;
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+static PyObject *_iot_reboot(PyObject *self, PyObject *args)
+{
+	iot_log(IOT_LOG_TYPE_DEBUG, "Rebooting machine...\n");
+
+	system("sudo reboot");
+
+	Py_INCREF(Py_None);
+
+	return Py_None;
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
 static PyObject *_iot_service_stop(PyObject *self, PyObject *args)
 {
 	iot_log(IOT_LOG_TYPE_DEBUG, "Stopping service `" IOT_NAME "-iot`...\n");
@@ -366,6 +379,7 @@ static PyObject *_iot_mqtt_send(PyObject *self, PyObject *args, PyObject *kwargs
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 static PyMethodDef _iot_builtins_functions[] = {
+	{"iot_reboot", (PyCFunction) _iot_reboot, METH_VARARGS, ""},
 	{"iot_service_stop", (PyCFunction) _iot_service_stop, METH_VARARGS, ""},
 	{"iot_service_restart", (PyCFunction) _iot_service_restart, METH_VARARGS, ""},
 	/**/
