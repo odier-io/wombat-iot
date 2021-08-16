@@ -4,8 +4,6 @@ SHELL:=/bin/bash
 
 PYTHON_LIBDIR:=$(shell python3 -c 'import sys, sysconfig; sys.stdout.write("%s" % sysconfig.get_config_var("LIBDIR"))')
 
-PYTHON_INCDIR:=$(shell python3 -c 'import sys, sysconfig; sys.stdout.write("%s" % sysconfig.get_path("include"))')
-
 ########################################################################################################################
 
 IOT_UID:=$(shell python3 -c 'import sys, uuid; sys.stdout.write("%s" % uuid.uuid4())')
@@ -17,8 +15,13 @@ IOT_DESCR:=N/A
 CC=gcc
 AR=ar
 RANLIB=ranlib
-CFLAGS=-std=c89 -fPIC -O3 -Wall -Wextra -Wno-comment -Wno-unused-parameter -I include -I $(PYTHON_INCDIR) -Dinline=__inline__ -DMQTTAsync_setConnectedCallback=MQTTAsync_setConnected -DIOT_UID=$(IOT_UID) -DIOT_DESCR=$(IOT_DESCR)
-LDFLAGS=-L lib -L $(PYTHON_LIBDIR) $(PYTHON_LIBDIR)/libpython*
+
+CFLAGS=-std=c89 -fPIC -O3 -Wall -Wextra -Wno-comment -Wno-unused-parameter -I include `python3-config --includes` -Dinline=__inline__ -DMQTTAsync_setConnectedCallback=MQTTAsync_setConnected -DIOT_UID=$(IOT_UID) -DIOT_DESCR=$(IOT_DESCR)
+LDFLAGS=-L lib `python3-config --libs`
+
+ifeq ($(shell uname -s),Darwin)
+	LDFLAGS+=-L $(PYTHON_LIBDIR) $(PYTHON_LIBDIR)/libpython*.dylib
+endif
 
 ########################################################################################################################
 
