@@ -7,19 +7,19 @@
  * This file is part of WOMBAT-IOT.
  *
  *
- * Batkens RESTRICTED
- * __________________
+ * odier.io RESTRICTED
+ * ___________________
  *
- *  Batkens
+ *  odier.io
  *  All Rights Reserved.
  *
  * NOTICE:  All information contained herein is, and remains
- * the property of Batkens and its suppliers, if any.
+ * the property of odier.io and its suppliers, if any.
  * The intellectual and technical concepts contained herein are
- * proprietary to Batkens and its suppliers and are protected by
+ * proprietary to odier.io and its suppliers and are protected by
  * trade secret or copyright law. Dissemination of this information
  * or reproduction of this material is strictly forbidden unless
- * prior written permission is obtained from Batkens.
+ * prior written permission is obtained from odier.io.
  */
 
 /*--------------------------------------------------------------------------------------------------------------------*/
