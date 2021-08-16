@@ -1,5 +1,5 @@
 <div style="text-align: center;">
-	<img src="https://raw.githubusercontent.com/odier-io/wombat-iot/master/wombat-iot.jpg" alt="Wombat-IOT" width="300" />
+	<img src="https://raw.githubusercontent.com/odier-io/wombat-iot/master/wombat-iot.jpg" alt="Wombat-IOT" width="350" />
 </div>
 
 Wombat-IOT
