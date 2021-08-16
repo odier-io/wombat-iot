@@ -46,14 +46,12 @@ then
   mkdir build
   cd build
 
-  LIBDIR=$(python3 -c 'import sys, sysconfig; sys.stdout.write("%s" % sysconfig.get_config_var("LIBDIR"))')
-
   if [[ -n $(uname 2>/dev/null | grep Darwin) ]]
   then
-    CC=clang CFLAGS="-fPIC -O3 -I ../../include" LDFLAGS="-L ../../lib -L $LIBDIR" \
+    CC=clang CFLAGS="-fPIC -O3" \
     cmake -DCMAKE_INSTALL_PREFIX=$WOMBAT_IOT_HOME -DPAHO_BUILD_SHARED=FALSE -DPAHO_BUILD_STATIC=TRUE -DPAHO_WITH_SSL=TRUE -DPAHO_ENABLE_TESTING=FALSE -DPAHO_ENABLE_CPACK=FALSE ..
   else
-    CC=gcc CFLAGS="-fPIC -O3 -I ../../include" LDFLAGS="-L ../../lib -L $LIBDIR" \
+    CC=gcc CFLAGS="-fPIC -O3" \
     cmake -DCMAKE_INSTALL_PREFIX=$WOMBAT_IOT_HOME -DPAHO_BUILD_SHARED=FALSE -DPAHO_BUILD_STATIC=TRUE -DPAHO_WITH_SSL=TRUE -DPAHO_ENABLE_TESTING=FALSE -DPAHO_ENABLE_CPACK=FALSE ..
   fi
 

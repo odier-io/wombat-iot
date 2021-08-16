@@ -20,15 +20,11 @@ CFLAGS=-std=c89 -fPIC -O3 -Wall -Wextra -Wno-comment -Wno-unused-parameter -I in
 
 ########################################################################################################################
 
-LDFLAGS=-L lib
-
 ifeq ($(shell uname -s),Darwin)
-	LDFLAGS+=-L $(PYTHON_LIBDIR) $(PYTHON_LIBDIR)/libpython*.dylib
+	LDFLAGS= -L lib $(PYTHON_LIBDIR)/libpython*.dylib -L /opt/local/lib -lssl -lcrypto -pthread
 else
-	LDFLAGS+=`python3-config --libs`
+	LDFLAGS= -L lib `python3-config --libs` -lssl -lcrypto -pthread
 endif
-
-LDFLAGS+=-lssl -lcrypto -pthread
 
 ########################################################################################################################
 
