@@ -70,7 +70,7 @@ def iot_get_descr()
 #############################################################################
 
 def iot_config_get_str(key, val = '')
-def iot_config_get_int(key, val = 0)
+def iot_config_get_int(key, val = 0x0)
 def iot_config_get_flt(key, val = 0.0)
 
 #############################################################################
