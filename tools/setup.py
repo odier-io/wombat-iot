@@ -329,12 +329,13 @@ WOMBAT_GITIGNORE = '''
 
 __pycache__/
 
-bin/wombat-iot
-lib/libwombat-iot.a
-lib/libpaho-mqtt3a.a
-lib/libpaho-mqtt3as.a
-include/wombat-*.h
-include/MQTT*.h
+./bin/wombat-iot
+./lib/libwombat-iot.a
+./lib/libpaho-mqtt3a.a
+./lib/libpaho-mqtt3as.a
+./include/wombat-*.h
+./include/MQTT*.h
+./setup.py
 '''[1: ]
 
 ########################################################################################################################
