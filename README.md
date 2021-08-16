@@ -55,41 +55,41 @@ API
 # Service                                                                   #
 #############################################################################
 
-def iot_service_stop() -> None
-def iot_service_restart() -> None
+def iot_service_stop() -> None:
+def iot_service_restart() -> None:
 
 #############################################################################
 # Thing                                                                     #
 #############################################################################
 
-def iot_get_uid() -> str
-def iot_get_descr() -> str
+def iot_get_uid() -> str:
+def iot_get_descr() -> str:
 
 #############################################################################
 # Config                                                                    #
 #############################################################################
 
-def iot_config_get_str(key: str, val = '') -> str
-def iot_config_get_int(key: str, val = 0x0) -> int
-def iot_config_get_flt(key: str, val = 0.0) -> float
+def iot_config_get_str(key: str, val = '') -> str:
+def iot_config_get_int(key: str, val = 0x0) -> int:
+def iot_config_get_flt(key: str, val = 0.0) -> float:
 
 #############################################################################
 # Log                                                                       #
 #############################################################################
 
-def iot_log_debug(message: str) -> None
-def iot_log_ooops(message: str) -> None
-def iot_log_error(message: str) -> None
-def iot_log_fatal(message: str) -> None
+def iot_log_debug(message: str) -> None:
+def iot_log_ooops(message: str) -> None:
+def iot_log_error(message: str) -> None:
+def iot_log_fatal(message: str) -> None:
 
 #############################################################################
 # MQTT (these functions can raise IOError)                                  #
 #############################################################################
 
-def iot_mqtt_subscribe(topic: str, qos: int) -> None
-def iot_mqtt_unsubscribe(topic: str) -> None
+def iot_mqtt_subscribe(topic: str, qos: int) -> None:
+def iot_mqtt_unsubscribe(topic: str) -> None:
 
-def iot_mqtt_send(topic: str, payload: str, qos: int, retained: bool, success_callback = None, failure_callback = None) -> None
+def iot_mqtt_send(topic: str, payload: str, qos: int, retained: bool, success_callback = None, failure_callback = None) -> None:
 
 #############################################################################
 ```
