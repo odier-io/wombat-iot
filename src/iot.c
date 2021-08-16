@@ -38,19 +38,6 @@ static iot_t *_python_iot;
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-static PyObject *_iot_reboot(PyObject *self, PyObject *args)
-{
-	iot_log(IOT_LOG_TYPE_DEBUG, "Rebooting machine...\n");
-
-	system("sudo reboot");
-
-	Py_INCREF(Py_None);
-
-	return Py_None;
-}
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
 static PyObject *_iot_service_stop(PyObject *self, PyObject *args)
 {
 	iot_log(IOT_LOG_TYPE_DEBUG, "Stopping service `" IOT_NAME "-iot`...\n");
@@ -69,6 +56,19 @@ static PyObject *_iot_service_restart(PyObject *self, PyObject *args)
 	iot_log(IOT_LOG_TYPE_DEBUG, "Restarting service `" IOT_NAME "-iot`...\n");
 
 	system("sudo systemctl restart " IOT_NAME "-iot");
+
+	Py_INCREF(Py_None);
+
+	return Py_None;
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+static PyObject *_iot_machine_reboot(PyObject *self, PyObject *args)
+{
+	iot_log(IOT_LOG_TYPE_DEBUG, "Rebooting machine...\n");
+
+	system("sudo reboot");
 
 	Py_INCREF(Py_None);
 
@@ -379,9 +379,9 @@ static PyObject *_iot_mqtt_send(PyObject *self, PyObject *args, PyObject *kwargs
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 static PyMethodDef _iot_builtins_functions[] = {
-	{"iot_reboot", (PyCFunction) _iot_reboot, METH_VARARGS, ""},
 	{"iot_service_stop", (PyCFunction) _iot_service_stop, METH_VARARGS, ""},
 	{"iot_service_restart", (PyCFunction) _iot_service_restart, METH_VARARGS, ""},
+	{"iot_machine_reboot", (PyCFunction) _iot_machine_reboot, METH_VARARGS, ""},
 	/**/
 	{"iot_get_uid", (PyCFunction) _iot_get_uid, METH_VARARGS, ""},
 	{"iot_get_descr", (PyCFunction) _iot_get_descr, METH_VARARGS, ""},
@@ -638,7 +638,7 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 		""																									"\n"
 		"	try:"																							"\n"
 		""																									"\n"
-		"		return iot_loop(connected)"																	"\n"
+		"		iot_loop(connected)"																		"\n"
 		""																									"\n"
 		"	except Exception as e:"																			"\n"
 		""																									"\n"
@@ -667,6 +667,12 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 		"			elif _type == 'restart':"																"\n"
 		""																									"\n"
 		"				iot_service_restart()"																"\n"
+		""																									"\n"
+		"			##################################################################"						"\n"
+		""																									"\n"
+		"			elif _type == 'reboot':"																"\n"
+		""																									"\n"
+		"				iot_machine_reboot()"																"\n"
 		""																									"\n"
 		"			##################################################################"						"\n"
 		""																									"\n"
