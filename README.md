@@ -47,6 +47,42 @@ sudo systemctl restart wombat-iot
 sudo systemctl status wombat-iot
 ```
 
+Callbacks
+=========
+
+```python
+#############################################################################
+# Thing                                                                     #
+#############################################################################
+
+def iot_init_success(message: str) -> None:
+
+def iot_init_failure(message: str) -> None:
+
+#############################################################################
+
+def iot_loop(connected: bool) -> None:
+
+#############################################################################
+# MQTT                                                                      #
+#############################################################################
+
+def iot_message(topic: str, payload: str) -> bool†:
+
+def iot_delivery(token: str) -> None:
+
+#############################################################################
+
+def iot_connection_lost(message: str) -> None:
+
+def iot_connection_opened(message: str) -> None:
+
+#############################################################################
+```
+
+† This function must return `False` or `True` indicating whether or not the message has been safely received by the client application.
+
+
 API
 ===
 
@@ -93,38 +129,3 @@ def iot_mqtt_send(topic: str, payload: str, qos: int, retained: bool, success_ca
 
 #############################################################################
 ```
-
-Callbacks
-=========
-
-```python
-#############################################################################
-# Thing                                                                     #
-#############################################################################
-
-def iot_init_success(message: str) -> None:
-
-def iot_init_failure(message: str) -> None:
-
-#############################################################################
-
-def iot_loop(connected: bool) -> None:
-
-#############################################################################
-# MQTT                                                                      #
-#############################################################################
-
-def iot_message(topic: str, payload: str) -> bool†:
-
-def iot_delivery(token: str) -> None:
-
-#############################################################################
-
-def iot_connection_lost(message: str) -> None:
-
-def iot_connection_opened(message: str) -> None:
-
-#############################################################################
-```
-
-† This function must return `False` or `True` indicating whether or not the message has been safely received by the client application.
