@@ -1,4 +1,6 @@
-![Wombat-IOT](https://raw.githubusercontent.com/odier-io/wombat-iot/master/wombat-iot.jpg)
+<div style="text-align: center;">
+	<img src="https://raw.githubusercontent.com/odier-io/wombat-iot/master/wombat-iot.jpg" alt="Wombat-IOT" style="width: 300px;" />
+</div>
 
 Wombat-IOT
 ==========
