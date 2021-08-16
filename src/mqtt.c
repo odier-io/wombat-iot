@@ -256,18 +256,18 @@ int_t iot_mqtt_initialize(iot_mqtt_t *mqtt, STR_t iot_uid, STR_t server_uri, STR
 
 	MQTTAsync_connectOptions connect_options = MQTTAsync_connectOptions_initializer;
 
-	connect_options.automaticReconnect = 0x0000000000000000001;
-	connect_options.connectTimeout = mqtt->connect_timeout;
+	connect_options.automaticReconnect = 0x0000000000001;
+	connect_options.connectTimeout = connect_timeout;
 	connect_options.cleansession = 0;
 
 	connect_options.ssl = &ssl_options;
 
-	if(mqtt->server_user != NULL
+	if(server_user != NULL
 	   &&
-	   mqtt->server_pass != NULL
+	   server_pass != NULL
 	 ) {
-		connect_options.username = mqtt->server_user;
-		connect_options.password = mqtt->server_pass;
+		connect_options.username = server_user;
+		connect_options.password = server_pass;
 	}
 
 	connect_options.context = mqtt;
