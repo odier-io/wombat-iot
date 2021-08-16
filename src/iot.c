@@ -354,12 +354,12 @@ static PyObject *_iot_mqtt_send(PyObject *self, PyObject *args, PyObject *kwargs
 		}
 		else
 		{
-			return PyErr_Format(PyExc_IOError, "Cannot not send message");
+			return PyErr_Format(PyExc_IOError, "Cannot not send message (network issue)");
 		}
 	}
 	else
 	{
-		return PyErr_Format(PyExc_IOError, "Cannot not send message");
+		return PyErr_Format(PyExc_IOError, "Cannot not send message (bad parameters)");
 	}
 }
 
