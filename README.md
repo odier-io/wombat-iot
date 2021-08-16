@@ -83,7 +83,7 @@ def iot_log_error(message: str) -> None
 def iot_log_fatal(message: str) -> None
 
 #############################################################################
-# MQTT (IOError if issue)                                                   #
+# MQTT (these functions can raise IOError)                                  #
 #############################################################################
 
 def iot_mqtt_subscribe(topic: str, qos: int) -> None
