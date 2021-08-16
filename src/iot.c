@@ -331,7 +331,7 @@ static PyObject *_iot_mqtt_send(PyObject *self, PyObject *args, PyObject *kwargs
 
 	static char *arg_names[] = {"topic", "payload", "qos", "retained", "success_callback", "failure_callback", NULL};
 
-	if(PyArg_ParseTupleAndKeywords(args, kwargs, "ss#ii|OO", arg_names, &topic, &payload_buff, &payload_size, &/**/qos/**/, &retained, &success_callback, &failure_callback) != 0)
+	if(PyArg_ParseTupleAndKeywords(args, kwargs, "ss#ip|OO", arg_names, &topic, &payload_buff, &payload_size, &/**/qos/**/, &retained, &success_callback, &failure_callback) != 0)
 	{
 		/*------------------------------------------------------------------------------------------------------------*/
 
