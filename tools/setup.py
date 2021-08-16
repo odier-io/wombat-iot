@@ -164,6 +164,10 @@ def createIni(verbose, url, username, password):
 
             MQTT_URL = input()
 
+		else:
+
+			MQTT_URL = url
+
         ################################################################################################################
 
         if username is None:
@@ -172,13 +176,21 @@ def createIni(verbose, url, username, password):
 
             MQTT_USERNAME = input()
 
+		else:
+
+			MQTT_USERNAME = username
+
         ################################################################################################################
 
-        if paassword is None:
+        if password is None:
 
             print('MQTT password:')
 
             MQTT_PASSWORD = input()
+
+		else:
+
+			MQTT_PASSWORD = password
 
         ################################################################################################################
 
