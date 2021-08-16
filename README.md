@@ -1,3 +1,5 @@
+![Wombat-IOT](https://raw.githubusercontent.com/odier-io/wombat-iot/master/wombat-iot.jpg)
+
 Wombat-IOT
 ==========
 
