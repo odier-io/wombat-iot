@@ -93,3 +93,22 @@ def iot_mqtt_send(topic: str, payload: str, qos: int, retained: bool, success_ca
 
 #############################################################################
 ```
+
+Callbacks
+=========
+
+```python
+def iot_init_success(message: str) -> None:
+
+def iot_init_failure(message: str) -> None:
+
+def iot_loop(connected: bool) -> None:
+
+def iot_message(topic: str, payload: str) -> int:
+
+def iot_delivery(token: str) -> None:
+
+def iot_connection_lost(message: str) -> None:
+
+def iot_connection_opened(message: str) -> None:
+```
