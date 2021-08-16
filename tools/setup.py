@@ -245,13 +245,13 @@ def main():
 
     parser.add_argument('--setup', help = 'setup Wombat-IOT', action = 'store_true')
 
-    parser.add_argument('--create-py', help = 'create the main Python file', action = 'store_true')
-    parser.add_argument('--create-ini', help = 'create the configuration file', action = 'store_true')
+    parser.add_argument('--create-py'     , help = 'create the main Python file'    , action = 'store_true')
+    parser.add_argument('--create-ini'    , help = 'create the configuration file'  , action = 'store_true')
     parser.add_argument('--create-service', help = 'create the systemd service file', action = 'store_true')
 
-    parser.add_argument('--url', help = 'MQTT URL (default: None)', type = str, default = None)
-    parser.add_argument('--username', help = 'MQTT username (default: None)', type = str, default = None)
-    parser.add_argument('--password', help = 'MQTT password (default: None)', type = str, default = None)
+    parser.add_argument('--url'     , help = 'MQTT URL (use with --create-ini, default: None)'     , type = str, default = None)
+    parser.add_argument('--username', help = 'MQTT username (use with --create-ini, default: None)', type = str, default = None)
+    parser.add_argument('--password', help = 'MQTT password (use with --create-ini, default: None)', type = str, default = None)
 
     parser.add_argument('--verbose', help = 'make this tool verbose', action = 'store_true')
 
