@@ -164,9 +164,9 @@ def createIni(verbose, url, username, password):
 
             MQTT_URL = input()
 
-		else:
+        else:
 
-			MQTT_URL = url
+            MQTT_URL = url
 
         ################################################################################################################
 
@@ -176,9 +176,9 @@ def createIni(verbose, url, username, password):
 
             MQTT_USERNAME = input()
 
-		else:
+        else:
 
-			MQTT_USERNAME = username
+            MQTT_USERNAME = username
 
         ################################################################################################################
 
@@ -188,9 +188,9 @@ def createIni(verbose, url, username, password):
 
             MQTT_PASSWORD = input()
 
-		else:
+        else:
 
-			MQTT_PASSWORD = password
+            MQTT_PASSWORD = password
 
         ################################################################################################################
 
