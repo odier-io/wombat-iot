@@ -129,7 +129,7 @@ def createPy(verbose):
 
     fileName = os.path.join(WOMBAT_IOT_DIR, 'wombat-iot.py')
 
-    if not os.path.isfile(fileName):
+    if os.path.isfile(fileName):
 
         print('error: file `%s` already exists' % fileName)
 
@@ -165,7 +165,7 @@ def createIni(verbose, mqtt_url, mqtt_username, mqtt_password):
 
     fileName = os.path.join(WOMBAT_IOT_DIR, 'wombat-iot.ini')
 
-    if not os.path.isfile(fileName):
+    if os.path.isfile(fileName):
 
         print('error: file `%s` already exists' % fileName)
 
@@ -229,7 +229,7 @@ def createService(verbose, service_name):
 
     fileName = '/etc/systemd/system/%s.service' % service_name
 
-    if not os.path.isfile(fileName):
+    if os.path.isfile(fileName):
 
         print('error: file `%s` already exists' % fileName)
 
