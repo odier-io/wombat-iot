@@ -15,10 +15,12 @@ AR=ar
 RANLIB=ranlib
 
 CFLAGS=-std=c89 -fPIC -O3 -Wall -Wextra -Wno-comment -Wno-unused-parameter -I include `python3-config --includes` -Dinline=__inline__ -DMQTTAsync_setConnectedCallback=MQTTAsync_setConnected -DIOT_UID=$(IOT_UID) -DIOT_DESCR=$(IOT_DESCR)
-LDFLAGS=-L lib `python3-config --libs`
+LDFLAGS=-L lib
 
 ifeq ($(shell uname -s),Darwin)
 	LDFLAGS+=-L $(PYTHON_LIBDIR) $(PYTHON_LIBDIR)/libpython*.dylib
+else
+	LDFLAGS+=`python3-config --libs`
 endif
 
 ########################################################################################################################
