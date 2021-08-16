@@ -352,8 +352,8 @@ static PyObject *_iot_mqtt_send(PyObject *self, PyObject *args, PyObject *kwargs
 
 		struct _iot_mqtt_send_callback_context_s *mqtt_send_callback_context = (struct _iot_mqtt_send_callback_context_s *) iot_malloc(sizeof(struct _iot_mqtt_send_callback_context_s));
 
-		mqtt_send_callback_context->success_callback = success_callback;
-		mqtt_send_callback_context->failure_callback = failure_callback;
+		mqtt_send_callback_context->success_callback = NULL;/*success_callback;*/
+		mqtt_send_callback_context->failure_callback = NULL;/*failure_callback;*/
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
