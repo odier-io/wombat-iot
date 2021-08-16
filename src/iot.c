@@ -605,7 +605,7 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 		""																									"\n"
 		"	try:"																							"\n"
 		""																									"\n"
-		"		iot_init_success(iot_uid)"																	"\n"
+		"		iot_init_success('Hi! I\\'m %s.' % iot_uid)"												"\n"
 		""																									"\n"
 		"	except Exception as e:"																			"\n"
 		""																									"\n"

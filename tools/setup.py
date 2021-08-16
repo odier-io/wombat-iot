@@ -314,7 +314,7 @@ def iot_init_failure(message):
 
 def iot_loop(connected):
 
-    iot_log_debug('Connected: %d' % connected)
+    iot_log_debug('Connected: %s' % str(connected))
 
 ########################################################################################################################
 
