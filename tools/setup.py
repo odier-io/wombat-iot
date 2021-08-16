@@ -152,43 +152,31 @@ def createPy(verbose):
 
 ########################################################################################################################
 
-def createIni(verbose):
+def createIni(verbose, url, username, password):
 
     try:
 
         ################################################################################################################
 
-        print('MQTT URL:')
+        if url is None:
 
-        try:
-
-            MQTT_URL = raw_input()
-
-        except NameError as e:
+            print('MQTT URL:')
 
             MQTT_URL = input()
 
         ################################################################################################################
 
-        print('MQTT username:')
+        if username is None:
 
-        try:
-
-            MQTT_USERNAME = raw_input()
-
-        except NameError as e:
+            print('MQTT username:')
 
             MQTT_USERNAME = input()
 
         ################################################################################################################
 
-        print('MQTT password:')
+        if paassword is None:
 
-        try:
-
-            MQTT_PASSWORD = raw_input()
-
-        except NameError as e:
+            print('MQTT password:')
 
             MQTT_PASSWORD = input()
 
@@ -261,6 +249,10 @@ def main():
     parser.add_argument('--create-ini', help = 'create the configuration file', action = 'store_true')
     parser.add_argument('--create-service', help = 'create the systemd service file', action = 'store_true')
 
+    parser.add_argument('--url', help = 'MQTT URL (default: None)', type = str, default = None)
+    parser.add_argument('--username', help = 'MQTT username (default: None)', type = str, default = None)
+    parser.add_argument('--password', help = 'MQTT password (default: None)', type = str, default = None)
+
     parser.add_argument('--verbose', help = 'make this tool verbose', action = 'store_true')
 
     args = parser.parse_args()
@@ -278,7 +270,7 @@ def main():
             result = 1
 
     elif args.create_ini:
-        if createIni(args.verbose) != 0:
+        if createIni(args.verbose, args.url, args.username, args.password) != 0:
             result = 1
 
     elif args.create_service:
