@@ -82,8 +82,7 @@ def iot_connection_opened(message: str) -> None:
 #############################################################################
 ```
 
-† This function must return `False` or `True` indicating whether or not the message has been safely received by the client application.
-
+† This function must return `True` or `False` indicating whether or not the message has been safely received by the client application.
 
 API
 ===
