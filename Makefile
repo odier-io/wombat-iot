@@ -4,8 +4,6 @@ SHELL:=/bin/bash
 
 PYTHON_LIBDIR:=$(shell python3 -c 'import sys, sysconfig; sys.stdout.write("%s" % sysconfig.get_config_var("LIBDIR"))')
 
-########################################################################################################################
-
 IOT_UID:=$(shell python3 -c 'import sys, uuid; sys.stdout.write("%s" % uuid.uuid4())')
 
 IOT_DESCR:=N/A
@@ -47,7 +45,7 @@ all:
 	# WOMBAT-IOT                                                                                                       #
 	####################################################################################################################
 
-	$(CC) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot -lpaho-mqtt3as $(LDFLAGS) -lssl -lcrypto -lpthread
+	$(CC) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot -lpaho-mqtt3as $(LDFLAGS) -lssl -lcrypto
 
 ########################################################################################################################
 
