@@ -264,8 +264,8 @@ int_t iot_mqtt_initialize(iot_mqtt_t *mqtt, STR_t iot_uid, STR_t server_uri, STR
 
 	connect_options.context = mqtt;
 
-    connect_options.onSuccess = _init_success_callback;
-    connect_options.onFailure = _init_failure_callback;
+	connect_options.onSuccess = _init_success_callback;
+	connect_options.onFailure = _init_failure_callback;
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
