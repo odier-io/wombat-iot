@@ -36,6 +36,8 @@ Creating the configuration file
 ./setup.py --create-ini --url=<URL> --username=<USERNAME> --password=<PASSWORD>
 ```
 
+See the available options there: `include/wombat-default.h`.
+
 Creating the systemd service file
 =================================
 
