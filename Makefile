@@ -18,7 +18,7 @@ CFLAGS=-std=c89 -fPIC -O3 -Wall -Wextra -Wno-comment -Wno-unused-parameter -I in
 LDFLAGS=-L lib
 
 ifeq ($(shell uname -s),Darwin)
-	LDFLAGS+=-L $(PYTHON_LIBDIR) $(PYTHON_LIBDIR)/libpython*.dylib
+	LDFLAGS+=-L $(PYTHON_LIBDIR) $(PYTHON_LIBDIR)/libpython*.dylib -lssl -lcrypto
 else
 	LDFLAGS+=`python3-config --libs`
 endif
@@ -47,7 +47,7 @@ all:
 	# WOMBAT-IOT                                                                                                       #
 	####################################################################################################################
 
-	$(CC) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot -lpaho-mqtt3as $(LDFLAGS) -lssl -lcrypto
+	$(CC) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot -lpaho-mqtt3as $(LDFLAGS)
 
 ########################################################################################################################
 
