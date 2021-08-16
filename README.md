@@ -114,7 +114,7 @@ def iot_loop(connected: bool) -> None:
 # MQTT                                                                      #
 #############################################################################
 
-def iot_message(topic: str, payload: str) -> int:
+def iot_message(topic: str, payload: str) -> bool†:
 
 def iot_delivery(token: str) -> None:
 
@@ -126,3 +126,5 @@ def iot_connection_opened(message: str) -> None:
 
 #############################################################################
 ```
+
+† This function must return `False` or `True` indicating whether or not the message has been safely received by the client application.
