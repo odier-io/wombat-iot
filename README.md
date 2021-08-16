@@ -33,7 +33,7 @@ Creating the configuration file
 ===============================
 
 ```bash
-./setup.py --create-ini --url=<URL> -username=<USERNAME> --password=<PASSWORD>
+./setup.py --create-ini --url=<URL> --username=<USERNAME> --password=<PASSWORD>
 ```
 
 Creating the systemd service file
