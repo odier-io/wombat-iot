@@ -16,7 +16,7 @@ Dependencies: `python3-dev`, ` openssl-dev`.
 mkdir wombat-iot
 cd wombat-iot
 
-curl https://raw.githubusercontent.com/odier-io/wombat-iot/master/tools/setup.py?_t=$(date +%s) > setup.py
+curl https://raw.githubusercontent.com/odier-io/wombat-iot/master/tools/setup.py > setup.py
 chmod a+x setup.py
 
 ./setup.py --setup

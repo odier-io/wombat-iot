@@ -2,7 +2,13 @@ SHELL:=/bin/bash
 
 ########################################################################################################################
 
-IOT_UID:=$(shell python -c 'import sys, uuid; sys.stdout.write("%s" % uuid.uuid4())')
+PYTHON_LIBDIR:=$(shell python3 -c 'import sys, sysconfig; sys.stdout.write("%s" % sysconfig.get_config_var("LIBDIR"))')
+
+PYTHON_INCDIR:=$(shell python3 -c 'import sys, sysconfig; sys.stdout.write("%s" % sysconfig.get_path("include"))')
+
+########################################################################################################################
+
+IOT_UID:=$(shell python3 -c 'import sys, uuid; sys.stdout.write("%s" % uuid.uuid4())')
 
 IOT_DESCR:=N/A
 
@@ -11,12 +17,8 @@ IOT_DESCR:=N/A
 CC=gcc
 AR=ar
 RANLIB=ranlib
-CFLAGS=-std=c89 -fPIC -O3 -Dinline=__inline__ -Wall -Wextra -Wno-comment -Wno-unused-parameter `python3-config --includes` -I include -DMQTTAsync_setConnectedCallback=MQTTAsync_setConnected -DIOT_UID=$(IOT_UID) -DIOT_DESCR=$(IOT_DESCR)
-LDFLAGS=-L lib
-
-########################################################################################################################
-
-export PKG_CONFIG_PATH:=$(PWD)/lib/pkgconfig
+CFLAGS=-std=c89 -fPIC -O3 -Wall -Wextra -Wno-comment -Wno-unused-parameter -I include -I $(PYTHON_INCDIR) -Dinline=__inline__ -DMQTTAsync_setConnectedCallback=MQTTAsync_setConnected -DIOT_UID=$(IOT_UID) -DIOT_DESCR=$(IOT_DESCR)
+LDFLAGS=-L lib -L $(PYTHON_LIBDIR) $(PYTHON_LIBDIR)/libpython*
 
 ########################################################################################################################
 
@@ -42,7 +44,7 @@ all:
 	# WOMBAT-IOT                                                                                                       #
 	####################################################################################################################
 
-	$(CC) $(CFLAGS) $(LDFLAGS) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot -lpaho-mqtt3as `pkg-config python-3.7 --libs` -lssl -lcrypto -lpthread
+	$(CC) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot -lpaho-mqtt3as $(LDFLAGS) -lssl -lcrypto -lpthread
 
 ########################################################################################################################
 
