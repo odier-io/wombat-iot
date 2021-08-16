@@ -142,13 +142,16 @@ static int_t _message_callback(buff_t context, str_t topic, int_t topiclen, MQTT
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	int_t result = mqtt->message_callback != NULL ? mqtt->message_callback(mqtt, topiclen == 0 ? (int_t) strlen(topic) : topiclen, topic, message->payloadlen, message->payload) : 0;
+	int_t result = mqtt->message_callback != NULL ? mqtt->message_callback(mqtt, topiclen == 0 ? (int_t) strlen(topic) : topiclen, topic, message->payloadlen, message->payload) : 1;
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	MQTTAsync_freeMessage(&message);
+	if(result != 0)
+	{
+		MQTTAsync_freeMessage(&message);
 
-	MQTTAsync_free(topic);
+		MQTTAsync_free(topic);
+	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
