@@ -19,6 +19,10 @@
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+#define PY_SSIZE_T_CLEAN
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
 #include <Python.h>
 #include <string.h>
 #include <unistd.h>
@@ -334,8 +338,7 @@ static void _iot_mqtt_message_failure_callback(void *context, iot_mqtt_t *mqtt, 
 static PyObject *_iot_mqtt_send(PyObject *self, PyObject *args, PyObject *kwargs)
 {
 	STR_t topic;
-	BUFF_t payload_buff;
-	int_t payload_size;
+	STR_t payload;
 	int_t /**/qos/**/ = 0;
 	int_t retained = 0;
 	PyObject *success_callback = NULL;
@@ -343,7 +346,7 @@ static PyObject *_iot_mqtt_send(PyObject *self, PyObject *args, PyObject *kwargs
 
 	static char *arg_names[] = {"topic", "payload", "qos", "retained", "success_callback", "failure_callback", NULL};
 
-	if(PyArg_ParseTupleAndKeywords(args, kwargs, "ss#|ipOO", arg_names, &topic, &payload_buff, &payload_size, &/**/qos/**/, &retained, &success_callback, &failure_callback) != 0)
+	if(PyArg_ParseTupleAndKeywords(args, kwargs, "ss|$ipOO", arg_names, &topic, &payload, &/**/qos/**/, &retained, &success_callback, &failure_callback) != 0)
 	{
 		/*------------------------------------------------------------------------------------------------------------*/
 
@@ -360,8 +363,8 @@ static PyObject *_iot_mqtt_send(PyObject *self, PyObject *args, PyObject *kwargs
 			_iot_mqtt_message_failure_callback,
 			mqtt_send_callback_context,
 			topic,
-			payload_size,
-			payload_buff,
+			strlen(payload),
+			/*--*/(payload),
 			/**/qos/**/,
 			retained
 		 ) >= 0) {
