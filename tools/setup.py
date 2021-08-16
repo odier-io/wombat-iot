@@ -324,7 +324,7 @@ def iot_message(topic, payload):
 
     iot_log_debug('Topic: %s, payload: %s' % (topic, payload, ))
 
-    return 1
+    return True
 
 ########################################################################################################################
 
