@@ -11,7 +11,8 @@ IOT_DESCR:=N/A
 CC=gcc
 AR=ar
 RANLIB=ranlib
-CFLAGS=-std=c89 -fPIC -O3 -Dinline=__inline__ -Wall -Wextra -Wno-comment -Wno-unused-parameter `python3-config --includes` -DMQTTAsync_setConnectedCallback=MQTTAsync_setConnected -DIOT_UID=$(IOT_UID) -DIOT_DESCR=$(IOT_DESCR)
+CFLAGS=-std=c89 -fPIC -O3 -Dinline=__inline__ -Wall -Wextra -Wno-comment -Wno-unused-parameter `python3-config --includes` -I include -DMQTTAsync_setConnectedCallback=MQTTAsync_setConnected -DIOT_UID=$(IOT_UID) -DIOT_DESCR=$(IOT_DESCR)
+LDFLAGS=-L lib
 
 ########################################################################################################################
 
@@ -41,7 +42,7 @@ all:
 	# WOMBAT-IOT                                                                                                       #
 	####################################################################################################################
 
-	$(CC) $(CFLAGS) -o bin/wombat-iot src/wombat-iot.c -L lib -lwombat-iot -lpaho-mqtt3as `pkg-config python-3.7 --libs` `pkg-config openssl --libs` -lpthread
+	$(CC) $(CFLAGS) $(LDFLAGS) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot -lpaho-mqtt3as `pkg-config python-3.7 --libs` -lssl -lcrypto -lpthread
 
 ########################################################################################################################
 
