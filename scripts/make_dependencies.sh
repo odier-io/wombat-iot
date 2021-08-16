@@ -58,16 +58,20 @@ then
     cmake -DCMAKE_INSTALL_PREFIX=$WOMBAT_IOT_HOME -DPAHO_BUILD_SHARED=FALSE -DPAHO_BUILD_STATIC=TRUE -DPAHO_WITH_SSL=TRUE -DPAHO_ENABLE_TESTING=FALSE -DPAHO_ENABLE_CPACK=FALSE ..
   fi
 
-  make all install
+  make paho-mqtt3as-static
 
   ######################################################################################################################
 
-  rm -fr $WOMBAT_IOT_HOME/bin/MQTTVersion
+  cp ./src/libpaho-mqtt3as.a ../../lib
 
-  rm -fr $WOMBAT_IOT_HOME/include/MQTTClient.h
+  ######################################################################################################################
 
-  rm -fr $WOMBAT_IOT_HOME/lib/libpaho-mqtt3c.a
-  rm -fr $WOMBAT_IOT_HOME/lib/libpaho-mqtt3cs.a
+  cp ../src/MQTTAsync.h ../../include
+  cp ../src/MQTTClientPersistence.h ../../include
+  cp ../src/MQTTExportDeclarations.h ../../include
+  cp ../src/MQTTProperties.h ../../include
+  cp ../src/MQTTReasonCodes.h ../../include
+  cp ../src/MQTTSubscribeOpts.h ../../include
 
   ######################################################################################################################
 ) || exit 1
@@ -75,7 +79,7 @@ fi
 
 ########################################################################################################################
 
-rm -fr $WOMBAT_IOT_HOME/paho.mqtt.c-*/
+#rm -fr $WOMBAT_IOT_HOME/paho.mqtt.c-*/
 
 ########################################################################################################################
 
