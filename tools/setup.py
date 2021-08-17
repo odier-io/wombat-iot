@@ -20,7 +20,7 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ########################################################################################################################
 
-import os, sys, stat, shutil, hashlib, argparse, subprocess
+import os, sys, stat, uuid, shutil, hashlib, argparse, subprocess
 
 ########################################################################################################################
 
@@ -183,6 +183,10 @@ def createIni(verbose, mqtt_url, mqtt_username, mqtt_password):
 
         ################################################################################################################
 
+        iot_uid = uuid.uuid4().__str__()
+
+        ################################################################################################################
+
         if mqtt_url is None:
 
             print('MQTT URL:')
@@ -208,6 +212,7 @@ def createIni(verbose, mqtt_url, mqtt_username, mqtt_password):
         ################################################################################################################
 
         saveText(fileName, WOMBAT_IOT_INI % (
+			iot_uid,
             mqtt_url,
             mqtt_username,
             mqtt_password,
@@ -391,6 +396,7 @@ def iot_delivery(token):
 ########################################################################################################################
 
 WOMBAT_IOT_INI = '''
+iot::uid=%s
 iot::sleep_ms=1000
 
 mqtt::server_url=%s

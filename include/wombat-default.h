@@ -24,8 +24,8 @@
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-#define IOT_DEFAULT_IOT_UID							__EXPAND(IOT_UID)
-#define IOT_DEFAULT_IOT_DESCR						__EXPAND(IOT_DESCR)
+#define IOT_DEFAULT_IOT_UID							"N/A"
+#define IOT_DEFAULT_IOT_DESCR						"N/A"
 #define IOT_DEFAULT_IOT_SLEEP_MS					1000
 
 /*--------------------------------------------------------------------------------------------------------------------*/
