@@ -178,10 +178,9 @@ typedef struct iot_mqtt_s
 
 	volatile int_t alive;
 
-	pthread_mutex_t mutex;
-
 	/*--------------------*/
 
+	void *mutex;
 	void *client;
 
 	STR_t iot_uid;
