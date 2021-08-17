@@ -19,10 +19,6 @@
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-#define PY_SSIZE_T_CLEAN
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
 #include <Python.h>
 #include <string.h>
 #include <unistd.h>
@@ -223,7 +219,7 @@ static PyObject *_iot_mqtt_subscribe(PyObject *self, PyObject *args, PyObject *k
 	STR_t topic;
 	int_t qos = 0;
 
-	static char *arg_names[] = {"topic", "qos", NULL};
+	static str_t arg_names[] = {"topic", "qos", NULL};
 
 	if(PyArg_ParseTupleAndKeywords(args, kwargs, "s|i", arg_names, &topic, &qos) != 0 && iot_mqtt_subscribe(
 		&_python_iot->mqtt,
@@ -247,7 +243,7 @@ static PyObject *_iot_mqtt_unsubscribe(PyObject *self, PyObject *args, PyObject 
 	STR_t topic;
 	int_t qos = 0;
 
-	static char *arg_names[] = {"topic", "qos", NULL};
+	static str_t arg_names[] = {"topic", "qos", NULL};
 
 	if(PyArg_ParseTupleAndKeywords(args, kwargs, "s|i", arg_names, &topic, &qos) != 0 && iot_mqtt_unsubscribe(
 		&_python_iot->mqtt,
@@ -344,16 +340,16 @@ static PyObject *_iot_mqtt_send(PyObject *self, PyObject *args, PyObject *kwargs
 	PyObject *success_callback = NULL;
 	PyObject *failure_callback = NULL;
 
-	static char *arg_names[] = {"topic", "payload", "qos", "retained", "success_callback", "failure_callback", NULL};
+	static str_t arg_names[] = {"topic", "payload", "qos", "retained", "success_callback", "failure_callback", NULL};
 
-	if(PyArg_ParseTupleAndKeywords(args, kwargs, "ss|$ipOO", arg_names, &topic, &payload, &/**/qos/**/, &retained, &success_callback, &failure_callback) != 0)
+	if(PyArg_ParseTupleAndKeywords(args, kwargs, "ss|ipOO", arg_names, &topic, &payload, &/**/qos/**/, &retained, &success_callback, &failure_callback) != 0)
 	{
 		/*------------------------------------------------------------------------------------------------------------*/
 
 		struct _iot_mqtt_send_callback_context_s *mqtt_send_callback_context = (struct _iot_mqtt_send_callback_context_s *) iot_malloc(sizeof(struct _iot_mqtt_send_callback_context_s));
 
-		mqtt_send_callback_context->success_callback = NULL;/*success_callback;*/
-		mqtt_send_callback_context->failure_callback = NULL;/*failure_callback;*/
+		mqtt_send_callback_context->success_callback = success_callback;
+		mqtt_send_callback_context->failure_callback = failure_callback;
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
@@ -594,22 +590,6 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	FILE *fp = fopen(script_fname, "rt");
-
-	if(fp == NULL)
-	{
-		iot_log(IOT_LOG_TYPE_FATAL, "Cannot not load Python script `%s`\n", script_fname);
-	}
-
-	ret = PyRun_SimpleFileEx(fp, script_fname, 1);
-
-	if(ret < 0)
-	{
-		iot_log(IOT_LOG_TYPE_FATAL, "Cannot not execute Python script `%s`\n", script_fname);
-	}
-
-	/*----------------------------------------------------------------------------------------------------------------*/
-
 	PyRun_SimpleString(
 		"#############################################################################"						"\n"
 		""																									"\n"
@@ -697,6 +677,22 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 		""																									"\n"
 		"#############################################################################"						"\n"
 	);
+
+	/*----------------------------------------------------------------------------------------------------------------*/
+
+	FILE *fp = fopen(script_fname, "rt");
+
+	if(fp == NULL)
+	{
+		iot_log(IOT_LOG_TYPE_FATAL, "Cannot not load Python script `%s`\n", script_fname);
+	}
+
+	ret = PyRun_SimpleFileEx(fp, script_fname, 1);
+
+	if(ret < 0)
+	{
+		iot_log(IOT_LOG_TYPE_FATAL, "Cannot not execute Python script `%s`\n", script_fname);
+	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
@@ -828,19 +824,23 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 
 		if(iot->pFuncLoop)
 		{
-			PyObject *pParam = PyBool_FromLong(iot_mqtt_is_connected(&iot->mqtt));
+			iot_mqtt_lock(&iot->mqtt);
 
-			if(pParam != NULL)
-			{
-				PyObject *pResult = PyObject_CallFunctionObjArgs(_python_iot->pFuncLoop, pParam, NULL);
+			/**/	PyObject *pParam = PyBool_FromLong(iot_mqtt_is_connected(&iot->mqtt));
+			/**/
+			/**/	if(pParam != NULL)
+			/**/	{
+			/**/		PyObject *pResult = PyObject_CallFunctionObjArgs(_python_iot->pFuncLoop, pParam, NULL);
+			/**/
+			/**/		if(pResult != NULL)
+			/**/		{
+			/**/			Py_DECREF(pResult);
+			/**/		}
+			/**/
+			/**/		Py_DECREF(pParam);
+			/**/	}
 
-				if(pResult != NULL)
-				{
-					Py_DECREF(pResult);
-				}
-
-				Py_DECREF(pParam);
-			}
+			iot_mqtt_unlock(&iot->mqtt);
 		}
 
 		/*------------------------------------------------------------------------------------------------------------*/

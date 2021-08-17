@@ -20,6 +20,7 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 #include <string.h>
+#include <pthread.h>
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -63,7 +64,11 @@ static void _init_success_callback(buff_t context, MQTTAsync_successData *respon
 
 	if(mqtt->init_success_callback != NULL)
 	{
+		pthread_mutex_lock(&mqtt->mutex);
+
 		mqtt->init_success_callback(mqtt, mqtt->iot_uid != NULL ? mqtt->iot_uid : "unknown");
+
+		pthread_mutex_unlock(&mqtt->mutex);
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -80,7 +85,11 @@ static void _init_failure_callback(buff_t context, MQTTAsync_failureData *respon
 
 	if(mqtt->init_failure_callback != NULL)
 	{
+		pthread_mutex_lock(&mqtt->mutex);
+
 		mqtt->init_failure_callback(mqtt, response->message != NULL ? response->message : "unknown");
+
+		pthread_mutex_unlock(&mqtt->mutex);
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -97,7 +106,11 @@ static void _connection_opened_callback(buff_t context, str_t message)
 
 	if(mqtt->connection_opened_callback != NULL)
 	{
+		pthread_mutex_lock(&mqtt->mutex);
+
 		mqtt->connection_opened_callback(mqtt, message != NULL ? message : "unknown");
+
+		pthread_mutex_unlock(&mqtt->mutex);
 	}
 	else
 	{
@@ -118,7 +131,11 @@ static void _connection_lost_callback(buff_t context, str_t message)
 
 	if(mqtt->connection_lost_callback != NULL)
 	{
+		pthread_mutex_lock(&mqtt->mutex);
+
 		mqtt->connection_lost_callback(mqtt, message != NULL ? message : "unknown");
+
+		pthread_mutex_unlock(&mqtt->mutex);
 	}
 	else
 	{
@@ -137,7 +154,20 @@ static int_t _message_callback(buff_t context, str_t topic, int_t topiclen, MQTT
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	int_t result = mqtt->message_callback != NULL ? mqtt->message_callback(mqtt, topiclen == 0 ? (int_t) strlen(topic) : topiclen, topic, message->payloadlen, message->payload) : 1;
+	int_t result;
+
+	if(mqtt->message_callback != NULL)
+	{
+		pthread_mutex_lock(&mqtt->mutex);
+
+		result = mqtt->message_callback(mqtt, topiclen == 0 ? (int_t) strlen(topic) : topiclen, topic, message->payloadlen, message->payload);
+
+		pthread_mutex_unlock(&mqtt->mutex);
+	}
+	else
+	{
+		result = 1;
+	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
@@ -164,7 +194,11 @@ static void _delivery_callback(buff_t context, int_t token)
 
 	if(mqtt->delivery_callback != NULL)
 	{
+		pthread_mutex_lock(&mqtt->mutex);
+
 		mqtt->delivery_callback(mqtt, token);
+
+		pthread_mutex_unlock(&mqtt->mutex);
 	}
 	else
 	{
@@ -200,6 +234,10 @@ int_t iot_mqtt_initialize(iot_mqtt_t *mqtt, STR_t iot_uid, STR_t server_uri, STR
 	mqtt->connection_opened_callback = connection_opened_callback;
 	mqtt->message_callback = message_callback;
 	mqtt->delivery_callback = delivery_callback;
+
+	/*----------------------------------------------------------------------------------------------------------------*/
+
+	pthread_mutex_init(&mqtt->mutex, NULL);
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
@@ -320,6 +358,10 @@ int_t iot_mqtt_finalize(iot_mqtt_t *mqtt)
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
+	pthread_mutex_destroy(&mqtt->mutex);
+
+	/*----------------------------------------------------------------------------------------------------------------*/
+
 	mqtt->alive = 0;
 
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -405,7 +447,11 @@ static void _mqtt_message_success_callback(void *context, MQTTAsync_successData 
 
 	if(send_callback_context->message_success_callback != NULL)
 	{
+		pthread_mutex_lock(&send_callback_context->mqtt->mutex);
+
 		send_callback_context->message_success_callback(send_callback_context->context, send_callback_context->mqtt, response->token);
+
+		pthread_mutex_unlock(&send_callback_context->mqtt->mutex);
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -423,7 +469,11 @@ static void _mqtt_message_failure_callback(void *context, MQTTAsync_failureData 
 
 	if(send_callback_context->message_failure_callback != NULL)
 	{
+		pthread_mutex_lock(&send_callback_context->mqtt->mutex);
+
 		send_callback_context->message_failure_callback(send_callback_context->context, send_callback_context->mqtt, response->message != NULL ? response->message : "unknown");
+
+		pthread_mutex_unlock(&send_callback_context->mqtt->mutex);
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -477,6 +527,20 @@ int_t iot_mqtt_send(iot_mqtt_t *mqtt, iot_mqtt_message_success_callback_t messag
 	/*----------------------------------------------------------------------------------------------------------------*/
 
 	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+void iot_mqtt_lock(iot_mqtt_t *mqtt)
+{
+	pthread_mutex_lock(&mqtt->mutex);
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+void iot_mqtt_unlock(iot_mqtt_t *mqtt)
+{
+	pthread_mutex_unlock(&mqtt->mutex);
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/

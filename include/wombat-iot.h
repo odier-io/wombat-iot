@@ -174,9 +174,13 @@ typedef void (* iot_mqtt_delivery_callback_t)(
 
 typedef struct iot_mqtt_s
 {
-	/*-----------------*/
+	/*--------------------*/
+
 	volatile int_t alive;
-	/*-----------------*/
+
+	pthread_mutex_t mutex;
+
+	/*--------------------*/
 
 	void *client;
 
@@ -370,7 +374,7 @@ int_t iot_mqtt_unsubscribe(
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 int_t iot_mqtt_send(
-	iot_mqtt_t *mqtt,
+	struct iot_mqtt_s *mqtt,
 	iot_mqtt_message_success_callback_t message_success_callback, /* Nullable */
 	iot_mqtt_message_failure_callback_t message_failure_callback, /* Nullable */
 	void *context, /* Nullable */
@@ -379,6 +383,16 @@ int_t iot_mqtt_send(
 	BUFF_t payload_buff,
 	int_t /**/qos/**/,
 	int_t retained
+);
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+void iot_mqtt_lock(
+	struct iot_mqtt_s *mqtt
+);
+
+void iot_mqtt_unlock(
+	struct iot_mqtt_s *mqtt
 );
 
 /*--------------------------------------------------------------------------------------------------------------------*/
