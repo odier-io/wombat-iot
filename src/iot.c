@@ -287,7 +287,7 @@ static void _iot_mqtt_message_success_callback(void *context, iot_mqtt_t *mqtt, 
 
 		if(pParam != NULL)
 		{
-			PyObject *pResult = PyObject_CallOneArg(mqtt_send_callback_context->success_callback, pParam);
+			PyObject *pResult = PyObject_CallFunctionObjArgs(mqtt_send_callback_context->success_callback, pParam, NULL);
 
 			if(pResult != NULL)
 			{
@@ -326,7 +326,7 @@ static void _iot_mqtt_message_failure_callback(void *context, iot_mqtt_t *mqtt, 
 
 		if(pParam != NULL)
 		{
-			PyObject *pResult = PyObject_CallOneArg(mqtt_send_callback_context->failure_callback, pParam);
+			PyObject *pResult = PyObject_CallFunctionObjArgs(mqtt_send_callback_context->failure_callback, pParam, NULL);
 
 			if(pResult != NULL)
 			{
@@ -448,7 +448,7 @@ static void _iot_init_success_callback(iot_mqtt_t *mqtt, STR_t iot_uid)
 
 		if(pParam != NULL)
 		{
-			PyObject *pResult = PyObject_CallOneArg(_python_iot->pFuncInitSuccess, pParam);
+			PyObject *pResult = PyObject_CallFunctionObjArgs(_python_iot->pFuncInitSuccess, pParam, NULL);
 
 			if(pResult != NULL)
 			{
@@ -470,7 +470,7 @@ static void _iot_init_failure_callback(iot_mqtt_t *mqtt, STR_t message)
 
 		if(pParam != NULL)
 		{
-			PyObject *pResult = PyObject_CallOneArg(_python_iot->pFuncInitFailure, pParam);
+			PyObject *pResult = PyObject_CallFunctionObjArgs(_python_iot->pFuncInitFailure, pParam, NULL);
 
 			if(pResult != NULL)
 			{
@@ -492,7 +492,7 @@ static void _iot_connection_opened_callback(iot_mqtt_t *mqtt, STR_t message)
 
 		if(pParam != NULL)
 		{
-			PyObject *pResult = PyObject_CallOneArg(_python_iot->pFuncConnectionOpened, pParam);
+			PyObject *pResult = PyObject_CallFunctionObjArgs(_python_iot->pFuncConnectionOpened, pParam, NULL);
 
 			if(pResult != NULL)
 			{
@@ -514,7 +514,7 @@ static void _iot_connection_lost_callback(iot_mqtt_t *mqtt, STR_t message)
 
 		if(pParam != NULL)
 		{
-			PyObject *pResult = PyObject_CallOneArg(_python_iot->pFuncConnectionLost, pParam);
+			PyObject *pResult = PyObject_CallFunctionObjArgs(_python_iot->pFuncConnectionLost, pParam, NULL);
 
 			if(pResult != NULL)
 			{
@@ -572,7 +572,7 @@ static void _iot_delivery_callback(iot_mqtt_t *mqtt, int_t token)
 
 		if(pParam != NULL)
 		{
-			PyObject *pResult = PyObject_CallOneArg(_python_iot->pFuncDelivery, pParam);
+			PyObject *pResult = PyObject_CallFunctionObjArgs(_python_iot->pFuncDelivery, pParam, NULL);
 
 			if(pResult != NULL)
 			{
@@ -864,7 +864,7 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 			/**/
 			/**/	if(pParam != NULL)
 			/**/	{
-			/**/		PyObject *pResult = PyObject_CallOneArg(_python_iot->pFuncLoop, pParam);
+			/**/		PyObject *pResult = PyObject_CallFunctionObjArgs(_python_iot->pFuncLoop, pParam, NULL);
 			/**/
 			/**/		if(pResult != NULL)
 			/**/		{
