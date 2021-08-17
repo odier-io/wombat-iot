@@ -292,6 +292,15 @@ static void _iot_mqtt_message_success_callback(void *context, iot_mqtt_t *mqtt, 
 
 			Py_DECREF(pParam);
 		}
+
+		Py_INCREF(mqtt_send_callback_context->success_callback);
+	}
+
+	/*----------------------------------------------------------------------------------------------------------------*/
+
+	if(mqtt_send_callback_context->failure_callback != NULL)
+	{
+		Py_INCREF(mqtt_send_callback_context->failure_callback);
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -322,6 +331,15 @@ static void _iot_mqtt_message_failure_callback(void *context, iot_mqtt_t *mqtt, 
 
 			Py_DECREF(pParam);
 		}
+
+		Py_INCREF(mqtt_send_callback_context->failure_callback);
+	}
+
+	/*----------------------------------------------------------------------------------------------------------------*/
+
+	if(mqtt_send_callback_context->success_callback != NULL)
+	{
+		Py_INCREF(mqtt_send_callback_context->success_callback);
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -694,14 +712,16 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 
 	if(fp == NULL)
 	{
-		iot_log(IOT_LOG_TYPE_FATAL, "Cannot not load Python script `%s`\n", script_fname);
+		iot_log(IOT_LOG_TYPE_ERROR, "Cannot not load Python script `%s`\n", script_fname);
 	}
-
-	ret = PyRun_SimpleFileEx(fp, script_fname, 1);
-
-	if(ret < 0)
+	else
 	{
-		iot_log(IOT_LOG_TYPE_FATAL, "Cannot not execute Python script `%s`\n", script_fname);
+		ret = PyRun_SimpleFileEx(fp, script_fname, 1);
+
+		if(ret < 0)
+		{
+			iot_log(IOT_LOG_TYPE_ERROR, "Cannot not execute Python script `%s`\n", script_fname);
+		}
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -817,7 +837,7 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 
 	if(ret < 0)
 	{
-		iot_log(IOT_LOG_TYPE_FATAL, "Cannot not initialize MQTT\n");
+		iot_log(IOT_LOG_TYPE_ERROR, "Cannot not initialize MQTT\n");
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
