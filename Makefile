@@ -12,14 +12,14 @@ RANLIB=ranlib
 
 ########################################################################################################################
 
-CFLAGS=-std=c89 -fPIC -O3 -Wall -Wextra -Wno-comment -Wno-unused-parameter -I include `python3-config --includes` -Dinline=__inline__ -DMQTTAsync_setConnectedCallback=MQTTAsync_setConnected
+CFLAGS=-std=c89 -O3 `python3-config --cflags` -Wall -Wextra -Wno-comment -Wno-unused-parameter -I include -Dinline=__inline__ -DMQTTAsync_setConnectedCallback=MQTTAsync_setConnected
 
 ########################################################################################################################
 
 ifeq ($(shell uname -s),Darwin)
-	LDFLAGS= -L lib $(PYTHON_LIBDIR)/libpython*.dylib -L /opt/local/lib -lssl -lcrypto -pthread
+	LDFLAGS= -L lib `python3-config --ldflags` $(PYTHON_LIBDIR)/libpython*.dylib -L /opt/local/lib -lssl -lcrypto -pthread
 else
-	LDFLAGS= -L lib `python3-config --libs` -lssl -lcrypto -pthread
+	LDFLAGS= -L lib `python3-config --ldflags` -lssl -lcrypto -pthread
 endif
 
 ########################################################################################################################
