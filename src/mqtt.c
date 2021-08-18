@@ -249,7 +249,7 @@ int_t iot_mqtt_initialize(iot_mqtt_t *mqtt, STR_t iot_uid, STR_t server_uri, STR
 	MQTTAsync_setTraceCallback(_trace_callback);
 
 	/*----------------------------------------------------------------------------------------------------------------*/
- 
+
 	ret = MQTTAsync_create(&mqtt->client, server_uri, iot_uid, MQTTCLIENT_PERSISTENCE_NONE, NULL);
 
 	if(ret != MQTTASYNC_SUCCESS)

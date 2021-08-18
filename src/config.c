@@ -23,24 +23,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <sys/time.h>
-
 #include "../include/wombat-iot.h"
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 void iot_config_initialize(iot_config_t *config, STR_t fname)
 {
-	/*----------------------------------------------------------------------------------------------------------------*/
-	/*----------------------------------------------------------------------------------------------------------------*/
-
-	struct timeval time;
-
-	gettimeofday(&time, NULL);
-
-	srand((time.tv_sec * 1000) + (time.tv_usec / 1000));
-
-	/*----------------------------------------------------------------------------------------------------------------*/
 	/*----------------------------------------------------------------------------------------------------------------*/
 
 	config->nb_of_entries = 0;
@@ -51,7 +39,7 @@ void iot_config_initialize(iot_config_t *config, STR_t fname)
 
 	if(fp == NULL)
 	{
-		iot_log(IOT_LOG_TYPE_FATAL, "Could not open `%s`\n", fname);
+		iot_log(IOT_LOG_TYPE_FATAL, "Could not open configuration file `%s`\n", fname);
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -63,7 +51,7 @@ void iot_config_initialize(iot_config_t *config, STR_t fname)
 
 	iot_config_entry_t *entry;
 
-	while(fgets(buffer, 1024, fp) != NULL)
+	while(config->nb_of_entries < 64 && fgets(buffer, 1024, fp) != NULL)
 	{
 		part2 = strchr(part1 = buffer, '=');
 
