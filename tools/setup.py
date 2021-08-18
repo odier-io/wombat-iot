@@ -89,13 +89,13 @@ def setup(verbose, with_ssl):
 
         subprocess.check_call('make deps-with-ssl', cwd = gitDir, shell = True)
 
-        subprocess.check_call('wombat-io-with-ssl', cwd = gitDir, shell = True)
+        subprocess.check_call('make wombat-io-with-ssl', cwd = gitDir, shell = True)
 
     else:
 
         subprocess.check_call('make deps-without-ssl', cwd = gitDir, shell = True)
 
-        subprocess.check_call('wombat-io-without-ssl', cwd = gitDir, shell = True)
+        subprocess.check_call('make wombat-io-without-ssl', cwd = gitDir, shell = True)
 
     ####################################################################################################################
     # INSTALL                                                                                                          #
