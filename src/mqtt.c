@@ -20,7 +20,6 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 #include <string.h>
-#include <pthread.h>
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
@@ -238,12 +237,8 @@ int_t iot_mqtt_initialize(iot_mqtt_t *mqtt, STR_t iot_uid, STR_t server_uri, STR
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	mqtt->mutex = iot_malloc(sizeof(pthread_mutex_t));
-
-	if(pthread_mutex_init(mqtt->mutex, NULL) != 0)
+	if(pthread_mutex_init(&mqtt->mutex, NULL) != 0)
 	{
-		iot_free(mqtt->mutex);
-
 		return -1;
 	}
 
@@ -259,9 +254,7 @@ int_t iot_mqtt_initialize(iot_mqtt_t *mqtt, STR_t iot_uid, STR_t server_uri, STR
 
 	if(ret != MQTTASYNC_SUCCESS)
 	{
-		pthread_mutex_destroy(mqtt->mutex);
-
-		iot_free(mqtt->mutex);
+		pthread_mutex_destroy(&mqtt->mutex);
 
 		return -1;
 	}
@@ -274,9 +267,7 @@ int_t iot_mqtt_initialize(iot_mqtt_t *mqtt, STR_t iot_uid, STR_t server_uri, STR
 	{
 		MQTTAsync_destroy(&mqtt->client);
 
-		pthread_mutex_destroy(mqtt->mutex);
-
-		iot_free(mqtt->mutex);
+		pthread_mutex_destroy(&mqtt->mutex);
 
 		return -1;
 	}
@@ -289,9 +280,7 @@ int_t iot_mqtt_initialize(iot_mqtt_t *mqtt, STR_t iot_uid, STR_t server_uri, STR
 	{
 		MQTTAsync_destroy(&mqtt->client);
 
-		pthread_mutex_destroy(mqtt->mutex);
-
-		iot_free(mqtt->mutex);
+		pthread_mutex_destroy(&mqtt->mutex);
 
 		return -1;
 	}
@@ -333,9 +322,7 @@ int_t iot_mqtt_initialize(iot_mqtt_t *mqtt, STR_t iot_uid, STR_t server_uri, STR
 	{
 		MQTTAsync_destroy(&mqtt->client);
 
-		pthread_mutex_destroy(mqtt->mutex);
-
-		iot_free(mqtt->mutex);
+		pthread_mutex_destroy(&mqtt->mutex);
 
 		return -1;
 	}
@@ -361,52 +348,31 @@ int_t iot_mqtt_finalize(iot_mqtt_t *mqtt)
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	if(mqtt->client != NULL)
+	if(MQTTAsync_isConnected(mqtt->client))
 	{
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		if(MQTTAsync_isConnected(mqtt->client))
-		{
-			/*--------------------------------------------------------------------------------------------------------*/
+		MQTTAsync_disconnectOptions disconnect_options = MQTTAsync_disconnectOptions_initializer;
 
-			MQTTAsync_disconnectOptions disconnect_options = MQTTAsync_disconnectOptions_initializer;
-
-			disconnect_options.timeout = mqtt->disconnect_timeout;
-
-			/*--------------------------------------------------------------------------------------------------------*/
-
-			if(MQTTAsync_disconnect(mqtt->client, &disconnect_options) != MQTTASYNC_SUCCESS)
-			{
-				result = -1;
-			}
-
-			/*--------------------------------------------------------------------------------------------------------*/
-		}
+		disconnect_options.timeout = mqtt->disconnect_timeout;
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		MQTTAsync_destroy(&mqtt->client);
+		if(MQTTAsync_disconnect(mqtt->client, &disconnect_options) != MQTTASYNC_SUCCESS)
+		{
+			result = -1;
+		}
 
 		/*------------------------------------------------------------------------------------------------------------*/
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	if(mqtt->mutex != NULL)
-	{
-		/*------------------------------------------------------------------------------------------------------------*/
+	MQTTAsync_destroy(&mqtt->client);
 
-		if(pthread_mutex_destroy(mqtt->mutex) != 0)
-		{
-			result = -1;
-		}
+	/*----------------------------------------------------------------------------------------------------------------*/
 
-		/*------------------------------------------------------------------------------------------------------------*/
-
-		iot_free(mqtt->mutex);
-
-		/*------------------------------------------------------------------------------------------------------------*/
-	}
+	pthread_mutex_destroy(&mqtt->mutex);
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
@@ -577,14 +543,14 @@ int_t iot_mqtt_send(iot_mqtt_t *mqtt, iot_mqtt_message_success_callback_t messag
 
 void iot_mqtt_lock(iot_mqtt_t *mqtt)
 {
-	pthread_mutex_lock(mqtt->mutex);
+	pthread_mutex_lock(&mqtt->mutex);
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 void iot_mqtt_unlock(iot_mqtt_t *mqtt)
 {
-	pthread_mutex_unlock(mqtt->mutex);
+	pthread_mutex_unlock(&mqtt->mutex);
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/

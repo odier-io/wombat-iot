@@ -27,6 +27,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdarg.h>
+#include <pthread.h>
 
 #include <sys/types.h>
 
@@ -167,11 +168,12 @@ typedef void (* iot_mqtt_delivery_callback_t)(
 
 typedef struct iot_mqtt_s
 {
-	/*-----------------*/
+	/*------------------*/
 	volatile int_t alive;
-	/*-----------------*/
+	/*------------------*/
+	pthread_mutex_t mutex;
+	/*------------------*/
 
-	void *mutex;
 	void *client;
 
 	STR_t iot_uid;

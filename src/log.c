@@ -22,7 +22,6 @@
 #include <errno.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <pthread.h>
 
 #include "../include/wombat-iot.h"
 
