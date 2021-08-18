@@ -842,6 +842,8 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 	if(ret < 0)
 	{
 		iot_log(IOT_LOG_TYPE_ERROR, "Cannot not initialize MQTT\n");
+
+		goto __by;
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -892,7 +894,7 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 	/*----------------------------------------------------------------------------------------------------------------*/
 	/* FINALIZE PYTHON                                                                                                */
 	/*----------------------------------------------------------------------------------------------------------------*/
-
+__by:
 	if(iot->pFuncDelivery != NULL)
 	{
 		Py_XDECREF(iot->pFuncDelivery);

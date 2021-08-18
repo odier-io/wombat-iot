@@ -12,7 +12,7 @@ RANLIB=ranlib
 
 ########################################################################################################################
 
-CFLAGS=-std=c89 -O3 `python3-config --cflags` -Wall -Wextra -Wno-comment -Wno-unused-parameter -I include -Dinline=__inline__ -DMQTTAsync_setConnectedCallback=MQTTAsync_setConnected
+CFLAGS=-std=c89 -O0 -g `python3-config --cflags` -Wall -Wextra -Wno-comment -Wno-unused-parameter -I include -Dinline=__inline__ -DMQTTAsync_setConnectedCallback=MQTTAsync_setConnected
 
 LDFLAGS_WITH_SSL= -L lib -L /opt/local/lib `python3-config --ldflags`
 LDFLAGS_WITHOUT_SSL= -L lib -L /opt/local/lib `python3-config --ldflags`

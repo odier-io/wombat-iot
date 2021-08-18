@@ -167,11 +167,9 @@ typedef void (* iot_mqtt_delivery_callback_t)(
 
 typedef struct iot_mqtt_s
 {
-	/*--------------------*/
-
+	/*-----------------*/
 	volatile int_t alive;
-
-	/*--------------------*/
+	/*-----------------*/
 
 	void *mutex;
 	void *client;

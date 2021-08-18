@@ -143,7 +143,7 @@ int main(int argc, char **argv)
 
 	if(strcmp(uid, IOT_DEFAULT_IOT_UID) == 0)
 	{
-		iot_log(IOT_LOG_TYPE_FATAL, "\n");
+		iot_log(IOT_LOG_TYPE_FATAL, "Config parameter `iot:uid` not defined\n");
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
