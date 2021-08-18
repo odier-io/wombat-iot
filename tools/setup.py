@@ -64,7 +64,7 @@ def saveText(fileName, data):
 
 ########################################################################################################################
 
-def setup(verbose):
+def setup(verbose, with_ssl):
 
     ####################################################################################################################
 
@@ -85,9 +85,17 @@ def setup(verbose):
 
     subprocess.check_call(['git', 'clone', WOMBAT_IOT_GIT_URL, gitDir])
 
-    subprocess.check_call('make deps', cwd = gitDir, shell = True)
+    if with_ssl:
 
-    subprocess.check_call('make all', cwd = gitDir, shell = True)
+        subprocess.check_call('make deps-with-ssl', cwd = gitDir, shell = True)
+
+        subprocess.check_call('wombat-io-with-ssl', cwd = gitDir, shell = True)
+
+    else:
+
+        subprocess.check_call('make deps-without-ssl', cwd = gitDir, shell = True)
+
+        subprocess.check_call('wombat-io-without-ssl', cwd = gitDir, shell = True)
 
     ####################################################################################################################
     # INSTALL                                                                                                          #
@@ -285,7 +293,8 @@ def main():
 
     parser = argparse.ArgumentParser(formatter_class = argparse.RawTextHelpFormatter, epilog = 'Authors:\n  Jérôme ODIER (jerome@odier.xyz)')
 
-    parser.add_argument('--setup', help = 'Setup Wombat-IOT', action = 'store_true')
+    parser.add_argument('--setup-with-ssl', help = 'Setup Wombat-IOT with SSL support', action = 'store_true')
+    parser.add_argument('--setup-without-ssl', help = 'Setup Wombat-IOT without SSL support', action = 'store_true')
 
     parser.add_argument('--create-py'     , help = 'Create the main Python file'    , action = 'store_true')
     parser.add_argument('--create-ini'    , help = 'Create the configuration file'  , action = 'store_true')
@@ -305,19 +314,23 @@ def main():
 
     result = 0
 
-    if   args.setup:
-        if setup(args.verbose) != 0:
+    if args.setup_with_ssl:
+        if setup(args.verbose, True) != 0:
             result = 1
 
-    if   args.create_py:
+    if args.setup_without_ssl:
+        if setup(args.verbose, False) != 0:
+            result = 1
+
+    if args.create_py:
         if createPy(args.verbose) != 0:
             result = 1
 
-    elif args.create_ini:
+    if args.create_ini:
         if createIni(args.verbose, args.mqtt_url, args.mqtt_username, args.mqtt_password) != 0:
             result = 1
 
-    elif args.create_service:
+    if args.create_service:
         if createService(args.verbose, args.service_name) != 0:
             result = 1
 

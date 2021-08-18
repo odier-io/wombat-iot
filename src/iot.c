@@ -297,14 +297,14 @@ static void _iot_mqtt_message_success_callback(void *context, iot_mqtt_t *mqtt, 
 			Py_DECREF(pParam);
 		}
 
-		Py_INCREF(mqtt_send_callback_context->success_callback);
+		Py_DECREF(mqtt_send_callback_context->success_callback);
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
 	if(mqtt_send_callback_context->failure_callback != NULL)
 	{
-		Py_INCREF(mqtt_send_callback_context->failure_callback);
+		Py_DECREF(mqtt_send_callback_context->failure_callback);
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -336,14 +336,14 @@ static void _iot_mqtt_message_failure_callback(void *context, iot_mqtt_t *mqtt, 
 			Py_DECREF(pParam);
 		}
 
-		Py_INCREF(mqtt_send_callback_context->failure_callback);
+		Py_DECREF(mqtt_send_callback_context->failure_callback);
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
 	if(mqtt_send_callback_context->success_callback != NULL)
 	{
-		Py_INCREF(mqtt_send_callback_context->success_callback);
+		Py_DECREF(mqtt_send_callback_context->success_callback);
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/

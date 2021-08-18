@@ -14,22 +14,54 @@ RANLIB=ranlib
 
 CFLAGS=-std=c89 -O3 `python3-config --cflags` -Wall -Wextra -Wno-comment -Wno-unused-parameter -I include -Dinline=__inline__ -DMQTTAsync_setConnectedCallback=MQTTAsync_setConnected
 
-########################################################################################################################
+LDFLAGS_WITH_SSL= -L lib -L /opt/local/lib `python3-config --ldflags`
+LDFLAGS_WITHOUT_SSL= -L lib -L /opt/local/lib `python3-config --ldflags`
 
 ifeq ($(shell uname -s),Darwin)
-	LDFLAGS= -L lib `python3-config --ldflags` $(PYTHON_LIBDIR)/libpython*.dylib -L /opt/local/lib -lssl -lcrypto -pthread
+	LDFLAGS_WITH_SSL+=$(PYTHON_LIBDIR)/libpython*.dylib -lssl -lcrypto -pthread
+	LDFLAGS_WITHOUT_SSL+=$(PYTHON_LIBDIR)/libpython*.dylib -pthread
 else
-	LDFLAGS= -L lib `python3-config --ldflags` -lssl -lcrypto -pthread
+	LDFLAGS_WITH_SSL+=-lssl -lcrypto -pthread
+	LDFLAGS_WITHOUT_SSL+=-pthread
 endif
 
 ########################################################################################################################
 
 all:
+	@echo 'make wombat-io-with-ssl'
+	@echo 'make wombat-io-without-ssl'
+	@echo 'make deps-with-ssl'
+	@echo 'make deps-without-ssl'
+
+########################################################################################################################
+
+wombat-io-with-ssl: wombat-iot.a
+
+	####################################################################################################################
+	# WOMBAT-IOT WITH SSL                                                                                              #
+	####################################################################################################################
+
+	$(CC) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot -lpaho-mqtt3as $(LDFLAGS_WITH_SSL)
+
+########################################################################################################################
+
+wombat-io-without-ssl: wombat-iot.a
+
+	####################################################################################################################
+	# WOMBAT-IOT WITHOUT SSL                                                                                           #
+	####################################################################################################################
+
+	$(CC) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot -lpaho-mqtt3a $(LDFLAGS_WITHOUT_SSL)
+
+########################################################################################################################
+
+wombat-iot.a:
+
 	mkdir -p bin
 	mkdir -p lib
 
 	####################################################################################################################
-	# LIBWOMBAT-IOT.A                                                                                                  #
+	# LIBWOMBAT-IOT.A WITHOUT SSL                                                                                      #
 	####################################################################################################################
 
 	$(CC) $(CFLAGS) -c -o src/str.o src/str.c
@@ -42,24 +74,23 @@ all:
 
 	$(AR) rcs lib/libwombat-iot.a src/str.o src/log.o src/config.o src/mqtt.o src/iot.o && $(RANLIB) lib/libwombat-iot.a
 
-	####################################################################################################################
-	# WOMBAT-IOT                                                                                                       #
-	####################################################################################################################
+########################################################################################################################
 
-	$(CC) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot -lpaho-mqtt3as $(LDFLAGS)
+.PHONY: wombat-iot.a
 
 ########################################################################################################################
 
-deps:
-	./scripts/make_dependencies.sh
+deps-with-ssl:
+	WITH_SSL=1 ./scripts/make_dependencies.sh
+
+########################################################################################################################
+
+deps-without-ssl:
+	WITH_SSL=0 ./scripts/make_dependencies.sh
 
 ########################################################################################################################
 
 clean:
 	rm -fr src/*.o lib/libwombat-iot.a bin/wombat-iot
-
-########################################################################################################################
-
-.PHONY: plugins
 
 ########################################################################################################################

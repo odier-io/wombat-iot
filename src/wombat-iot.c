@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <signal.h>
+#include <string.h>
 
 #include "../include/wombat-iot.h"
 
@@ -128,19 +129,37 @@ int main(int argc, char **argv)
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
+	STR_t uid = iot_config_get_str(&config, "iot::uid", IOT_DEFAULT_IOT_UID);
+	STR_t descr = iot_config_get_str(&config, "iot::descr", IOT_DEFAULT_IOT_DESCR);
+	int_t sleep_ms = iot_config_get_int(&config, "iot::sleep_ms", IOT_DEFAULT_IOT_SLEEP_MS);
+	STR_t mqtt_server_uri = iot_config_get_str(&config, "mqtt::server_url", IOT_DEFAULT_MQTT_SERVER_URL);
+	STR_t mqtt_server_user = iot_config_get_str(&config, "mqtt::server_user", IOT_DEFAULT_MQTT_SERVER_USER);
+	STR_t mqtt_server_pass = iot_config_get_str(&config, "mqtt::server_pass", IOT_DEFAULT_MQTT_SERVER_PASS);
+	int_t mqtt_connect_timeout = iot_config_get_int(&config, "mqtt::connect_timeout_ms", IOT_DEFAULT_MQTT_CONNECT_TIMEOUT_MS);
+	int_t mqtt_disconnect_timeout = iot_config_get_int(&config, "mqtt::disconnnect_timeout_ms", IOT_DEFAULT_MQTT_DISCONNECT_TIMEOUT_MS);
+	int_t mqtt_log_level = iot_config_get_int(&config, "mqtt::log_level", IOT_DEFAULT_MQTT_LOG_LEVEL);
+
+	/*----------------------------------------------------------------------------------------------------------------*/
+
+	if(strcmp(uid, IOT_DEFAULT_IOT_UID) == 0)
+	{
+		iot_log(IOT_LOG_TYPE_FATAL, "\n");
+	}
+
+	/*----------------------------------------------------------------------------------------------------------------*/
 	iot_loop(
 		&iot,
 		&config,
 		script_fname,
-		iot_config_get_str(&config, "iot::uid", IOT_DEFAULT_IOT_UID),
-		iot_config_get_str(&config, "iot::descr", IOT_DEFAULT_IOT_DESCR),
-		iot_config_get_int(&config, "iot::sleep_ms", IOT_DEFAULT_IOT_SLEEP_MS),
-		iot_config_get_str(&config, "mqtt::server_url", IOT_DEFAULT_MQTT_SERVER_URL),
-		iot_config_get_str(&config, "mqtt::server_user", IOT_DEFAULT_MQTT_SERVER_USER),
-		iot_config_get_str(&config, "mqtt::server_pass", IOT_DEFAULT_MQTT_SERVER_PASS),
-		iot_config_get_int(&config, "mqtt::connect_timeout_ms", IOT_DEFAULT_MQTT_CONNECT_TIMEOUT_MS),
-		iot_config_get_int(&config, "mqtt::disconnnect_timeout_ms", IOT_DEFAULT_MQTT_DISCONNECT_TIMEOUT_MS),
-		iot_config_get_int(&config, "mqtt::log_level", IOT_DEFAULT_MQTT_LOG_LEVEL)
+		uid,
+		descr,
+		sleep_ms,
+		mqtt_server_uri,
+		mqtt_server_user,
+		mqtt_server_pass,
+		mqtt_connect_timeout,
+		mqtt_disconnect_timeout,
+		mqtt_log_level
 	);
 
 	/*----------------------------------------------------------------------------------------------------------------*/

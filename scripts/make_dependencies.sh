@@ -48,20 +48,36 @@ then
 
   if [[ -n $(uname 2>/dev/null | grep Darwin) ]]
   then
-    CC=clang CFLAGS="-fPIC -O3" \
-    cmake -DCMAKE_INSTALL_PREFIX=$WOMBAT_IOT_HOME -DPAHO_BUILD_SHARED=FALSE -DPAHO_BUILD_STATIC=TRUE -DPAHO_WITH_SSL=TRUE -DPAHO_ENABLE_TESTING=FALSE -DPAHO_ENABLE_CPACK=FALSE ..
-  else
-    CC=gcc CFLAGS="-fPIC -O3" \
-    cmake -DCMAKE_INSTALL_PREFIX=$WOMBAT_IOT_HOME -DPAHO_BUILD_SHARED=FALSE -DPAHO_BUILD_STATIC=TRUE -DPAHO_WITH_SSL=TRUE -DPAHO_ENABLE_TESTING=FALSE -DPAHO_ENABLE_CPACK=FALSE ..
-  fi
+    if [[ $WITH_SSL == 1 ]]
+    then
+      CC="clang" CFLAGS="-fPIC -O3" cmake -DCMAKE_INSTALL_PREFIX=$WOMBAT_IOT_HOME -DPAHO_BUILD_SHARED=FALSE -DPAHO_BUILD_STATIC=TRUE -DPAHO_WITH_SSL=TRUE -DPAHO_ENABLE_TESTING=FALSE -DPAHO_ENABLE_CPACK=FALSE ..
+      make paho-mqtt3as-static
+    else
+      CC="clang" CFLAGS="-fPIC -O3" cmake -DCMAKE_INSTALL_PREFIX=$WOMBAT_IOT_HOME -DPAHO_BUILD_SHARED=FALSE -DPAHO_BUILD_STATIC=TRUE -DPAHO_WITH_SSL=FALSE -DPAHO_ENABLE_TESTING=FALSE -DPAHO_ENABLE_CPACK=FALSE ..
+      make paho-mqtt3a-static
+    fi
 
-  make paho-mqtt3as-static
+  else
+    if [[ $WITH_SSL == 1 ]]
+    then
+      CC="gcc" CFLAGS="-fPIC -O3" cmake -DCMAKE_INSTALL_PREFIX=$WOMBAT_IOT_HOME -DPAHO_BUILD_SHARED=FALSE -DPAHO_BUILD_STATIC=TRUE -DPAHO_WITH_SSL=TRUE -DPAHO_ENABLE_TESTING=FALSE -DPAHO_ENABLE_CPACK=FALSE ..
+      make paho-mqtt3as-static
+    else
+      CC="gcc" CFLAGS="-fPIC -O3" cmake -DCMAKE_INSTALL_PREFIX=$WOMBAT_IOT_HOME -DPAHO_BUILD_SHARED=FALSE -DPAHO_BUILD_STATIC=TRUE -DPAHO_WITH_SSL=FALSE -DPAHO_ENABLE_TESTING=FALSE -DPAHO_ENABLE_CPACK=FALSE ..
+      make paho-mqtt3a-static
+    fi
+  fi
 
   ######################################################################################################################
 
   mkdir -p ../../lib
 
-  cp ./src/libpaho-mqtt3as.a ../../lib
+  if [[ $WITH_SSL == 1 ]]
+  then
+    cp ./src/libpaho-mqtt3as.a ../../lib
+  else
+    cp ./src/libpaho-mqtt3a.a ../../lib
+  fi
 
   ######################################################################################################################
 
