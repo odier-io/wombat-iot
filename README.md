@@ -35,7 +35,7 @@ Creating the configuration file
 ===============================
 
 ```bash
-./setup.py --create-ini --url=<URL> --username=<USERNAME> --password=<PASSWORD>
+./setup.py --create-ini --mqtt-url=<URL> --mqtt-username=<USERNAME> --mqtt-password=<PASSWORD>
 ```
 
 See the available options there: `include/wombat-default.h`.
