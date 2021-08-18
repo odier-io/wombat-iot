@@ -44,14 +44,7 @@ def print_logo1():
 
 def print_logo2():
 
-    print('''
-███████ ██    ██  ██████  ██████  ██████ ███████ ███████ ███████
-██      ██    ██ ██      ██      ██      ██      ██      ██     
-███████ ██    ██ ██      ██      ██      █████   ███████ ███████
-     ██ ██    ██ ██      ██      ██      ██           ██      ██
-███████  ██████   ██████  ██████  ██████ ███████ ███████ ███████
-                                                                
-                                                                '''[1: ])
+    print('◖ᵔᴥᵔ◗ ♪ ♫')
 
 ########################################################################################################################
 
@@ -296,7 +289,7 @@ def main():
 
     ####################################################################################################################
 
-    parser = argparse.ArgumentParser(formatter_class = argparse.RawTextHelpFormatter, epilog = 'Authors:\n  Jérôme ODIER (jerome@odier.xyz)')
+    parser = argparse.ArgumentParser(epilog = 'Authors:\n  Jérôme ODIER (jerome@odier.xyz)')
 
     parser.add_argument('--setup-with-ssl', help = 'Setup Wombat-IOT with SSL support', action = 'store_true')
     parser.add_argument('--setup-without-ssl', help = 'Setup Wombat-IOT without SSL support', action = 'store_true')
@@ -319,25 +312,28 @@ def main():
 
     result = 0
 
-    if args.setup_with_ssl:
+    if   args.setup_with_ssl:
         if setup(args.verbose, True) != 0:
             result = 1
 
-    if args.setup_without_ssl:
+    elif args.setup_without_ssl:
         if setup(args.verbose, False) != 0:
             result = 1
 
-    if args.create_py:
+    elif args.create_py:
         if createPy(args.verbose) != 0:
             result = 1
 
-    if args.create_ini:
+    elif args.create_ini:
         if createIni(args.verbose, args.mqtt_url, args.mqtt_username, args.mqtt_password) != 0:
             result = 1
 
-    if args.create_service:
+    elif args.create_service:
         if createService(args.verbose, args.service_name) != 0:
             result = 1
+
+    else:
+        parser.print_help()
 
     ####################################################################################################################
 
