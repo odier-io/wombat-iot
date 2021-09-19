@@ -1,8 +1,8 @@
-qSHELL:=/bin/bash
+SHELL := /bin/bash
 
 ########################################################################################################################
 
-PYTHON_LIBDIR:=$(shell python3 -c 'import sys, sysconfig; sys.stdout.write("%s" % sysconfig.get_config_var("LIBDIR"))')
+PYTHON_LIBDIR := $(shell python3 -c 'import sys, sysconfig; sys.stdout.write("%s" % sysconfig.get_config_var("LIBDIR"))')
 
 ########################################################################################################################
 
