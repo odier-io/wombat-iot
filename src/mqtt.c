@@ -301,9 +301,9 @@ int_t iot_mqtt_initialize(iot_mqtt_t *mqtt, STR_t iot_uid, STR_t server_uri, STR
 
 	connect_options.ssl = &ssl_options;
 
-	if(server_user != NULL
+	if(server_user != NULL && strlen(server_user) > 0
 	   &&
-	   server_pass != NULL
+	   server_pass != NULL && strlen(server_pass) > 0
 	 ) {
 		connect_options.username = server_user;
 		connect_options.password = server_pass;
