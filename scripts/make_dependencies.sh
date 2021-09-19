@@ -51,20 +51,20 @@ then
     if [[ $WITH_SSL == 1 ]]
     then
       CC="${CC:-clang}" CFLAGS="-fPIC -O3" cmake -DCMAKE_INSTALL_PREFIX=$WOMBAT_IOT_HOME -DPAHO_BUILD_SHARED=FALSE -DPAHO_BUILD_STATIC=TRUE -DPAHO_WITH_SSL=TRUE -DPAHO_ENABLE_TESTING=FALSE -DPAHO_ENABLE_CPACK=FALSE ..
-      make paho-mqtt3as-static
+      make paho-mqtt3as-static VERBOSE=1
     else
       CC="${CC:-clang}" CFLAGS="-fPIC -O3" cmake -DCMAKE_INSTALL_PREFIX=$WOMBAT_IOT_HOME -DPAHO_BUILD_SHARED=FALSE -DPAHO_BUILD_STATIC=TRUE -DPAHO_WITH_SSL=FALSE -DPAHO_ENABLE_TESTING=FALSE -DPAHO_ENABLE_CPACK=FALSE ..
-      make paho-mqtt3a-static
+      make paho-mqtt3a-static VERBOSE=1
     fi
 
   else
     if [[ $WITH_SSL == 1 ]]
     then
       CC="${CC:-gcc}" CFLAGS="-fPIC -O3" cmake -DCMAKE_INSTALL_PREFIX=$WOMBAT_IOT_HOME -DPAHO_BUILD_SHARED=FALSE -DPAHO_BUILD_STATIC=TRUE -DPAHO_WITH_SSL=TRUE -DPAHO_ENABLE_TESTING=FALSE -DPAHO_ENABLE_CPACK=FALSE ..
-      make paho-mqtt3as-static
+      make paho-mqtt3as-static VERBOSE=1
     else
       CC="${CC:-gcc}" CFLAGS="-fPIC -O3" cmake -DCMAKE_INSTALL_PREFIX=$WOMBAT_IOT_HOME -DPAHO_BUILD_SHARED=FALSE -DPAHO_BUILD_STATIC=TRUE -DPAHO_WITH_SSL=FALSE -DPAHO_ENABLE_TESTING=FALSE -DPAHO_ENABLE_CPACK=FALSE ..
-      make paho-mqtt3a-static
+      make paho-mqtt3a-static VERBOSE=1
     fi
   fi
 
