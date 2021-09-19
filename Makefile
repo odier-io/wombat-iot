@@ -1,4 +1,4 @@
-SHELL:=/bin/bash
+qSHELL:=/bin/bash
 
 ########################################################################################################################
 
@@ -9,13 +9,15 @@ PYTHON_LIBDIR:=$(shell python3 -c 'import sys, sysconfig; sys.stdout.write("%s" 
 CC ?= gcc
 AR ?= ar
 RANLIB ?= ranlib
+PYTHONCFLAGS ?= $(shell python3-config --cflags)
+PYTHONLDFLAGS ?= $(shell python3-config --ldflags)
 
 ########################################################################################################################
 
-CFLAGS=-std=c89 -fPIC -O3 `python3-config --cflags` -Wall -Wextra -Wno-comment -Wno-unused-parameter -I include -Dinline=__inline__ -DMQTTAsync_setConnectedCallback=MQTTAsync_setConnected
+CFLAGS=-std=c89 -fPIC -O3 $(PYTHONCFLAGS) -Wall -Wextra -Wno-comment -Wno-unused-parameter -I include -Dinline=__inline__ -DMQTTAsync_setConnectedCallback=MQTTAsync_setConnected
 
-LDFLAGS_WITH_SSL= -L lib -L /opt/local/lib `python3-config --ldflags`
-LDFLAGS_WITHOUT_SSL= -L lib -L /opt/local/lib `python3-config --ldflags`
+LDFLAGS_WITH_SSL= -L lib -L /opt/local/lib $(PYTHONLDFLAGS)
+LDFLAGS_WITHOUT_SSL= -L lib -L /opt/local/lib $(PYTHONLDFLAGS)
 
 ifeq ($(shell uname -s),Darwin)
 	LDFLAGS_WITH_SSL+=$(PYTHON_LIBDIR)/libpython*.dylib -lssl -lcrypto -pthread
@@ -28,14 +30,14 @@ endif
 ########################################################################################################################
 
 all:
-	@echo 'make wombat-io-with-ssl'
-	@echo 'make wombat-io-without-ssl'
+	@echo 'make wombat-iot-with-ssl'
+	@echo 'make wombat-iot-without-ssl'
 	@echo 'make deps-with-ssl'
 	@echo 'make deps-without-ssl'
 
 ########################################################################################################################
 
-wombat-io-with-ssl: wombat-iot.a
+wombat-iot-with-ssl: wombat-iot.a
 
 	####################################################################################################################
 	# WOMBAT-IOT WITH SSL                                                                                              #
@@ -45,7 +47,7 @@ wombat-io-with-ssl: wombat-iot.a
 
 ########################################################################################################################
 
-wombat-io-without-ssl: wombat-iot.a
+wombat-iot-without-ssl: wombat-iot.a
 
 	####################################################################################################################
 	# WOMBAT-IOT WITHOUT SSL                                                                                           #
