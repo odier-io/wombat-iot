@@ -14,7 +14,7 @@ PYTHONLDFLAGS ?= $(shell python3-config --ldflags)
 
 ########################################################################################################################
 
-CFLAGS=-std=c89 -fPIC -O3 $(PYTHONCFLAGS) -Wall -Wextra -Wno-comment -Wno-unused-parameter -I include -Dinline=__inline__ -DMQTTAsync_setConnectedCallback=MQTTAsync_setConnected
+CFLAGS=-std=c89 -fPIC -O3 $(PYTHONCFLAGS) -Wall -Wextra -Wno-comment -Wno-unused-result -Wno-unused-parameter -Wno-cast-function-type -I include -Dinline=__inline__ -DMQTTAsync_setConnectedCallback=MQTTAsync_setConnected
 
 LDFLAGS_WITH_SSL= -L lib -L /opt/local/lib $(PYTHONLDFLAGS)
 LDFLAGS_WITHOUT_SSL= -L lib -L /opt/local/lib $(PYTHONLDFLAGS)
