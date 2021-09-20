@@ -171,6 +171,42 @@ def createPy(verbose):
 
 ########################################################################################################################
 
+def createLua(verbose):
+
+    ####################################################################################################################
+
+    fileName = os.path.join(WOMBAT_IOT_DIR, 'wombat-iot.lua')
+
+    if os.path.isfile(fileName):
+
+        print('error: file `%s` already exists' % fileName)
+
+        return 1
+
+    ####################################################################################################################
+
+    try:
+
+        ################################################################################################################
+
+        saveText(fileName, WOMBAT_IOT_LUA)
+
+        ################################################################################################################
+
+        print_logo2()
+
+        ################################################################################################################
+
+        return 0
+
+    except Exception as e:
+
+        print('error: %s' % e)
+
+        return 1
+
+########################################################################################################################
+
 def createIni(verbose, mqtt_url, mqtt_username, mqtt_password):
 
     ####################################################################################################################
@@ -240,7 +276,7 @@ def createIni(verbose, mqtt_url, mqtt_username, mqtt_password):
 
 ########################################################################################################################
 
-def createService(verbose, service_name):
+def createService(verbose, service_name, ext):
 
     ####################################################################################################################
 
@@ -260,8 +296,8 @@ def createService(verbose, service_name):
 
         saveText(fileName, WOMBAT_IOT_SERVICE % (
             os.path.join(WOMBAT_IOT_DIR, 'bin', 'wombat-iot'),
-            os.path.join(WOMBAT_IOT_DIR, 'wombat-iot.ini'),
-            os.path.join(WOMBAT_IOT_DIR, 'wombat-iot.py'),
+            os.path.join(WOMBAT_IOT_DIR, 'wombat-iot.' + 'ini'),
+            os.path.join(WOMBAT_IOT_DIR, 'wombat-iot.' +  ext ),
             os.path.join(WOMBAT_IOT_DIR),
         ))
 
@@ -294,15 +330,17 @@ def main():
     parser.add_argument('--setup-with-ssl', help = 'Setup Wombat-IOT with SSL support', action = 'store_true')
     parser.add_argument('--setup-without-ssl', help = 'Setup Wombat-IOT without SSL support', action = 'store_true')
 
-    parser.add_argument('--create-py'     , help = 'Create the main Python file'    , action = 'store_true')
-    parser.add_argument('--create-ini'    , help = 'Create the configuration file'  , action = 'store_true')
-    parser.add_argument('--create-service', help = 'Create the systemd service file', action = 'store_true')
+    parser.add_argument('--create-py'         , help = 'Create the main .py file'       , action = 'store_true')
+    parser.add_argument('--create-lua'        , help = 'Create the main .lua file'      , action = 'store_true')
+    parser.add_argument('--create-ini'        , help = 'Create the configuration file'  , action = 'store_true')
+    parser.add_argument('--create-service-py' , help = 'Create the systemd service file (py mode)', action = 'store_true')
+    parser.add_argument('--create-service-lua', help = 'Create the systemd service file (lua mode)', action = 'store_true')
 
     parser.add_argument('--mqtt-url'     , help = 'MQTT URL (use with --create-ini, default: None)'     , type = str, default = None)
     parser.add_argument('--mqtt-username', help = 'MQTT username (use with --create-ini, default: None)', type = str, default = None)
     parser.add_argument('--mqtt-password', help = 'MQTT password (use with --create-ini, default: None)', type = str, default = None)
 
-    parser.add_argument('--service-name', help = 'Service name (use with --create-service, default: None)', type = str, default = 'wombat-iot')
+    parser.add_argument('--service-name', help = 'Service name (use with --create-service-py or --create-service-lua, default: wombat-iot)', type = str, default = 'wombat-iot')
 
     parser.add_argument('--verbose', help = 'make this tool verbose', action = 'store_true')
 
@@ -324,12 +362,20 @@ def main():
         if createPy(args.verbose) != 0:
             result = 1
 
+    elif args.create_lua:
+        if createLua(args.verbose) != 0:
+            result = 1
+
     elif args.create_ini:
         if createIni(args.verbose, args.mqtt_url, args.mqtt_username, args.mqtt_password) != 0:
             result = 1
 
-    elif args.create_service:
-        if createService(args.verbose, args.service_name) != 0:
+    elif args.create_service_py:
+        if createService(args.verbose, args.service_name, 'py') != 0:
+            result = 1
+
+    elif args.create_service_lua:
+        if createService(args.verbose, args.service_name, 'lua') != 0:
             result = 1
 
     else:
@@ -405,6 +451,70 @@ def iot_delivery(token):
     iot_log_debug('Token: %s' % (token, ))
 
 ########################################################################################################################
+'''[1: ]
+
+########################################################################################################################
+
+WOMBAT_IOT_LUA = '''
+------------------------------------------------------------------------------------------------------------------------
+
+function iot_init_success(message)
+
+    iot_log_debug(string.format("Success: %s", message))
+
+end
+
+------------------------------------------------------------------------------------------------------------------------
+
+function iot_init_failure(message)
+
+    iot_log_debug(string.format("Failure: %s", message))
+
+end
+
+------------------------------------------------------------------------------------------------------------------------
+
+function iot_loop(connected)
+
+    iot_log_debug(string.format("Connected: %s", tostring(connected)))
+
+end
+
+------------------------------------------------------------------------------------------------------------------------
+
+function iot_connection_opened(message)
+
+    iot_log_debug(string.format("Connection opened, cause: %s", message))
+
+end
+
+------------------------------------------------------------------------------------------------------------------------
+
+function iot_connection_lost(message)
+
+    iot_log_debug(string.format("Connection lost, cause: %s", message))
+
+end
+
+------------------------------------------------------------------------------------------------------------------------
+
+function iot_message(topic, payload)
+
+    iot_log_debug(string.format("Topic: %s, payload: %s", topic, payload))
+
+    return true
+
+end
+
+------------------------------------------------------------------------------------------------------------------------
+
+function iot_delivery(token)
+
+    iot_log_debug(string.format("Token: %s", token))
+
+end
+
+------------------------------------------------------------------------------------------------------------------------
 '''[1: ]
 
 ########################################################################################################################
