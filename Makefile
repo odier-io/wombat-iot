@@ -37,48 +37,73 @@ all:
 
 ########################################################################################################################
 
-wombat-iot-with-ssl: wombat-iot.a
+wombat-iot-with-ssl: wombat-iot-python.a
 
 	####################################################################################################################
 	# WOMBAT-IOT WITH SSL                                                                                              #
 	####################################################################################################################
 
-	$(CC) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot -lpaho-mqtt3as $(LDFLAGS_WITH_SSL)
+	$(CC) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot-python -lpaho-mqtt3as $(LDFLAGS_WITH_SSL)
 
 ########################################################################################################################
 
-wombat-iot-without-ssl: wombat-iot.a
+wombat-iot-without-ssl: wombat-iot-python.a
 
 	####################################################################################################################
 	# WOMBAT-IOT WITHOUT SSL                                                                                           #
 	####################################################################################################################
 
-	$(CC) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot -lpaho-mqtt3a $(LDFLAGS_WITHOUT_SSL)
+	$(CC) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot-python -lpaho-mqtt3a $(LDFLAGS_WITHOUT_SSL)
 
 ########################################################################################################################
 
-wombat-iot.a:
+wombat-iot-python.a:
 
 	mkdir -p bin
 	mkdir -p lib
 
 	####################################################################################################################
-	# LIBWOMBAT-IOT.A WITHOUT SSL                                                                                      #
+	# LIBWOMBAT-IOT-PYTHON.A WITHOUT SSL                                                                               #
 	####################################################################################################################
 
 	$(CC) $(CFLAGS) -c -o src/str.o src/str.c
 	$(CC) $(CFLAGS) -c -o src/log.o src/log.c
 	$(CC) $(CFLAGS) -c -o src/config.o src/config.c
 	$(CC) $(CFLAGS) -c -o src/mqtt.o src/mqtt.c
-	$(CC) $(CFLAGS) -c -o src/iot.o src/iot.c
+	$(CC) $(CFLAGS) -c -o src/iot_python.o src/iot_python.c
 
 	####################################################################################################################
 
-	$(AR) rcs lib/libwombat-iot.a src/str.o src/log.o src/config.o src/mqtt.o src/iot.o && $(RANLIB) lib/libwombat-iot.a
+	$(AR) rcs lib/libwombat-iot-python.a src/str.o src/log.o src/config.o src/mqtt.o src/iot_python.o && $(RANLIB) lib/libwombat-iot-python.a
 
 ########################################################################################################################
 
-.PHONY: wombat-iot.a
+.PHONY: wombat-iot-python.a
+
+########################################################################################################################
+
+wombat-iot-lua.a:
+
+	mkdir -p bin
+	mkdir -p lib
+
+	####################################################################################################################
+	# LIBWOMBAT-IOT-LUA.A WITHOUT SSL                                                                                  #
+	####################################################################################################################
+
+	$(CC) $(CFLAGS) -c -o src/str.o src/str.c
+	$(CC) $(CFLAGS) -c -o src/log.o src/log.c
+	$(CC) $(CFLAGS) -c -o src/config.o src/config.c
+	$(CC) $(CFLAGS) -c -o src/mqtt.o src/mqtt.c
+	$(CC) $(CFLAGS) -c -o src/iot_lua.o src/iot_lua.c
+
+	####################################################################################################################
+
+	$(AR) rcs lib/libwombat-iot-lua.a src/str.o src/log.o src/config.o src/mqtt.o src/iot_lua.o && $(RANLIB) lib/libwombat-iot-lua.a
+
+########################################################################################################################
+
+.PHONY: wombat-iot-lua.a
 
 ########################################################################################################################
 

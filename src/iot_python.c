@@ -251,8 +251,8 @@ static PyObject *_iot_mqtt_unsubscribe(PyObject *self, PyObject *args, PyObject 
 
 	if(PyArg_ParseTupleAndKeywords(args, kwargs, "s|i", arg_names, &topic, &qos) != 0 && iot_mqtt_unsubscribe(
 		&_python_iot->mqtt,
-		topic
-		/**/
+		topic,
+		qos
 	 ) >= 0) {
 		Py_INCREF(Py_None);
 

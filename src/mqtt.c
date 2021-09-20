@@ -295,11 +295,11 @@ int_t iot_mqtt_initialize(iot_mqtt_t *mqtt, STR_t iot_uid, STR_t server_uri, STR
 
 	MQTTAsync_connectOptions connect_options = MQTTAsync_connectOptions_initializer;
 
+	connect_options.ssl = iot_mqtt_ssl_enabled() ? &ssl_options : NULL;
+
 	connect_options.automaticReconnect = 0x0000000000001;
 	connect_options.connectTimeout = connect_timeout;
 	connect_options.cleansession = 0;
-
-	connect_options.ssl = &ssl_options;
 
 	if(server_user != NULL && strlen(server_user) > 0
 	   &&
@@ -381,6 +381,23 @@ int_t iot_mqtt_finalize(iot_mqtt_t *mqtt)
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+int_t iot_mqtt_ssl_enabled(void)
+{
+	MQTTAsync_nameValue *nameValue;
+
+	for(nameValue = MQTTAsync_getVersionInfo(); nameValue->name != NULL; nameValue++)
+	{
+		if(strcmp(nameValue->name, "OpenSSL version") == 0)
+		{
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
 int_t iot_mqtt_is_connected(iot_mqtt_t *mqtt)
 {
 	return MQTTAsync_isConnected(mqtt->client);
@@ -412,7 +429,7 @@ int_t iot_mqtt_subscribe(iot_mqtt_t *mqtt, STR_t topic, int_t qos)
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-int_t iot_mqtt_unsubscribe(iot_mqtt_t *mqtt, STR_t topic)
+int_t iot_mqtt_unsubscribe(iot_mqtt_t *mqtt, STR_t topic, int_t qos)
 {
 	int_t ret;
 
