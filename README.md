@@ -59,8 +59,8 @@ sudo systemctl restart wombat-iot
 sudo systemctl status wombat-iot
 ```
 
-Callbacks
-=========
+Callbacks (Python syntax)
+=========================
 
 ```python
 #############################################################################
@@ -94,8 +94,8 @@ def iot_connection_opened(message: str) -> None:
 
 † This function must return `True` or `False` indicating whether or not the message has been safely received by the client application.
 
-API
-===
+API (Python syntax)
+===================
 
 ```python
 #############################################################################
