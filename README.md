@@ -19,16 +19,22 @@ cd wombat-iot
 curl https://raw.githubusercontent.com/odier-io/wombat-iot/master/tools/setup.py > setup.py
 chmod a+x setup.py
 
-./setup.py --setup-with-ssl
+./setup.py --setup-py-with-ssl
 # or
-./setup.py --setup-without-ssl
+./setup.py --setup-py-without-ssl
+# or
+./setup.py --setup-lua-with-ssl
+# or
+./setup.py --setup-lua-without-ssl
 ```
 
-Creating the main Python file
-=============================
+Creating the main main file
+===========================
 
 ```bash
 ./setup.py --create-py
+# or
+./setup.py --create-lua
 ```
 
 Creating the configuration file
@@ -44,7 +50,9 @@ Creating the systemd service file
 =================================
 
 ```bash
-sudo ./setup.py --create-service
+sudo ./setup.py --create-service-py
+# or
+sudo ./setup.py --create-service-lua
 
 sudo systemctl enable wombat-iot
 sudo systemctl restart wombat-iot

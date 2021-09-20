@@ -83,25 +83,25 @@ def setup(verbose, mode, with_ssl):
 
         subprocess.check_call('make deps-with-ssl', cwd = gitDir, shell = True)
 
-		if   mode == 'py':
+        if   mode == 'py':
 
-	        subprocess.check_call('make wombat-iot-py-with-ssl', cwd = gitDir, shell = True)
+            subprocess.check_call('make wombat-iot-py-with-ssl', cwd = gitDir, shell = True)
 
-		elif mode = 'lua':
+        elif mode == 'lua':
 
-	        subprocess.check_call('make wombat-iot-lua-with-ssl', cwd = gitDir, shell = True)
+            subprocess.check_call('make wombat-iot-lua-with-ssl', cwd = gitDir, shell = True)
 
     else:
 
         subprocess.check_call('make deps-without-ssl', cwd = gitDir, shell = True)
 
-		if   mode == 'py':
+        if   mode == 'py':
 
-	        subprocess.check_call('make wombat-iot-py-without-ssl', cwd = gitDir, shell = True)
+            subprocess.check_call('make wombat-iot-py-without-ssl', cwd = gitDir, shell = True)
 
-		elif mode = 'lua':
+        elif mode == 'lua':
 
-	        subprocess.check_call('make wombat-iot-lua-without-ssl', cwd = gitDir, shell = True)
+            subprocess.check_call('make wombat-iot-lua-without-ssl', cwd = gitDir, shell = True)
 
     ####################################################################################################################
     # INSTALL                                                                                                          #
