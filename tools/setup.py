@@ -483,7 +483,7 @@ WOMBAT_IOT_LUA = '''
 
 function iot_init_success(message)
 
-    iot_log_debug(string.format("Success: %s", message))
+    iot_log_debug(string.format('Success: %s', message))
 
 end
 
@@ -491,7 +491,7 @@ end
 
 function iot_init_failure(message)
 
-    iot_log_debug(string.format("Failure: %s", message))
+    iot_log_debug(string.format('Failure: %s', message))
 
 end
 
@@ -499,7 +499,7 @@ end
 
 function iot_loop(connected)
 
-    iot_log_debug(string.format("Connected: %s", tostring(connected)))
+    iot_log_debug(string.format('Connected: %s', tostring(connected)))
 
 end
 
@@ -507,7 +507,7 @@ end
 
 function iot_connection_opened(message)
 
-    iot_log_debug(string.format("Connection opened, cause: %s", message))
+    iot_log_debug(string.format('Connection opened, cause: %s', message))
 
 end
 
@@ -515,7 +515,7 @@ end
 
 function iot_connection_lost(message)
 
-    iot_log_debug(string.format("Connection lost, cause: %s", message))
+    iot_log_debug(string.format('Connection lost, cause: %s', message))
 
 end
 
@@ -523,7 +523,7 @@ end
 
 function iot_message(topic, payload)
 
-    iot_log_debug(string.format("Topic: %s, payload: %s", topic, payload))
+    iot_log_debug(string.format('Topic: %s, payload: %s', topic, payload))
 
     return true
 
@@ -533,7 +533,7 @@ end
 
 function iot_delivery(token)
 
-    iot_log_debug(string.format("Token: %s", token))
+    iot_log_debug(string.format('Token: %s', token))
 
 end
 
