@@ -58,7 +58,7 @@ def saveText(fileName, data):
 
 ########################################################################################################################
 
-def setup(verbose, with_ssl):
+def setup(verbose, mode, with_ssl):
 
     ####################################################################################################################
 
@@ -83,13 +83,25 @@ def setup(verbose, with_ssl):
 
         subprocess.check_call('make deps-with-ssl', cwd = gitDir, shell = True)
 
-        subprocess.check_call('make wombat-iot-with-ssl', cwd = gitDir, shell = True)
+		if   mode == 'py':
+
+	        subprocess.check_call('make wombat-iot-py-with-ssl', cwd = gitDir, shell = True)
+
+		elif mode = 'lua':
+
+	        subprocess.check_call('make wombat-iot-lua-with-ssl', cwd = gitDir, shell = True)
 
     else:
 
         subprocess.check_call('make deps-without-ssl', cwd = gitDir, shell = True)
 
-        subprocess.check_call('make wombat-iot-without-ssl', cwd = gitDir, shell = True)
+		if   mode == 'py':
+
+	        subprocess.check_call('make wombat-iot-py-without-ssl', cwd = gitDir, shell = True)
+
+		elif mode = 'lua':
+
+	        subprocess.check_call('make wombat-iot-lua-without-ssl', cwd = gitDir, shell = True)
 
     ####################################################################################################################
     # INSTALL                                                                                                          #
@@ -327,8 +339,11 @@ def main():
 
     parser = argparse.ArgumentParser(epilog = 'Authors:\n  Jérôme ODIER (jerome@odier.xyz)')
 
-    parser.add_argument('--setup-with-ssl', help = 'Setup Wombat-IOT with SSL support', action = 'store_true')
-    parser.add_argument('--setup-without-ssl', help = 'Setup Wombat-IOT without SSL support', action = 'store_true')
+    parser.add_argument('--setup-py-with-ssl', help = 'Setup Wombat-IOT with SSL support', action = 'store_true')
+    parser.add_argument('--setup-py-without-ssl', help = 'Setup Wombat-IOT without SSL support', action = 'store_true')
+
+    parser.add_argument('--setup-lua-with-ssl', help = 'Setup Wombat-IOT with SSL support', action = 'store_true')
+    parser.add_argument('--setup-lua-without-ssl', help = 'Setup Wombat-IOT without SSL support', action = 'store_true')
 
     parser.add_argument('--create-py'         , help = 'Create the main .py file'       , action = 'store_true')
     parser.add_argument('--create-lua'        , help = 'Create the main .lua file'      , action = 'store_true')
@@ -350,12 +365,20 @@ def main():
 
     result = 0
 
-    if   args.setup_with_ssl:
-        if setup(args.verbose, True) != 0:
+    if   args.setup_py_with_ssl:
+        if setup(args.verbose, 'py', True) != 0:
             result = 1
 
-    elif args.setup_without_ssl:
-        if setup(args.verbose, False) != 0:
+    elif args.setup_py_without_ssl:
+        if setup(args.verbose, 'py', False) != 0:
+            result = 1
+
+    elif args.setup_lua_with_ssl:
+        if setup(args.verbose, 'lua', True) != 0:
+            result = 1
+
+    elif args.setup_lua_without_ssl:
+        if setup(args.verbose, 'lua', False) != 0:
             result = 1
 
     elif args.create_py:

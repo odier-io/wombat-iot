@@ -4,6 +4,8 @@ bin
 lib
 
 *.o
+lua*.h
+lauxlib.h
 MQTT*.h
 
 tools/.wombat-iot/
@@ -14,3 +16,4 @@ tools/lib/
 wombat-iot.service
 wombat-iot.ini
 wombat-iot.py
+wombat-iot.lua

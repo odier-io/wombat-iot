@@ -4,6 +4,8 @@
 
 PAHO_TARBALL=v1.3.9.tar.gz
 
+LUA_TARBALL=lua-5.4.3.tar.gz
+
 ########################################################################################################################
 
 THIS_SCRIPT=${BASH_SOURCE[0]:-$0}
@@ -51,20 +53,20 @@ then
     if [[ $WITH_SSL == 1 ]]
     then
       CC="${CC:-clang}" CFLAGS="-fPIC -O3" cmake -DCMAKE_INSTALL_PREFIX=$WOMBAT_IOT_HOME -DPAHO_BUILD_SHARED=FALSE -DPAHO_BUILD_STATIC=TRUE -DPAHO_WITH_SSL=TRUE -DPAHO_ENABLE_TESTING=FALSE -DPAHO_ENABLE_CPACK=FALSE ..
-      make paho-mqtt3as-static VERBOSE=1
+      make paho-mqtt3as-static
     else
       CC="${CC:-clang}" CFLAGS="-fPIC -O3" cmake -DCMAKE_INSTALL_PREFIX=$WOMBAT_IOT_HOME -DPAHO_BUILD_SHARED=FALSE -DPAHO_BUILD_STATIC=TRUE -DPAHO_WITH_SSL=FALSE -DPAHO_ENABLE_TESTING=FALSE -DPAHO_ENABLE_CPACK=FALSE ..
-      make paho-mqtt3a-static VERBOSE=1
+      make paho-mqtt3a-static
     fi
 
   else
     if [[ $WITH_SSL == 1 ]]
     then
       CC="${CC:-gcc}" CFLAGS="-fPIC -O3" cmake -DCMAKE_INSTALL_PREFIX=$WOMBAT_IOT_HOME -DPAHO_BUILD_SHARED=FALSE -DPAHO_BUILD_STATIC=TRUE -DPAHO_WITH_SSL=TRUE -DPAHO_ENABLE_TESTING=FALSE -DPAHO_ENABLE_CPACK=FALSE ..
-      make paho-mqtt3as-static VERBOSE=1
+      make paho-mqtt3as-static
     else
       CC="${CC:-gcc}" CFLAGS="-fPIC -O3" cmake -DCMAKE_INSTALL_PREFIX=$WOMBAT_IOT_HOME -DPAHO_BUILD_SHARED=FALSE -DPAHO_BUILD_STATIC=TRUE -DPAHO_WITH_SSL=FALSE -DPAHO_ENABLE_TESTING=FALSE -DPAHO_ENABLE_CPACK=FALSE ..
-      make paho-mqtt3a-static VERBOSE=1
+      make paho-mqtt3a-static
     fi
   fi
 
@@ -97,6 +99,60 @@ fi
 ########################################################################################################################
 
 rm -fr $WOMBAT_IOT_HOME/paho.mqtt.c-*/
+
+########################################################################################################################
+
+echo ''
+echo '#############################################################################'
+echo '# Compiling Lua...                                                          #'
+echo '#############################################################################'
+echo ''
+
+########################################################################################################################
+
+rm -fr $WOMBAT_IOT_HOME/lua-*/
+
+########################################################################################################################
+
+if [[ 0 == 0 ]]
+then
+(
+  ######################################################################################################################
+
+  cd $WOMBAT_IOT_HOME
+
+  ######################################################################################################################
+
+  curl -L https://www.lua.org/ftp/$LUA_TARBALL | tar xzf -
+
+  ######################################################################################################################
+
+  cd lua-*/
+
+  make posix
+
+  ######################################################################################################################
+
+  mkdir -p ../lib
+
+  cp src/liblua.a ../lib
+
+  ######################################################################################################################
+
+  mkdir -p ../include
+
+  cp src/lua.h ../include
+  cp src/lualib.h ../include
+  cp src/luaconf.h ../include
+  cp src/lauxlib.h ../include
+
+  ######################################################################################################################
+) || exit 1
+fi
+
+########################################################################################################################
+
+rm -fr $WOMBAT_IOT_HOME/lua-*/
 
 ########################################################################################################################
 
