@@ -24,6 +24,7 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 #include <Python.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -622,7 +623,7 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	PyRun_SimpleString(
+	ret = PyRun_SimpleString(
 		"#############################################################################"						"\n"
 		""																									"\n"
 		"import json"																						"\n"
@@ -709,6 +710,11 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 		""																									"\n"
 		"#############################################################################"						"\n"
 	);
+
+	if(ret > 0)
+	{
+		iot_log(IOT_LOG_TYPE_ERROR, "Cannot not execute internal Python script `%s`\n", script_fname);
+	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
