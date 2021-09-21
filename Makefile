@@ -10,19 +10,19 @@ CC ?= gcc
 AR ?= ar
 RANLIB ?= ranlib
 
-PYCFLAGS ?= $(shell python3-config --cflags)
-PYLDFLAGS ?= $(shell python3-config --ldflags)
+PYTHON_CFLAGS ?= $(shell python3-config --cflags)
+PYTHON_LDFLAGS ?= $(shell python3-config --ldflags)
 
 ifeq ($(shell uname -s),Darwin)
-	PYLDFLAGS+=$(PYTHON_LIBDIR)/libpython*.dylib
+	PYTHON_LDFLAGS+=$(PYTHON_LIBDIR)/libpython*.dylib
 endif
 
 ########################################################################################################################
 
-CFLAGS_PY=-std=c99 -fPIC -O3 $(PYCFLAGS) -Wall -Wextra -Wno-unused-result -Wno-unused-parameter -I include -Dinline=__inline__ -DMQTTAsync_setConnectedCallback=MQTTAsync_setConnected
+CFLAGS_PY=-std=c99 -fPIC -O3 $(PYTHON_CFLAGS) -Wall -Wextra -Wno-unused-result -Wno-unused-parameter -I include -Dinline=__inline__ -DMQTTAsync_setConnectedCallback=MQTTAsync_setConnected
 
-LDFLAGS_WITH_SSL_PY=-L lib -L /opt/local/lib $(PYLDFLAGS) -lssl -lcrypto -pthread
-LDFLAGS_WITHOUT_SSL_PY=-L lib $(PYLDFLAGS) -pthread
+LDFLAGS_WITH_SSL_PY=-L lib -L /opt/local/lib $(PYTHON_LDFLAGS) -lssl -lcrypto -pthread
+LDFLAGS_WITHOUT_SSL_PY=-L lib $(PYTHON_LDFLAGS) -pthread
 
 ########################################################################################################################
 
