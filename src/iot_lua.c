@@ -314,7 +314,7 @@ static int_t _iot_mqtt_send(lua_State *state)
 
 static void _iot_init_success_callback(iot_mqtt_t *mqtt, STR_t iot_uid)
 {
-	if(_python_iot->pFuncInitSuccess != NULL)
+	if(_lua_iot->pFuncInitSuccess != NULL)
 	{
 		/* TODO */
 	}
@@ -324,7 +324,7 @@ static void _iot_init_success_callback(iot_mqtt_t *mqtt, STR_t iot_uid)
 
 static void _iot_init_failure_callback(iot_mqtt_t *mqtt, STR_t message)
 {
-	if(_python_iot->pFuncInitFailure != NULL)
+	if(_lua_iot->pFuncInitFailure != NULL)
 	{
 		/* TODO */
 	}
@@ -334,7 +334,7 @@ static void _iot_init_failure_callback(iot_mqtt_t *mqtt, STR_t message)
 
 static void _iot_connection_opened_callback(iot_mqtt_t *mqtt, STR_t message)
 {
-	if(_python_iot->pFuncConnectionOpened != NULL)
+	if(_lua_iot->pFuncConnectionOpened != NULL)
 	{
 		/* TODO */
 	}
@@ -344,7 +344,7 @@ static void _iot_connection_opened_callback(iot_mqtt_t *mqtt, STR_t message)
 
 static void _iot_connection_lost_callback(iot_mqtt_t *mqtt, STR_t message)
 {
-	if(_python_iot->pFuncConnectionLost != NULL)
+	if(_lua_iot->pFuncConnectionLost != NULL)
 	{
 		/* TODO */
 	}
@@ -354,7 +354,7 @@ static void _iot_connection_lost_callback(iot_mqtt_t *mqtt, STR_t message)
 
 static int_t _iot_message_callback(iot_mqtt_t *mqtt, size_t topic_size, STR_t topic_str, size_t payload_size, BUFF_t payload_buff)
 {
-	if(_python_iot->pFuncMessage != NULL)
+	if(_lua_iot->pFuncMessage != NULL)
 	{
 		/* TODO */
 	}
@@ -366,7 +366,7 @@ static int_t _iot_message_callback(iot_mqtt_t *mqtt, size_t topic_size, STR_t to
 
 static void _iot_delivery_callback(iot_mqtt_t *mqtt, int_t token)
 {
-	if(_python_iot->pFuncDelivery != NULL)
+	if(_lua_iot->pFuncDelivery != NULL)
 	{
 		/* TODO */
 	}
