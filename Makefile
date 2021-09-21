@@ -7,6 +7,8 @@ PYTHON_LIBDIR := $(shell python3 -c 'import sys, sysconfig; sys.stdout.write("%s
 ########################################################################################################################
 
 CC ?= gcc
+STRIP ?= strip
+
 AR ?= ar
 RANLIB ?= ranlib
 
@@ -51,6 +53,8 @@ wombat-iot-py-with-ssl: wombat-iot-py.a
 
 	$(CC) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot-py -lpaho-mqtt3as $(LDFLAGS_WITH_SSL_PY)
 
+	$(STRIP) bin/wombat-iot
+
 ########################################################################################################################
 
 wombat-iot-py-without-ssl: wombat-iot-py.a
@@ -60,6 +64,8 @@ wombat-iot-py-without-ssl: wombat-iot-py.a
 	####################################################################################################################
 
 	$(CC) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot-py -lpaho-mqtt3a $(LDFLAGS_WITHOUT_SSL_PY)
+
+	$(STRIP) bin/wombat-iot
 
 ########################################################################################################################
 
@@ -71,6 +77,8 @@ wombat-iot-lua-with-ssl: wombat-iot-lua.a
 
 	$(CC) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot-lua -lpaho-mqtt3as $(LDFLAGS_WITH_SSL_LUA)
 
+	$(STRIP) bin/wombat-iot
+
 ########################################################################################################################
 
 wombat-iot-lua-without-ssl: wombat-iot-lua.a
@@ -80,6 +88,8 @@ wombat-iot-lua-without-ssl: wombat-iot-lua.a
 	####################################################################################################################
 
 	$(CC) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot-lua -lpaho-mqtt3a $(LDFLAGS_WITHOUT_SSL_LUA)
+
+	$(STRIP) bin/wombat-iot
 
 ########################################################################################################################
 
