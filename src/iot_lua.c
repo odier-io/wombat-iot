@@ -133,12 +133,14 @@ static int_t _iot_config_get_flt(lua_State *state)
 
 static int_t _iot_log_debug(lua_State *state)
 {
-	STR_t file_name = "?";
-	int_t line_number = 0.0;
+	lua_Debug debug;
+
+	lua_getstack(state, 1, &debug);
+	lua_getinfo(state, "Sl", &debug);
 
 	STR_t message = luaL_checkstring(state, 1);
 
-	_iot_log(IOT_LOG_TYPE_DEBUG, file_name, line_number, "%s\n", message);
+	_iot_log(IOT_LOG_TYPE_DEBUG, debug.source, debug.currentline, "%s\n", message);
 
 	return 0;
 }
@@ -147,12 +149,14 @@ static int_t _iot_log_debug(lua_State *state)
 
 static int_t _iot_log_ooops(lua_State *state)
 {
-	STR_t file_name = "?";
-	int_t line_number = 0.0;
+	lua_Debug debug;
+
+	lua_getstack(state, 1, &debug);
+	lua_getinfo(state, "Sl", &debug);
 
 	STR_t message = luaL_checkstring(state, 1);
 
-	_iot_log(IOT_LOG_TYPE_OOOPS, file_name, line_number, "%s\n", message);
+	_iot_log(IOT_LOG_TYPE_OOOPS, debug.source, debug.currentline, "%s\n", message);
 
 	return 0;
 }
@@ -161,12 +165,14 @@ static int_t _iot_log_ooops(lua_State *state)
 
 static int_t _iot_log_error(lua_State *state)
 {
-	STR_t file_name = "?";
-	int_t line_number = 0.0;
+	lua_Debug debug;
+
+	lua_getstack(state, 1, &debug);
+	lua_getinfo(state, "Sl", &debug);
 
 	STR_t message = luaL_checkstring(state, 1);
 
-	_iot_log(IOT_LOG_TYPE_ERROR, file_name, line_number, "%s\n", message);
+	_iot_log(IOT_LOG_TYPE_ERROR, debug.source, debug.currentline, "%s\n", message);
 
 	return 0;
 }
@@ -175,12 +181,14 @@ static int_t _iot_log_error(lua_State *state)
 
 static int_t _iot_log_fatal(lua_State *state)
 {
-	STR_t file_name = "?";
-	int_t line_number = 0.0;
+	lua_Debug debug;
+
+	lua_getstack(state, 1, &debug);
+	lua_getinfo(state, "Sl", &debug);
 
 	STR_t message = luaL_checkstring(state, 1);
 
-	_iot_log(IOT_LOG_TYPE_FATAL, file_name, line_number, "%s\n", message);
+	_iot_log(IOT_LOG_TYPE_FATAL, debug.source, debug.currentline, "%s\n", message);
 
 	return 0;
 }
@@ -202,9 +210,7 @@ static int_t _iot_mqtt_subscribe(lua_State *state)
 	}
 	else
 	{
-		/*return PyErr_Format(PyExc_IOError, "Cannot not subscribe to topic '%s'", topic);*/
-
-		return 0;
+		return luaL_error(state, "Cannot not subscribe to topic '%s'", topic);
 	}
 }
 
@@ -225,9 +231,7 @@ static int_t _iot_mqtt_unsubscribe(lua_State *state)
 	}
 	else
 	{
-		/*return PyErr_Format(PyExc_IOError, "Cannot not unsubscribe to topic '%s'", topic);*/
-
-		return 0;
+		return luaL_error(state, "Cannot not unsubscribe to topic '%s'", topic);
 	}
 }
 
@@ -248,6 +252,8 @@ static void _iot_mqtt_message_success_callback(void *context, iot_mqtt_t *mqtt, 
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
+	/* TODO */
+
 	/*----------------------------------------------------------------------------------------------------------------*/
 
 	iot_free(mqtt_send_callback_context);
@@ -260,6 +266,8 @@ static void _iot_mqtt_message_failure_callback(void *context, iot_mqtt_t *mqtt, 
 	struct _iot_mqtt_send_callback_context_s *mqtt_send_callback_context = (struct _iot_mqtt_send_callback_context_s *) context;
 
 	/*----------------------------------------------------------------------------------------------------------------*/
+
+	/* TODO */
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
@@ -281,8 +289,8 @@ static int_t _iot_mqtt_send(lua_State *state)
 
 	struct _iot_mqtt_send_callback_context_s *mqtt_send_callback_context = (struct _iot_mqtt_send_callback_context_s *) iot_malloc(sizeof(struct _iot_mqtt_send_callback_context_s));
 
-	mqtt_send_callback_context->success_callback = NULL;
-	mqtt_send_callback_context->failure_callback = NULL;
+	mqtt_send_callback_context->success_callback = NULL; /* TODO */
+	mqtt_send_callback_context->failure_callback = NULL; /* TODO */
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
@@ -302,9 +310,7 @@ static int_t _iot_mqtt_send(lua_State *state)
 	}
 	else
 	{
-		/*return PyErr_Format(PyExc_IOError, "Cannot not send message (network issue)");*/
-
-		return 0;
+		return luaL_error(state, "Cannot not send message (network issue)");
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -312,11 +318,43 @@ static int_t _iot_mqtt_send(lua_State *state)
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+static const struct luaL_Reg _iot_builtins_functions[] = {
+	{"iot_service_stop", _iot_service_stop},
+	{"iot_service_restart", _iot_service_restart},
+	{"iot_machine_reboot", _iot_machine_reboot},
+	{"iot_get_uid", _iot_get_uid},
+	{"iot_get_descr", _iot_get_descr},
+	{"iot_config_get_str", _iot_config_get_str},
+	{"iot_config_get_int", _iot_config_get_int},
+	{"iot_config_get_flt", _iot_config_get_flt},
+	{"iot_log_debug", _iot_log_debug},
+	{"iot_log_ooops", _iot_log_ooops},
+	{"iot_log_error", _iot_log_error},
+	{"iot_log_fatal", _iot_log_fatal},
+	{"iot_mqtt_subscribe", _iot_mqtt_subscribe},
+	{"iot_mqtt_unsubscribe", _iot_mqtt_unsubscribe},
+	{"iot_mqtt_send", _iot_mqtt_send},
+	{NULL, NULL},
+};
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
 static void _iot_init_success_callback(iot_mqtt_t *mqtt, STR_t iot_uid)
 {
-	if(_lua_iot->pFuncInitSuccess != NULL)
+	lua_State *state = (lua_State *) _lua_iot->pFuncInitSuccess;
+
+	if(state != NULL)
 	{
-		/* TODO */
+		lua_getglobal(state, "int_init_success");
+
+		lua_pushstring(state, iot_uid);
+
+		if(lua_pcall(state, 1, 0, 0) != LUA_OK)
+		{
+			iot_log(IOT_LOG_TYPE_OOOPS, "Error running function `int_init_success`: %s\n", lua_tostring(state, -1));
+		}
+
+		lua_pop(state, lua_gettop(state));
 	}
 }
 
@@ -324,9 +362,20 @@ static void _iot_init_success_callback(iot_mqtt_t *mqtt, STR_t iot_uid)
 
 static void _iot_init_failure_callback(iot_mqtt_t *mqtt, STR_t message)
 {
-	if(_lua_iot->pFuncInitFailure != NULL)
+	lua_State *state = (lua_State *) _lua_iot->pFuncInitFailure;
+
+	if(state != NULL)
 	{
-		/* TODO */
+		lua_getglobal(state, "int_init_failure");
+
+		lua_pushstring(state, message);
+
+		if(lua_pcall(state, 1, 0, 0) != LUA_OK)
+		{
+			iot_log(IOT_LOG_TYPE_OOOPS, "Error running function `int_init_failure`: %s\n", lua_tostring(state, -1));
+		}
+
+		lua_pop(state, lua_gettop(state));
 	}
 }
 
@@ -334,9 +383,20 @@ static void _iot_init_failure_callback(iot_mqtt_t *mqtt, STR_t message)
 
 static void _iot_connection_opened_callback(iot_mqtt_t *mqtt, STR_t message)
 {
-	if(_lua_iot->pFuncConnectionOpened != NULL)
+	lua_State *state = (lua_State *) _lua_iot->pFuncConnectionOpened;
+
+	if(state != NULL)
 	{
-		/* TODO */
+		lua_getglobal(state, "iot_connection_opened");
+
+		lua_pushstring(state, message);
+
+		if(lua_pcall(state, 1, 0, 0) != LUA_OK)
+		{
+			iot_log(IOT_LOG_TYPE_OOOPS, "Error running function `iot_connection_opened`: %s\n", lua_tostring(state, -1));
+		}
+
+		lua_pop(state, lua_gettop(state));
 	}
 }
 
@@ -344,9 +404,20 @@ static void _iot_connection_opened_callback(iot_mqtt_t *mqtt, STR_t message)
 
 static void _iot_connection_lost_callback(iot_mqtt_t *mqtt, STR_t message)
 {
-	if(_lua_iot->pFuncConnectionLost != NULL)
+	lua_State *state = (lua_State *) _lua_iot->pFuncConnectionLost;
+
+	if(state != NULL)
 	{
-		/* TODO */
+		lua_getglobal(state, "iot_connection_lost");
+
+		lua_pushstring(state, message);
+
+		if(lua_pcall(state, 1, 0, 0) != LUA_OK)
+		{
+			iot_log(IOT_LOG_TYPE_OOOPS, "Error running function `iot_connection_lost`: %s\n", lua_tostring(state, -1));
+		}
+
+		lua_pop(state, lua_gettop(state));
 	}
 }
 
@@ -354,21 +425,53 @@ static void _iot_connection_lost_callback(iot_mqtt_t *mqtt, STR_t message)
 
 static int_t _iot_message_callback(iot_mqtt_t *mqtt, size_t topic_size, STR_t topic_str, size_t payload_size, BUFF_t payload_buff)
 {
-	if(_lua_iot->pFuncMessage != NULL)
+	int_t result = 1;
+
+	lua_State *state = (lua_State *) _lua_iot->pFuncMessage;
+
+	if(state != NULL)
 	{
-		/* TODO */
+		lua_getglobal(state, "int_message");
+
+		lua_pushlstring(state, topic_str, topic_size);
+		lua_pushlstring(state, payload_buff, payload_size);
+
+		if(lua_pcall(state, 2, 1, 0) != LUA_OK)
+		{
+			iot_log(IOT_LOG_TYPE_OOOPS, "Error running function `int_message`: %s\n", lua_tostring(state, -1));
+		}
+		else
+		{
+			if(lua_isboolean(state, -1))
+			{
+				result = lua_toboolean(state, -1);
+			}
+		}
+
+		lua_pop(state, lua_gettop(state));
 	}
 
-	return 1;
+	return result;
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
 static void _iot_delivery_callback(iot_mqtt_t *mqtt, int_t token)
 {
-	if(_lua_iot->pFuncDelivery != NULL)
+	lua_State *state = (lua_State *) _lua_iot->pFuncDelivery;
+
+	if(state != NULL)
 	{
-		/* TODO */
+		lua_getglobal(state, "iot_delivery");
+
+		lua_pushnumber(state, token);
+
+		if(lua_pcall(state, 1, 0, 0) != LUA_OK)
+		{
+			iot_log(IOT_LOG_TYPE_OOOPS, "Error running function `iot_delivery`: %s\n", lua_tostring(state, -1));
+		}
+
+		lua_pop(state, lua_gettop(state));
 	}
 }
 
@@ -409,36 +512,14 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	lua_pushcfunction(state, _iot_service_stop);
-	lua_setglobal(state, "iot_service_stop");
-	lua_pushcfunction(state, _iot_service_restart);
-	lua_setglobal(state, "iot_service_restart");
-	lua_pushcfunction(state, _iot_machine_reboot);
-	lua_setglobal(state, "iot_machine_reboot");
-	lua_pushcfunction(state, _iot_get_uid);
-	lua_setglobal(state, "iot_get_uid");
-	lua_pushcfunction(state, _iot_get_descr);
-	lua_setglobal(state, "iot_get_descr");
-	lua_pushcfunction(state, _iot_config_get_str);
-	lua_setglobal(state, "iot_config_get_str");
-	lua_pushcfunction(state, _iot_config_get_int);
-	lua_setglobal(state, "iot_config_get_int");
-	lua_pushcfunction(state, _iot_config_get_flt);
-	lua_setglobal(state, "iot_config_get_flt");
-	lua_pushcfunction(state, _iot_log_debug);
-	lua_setglobal(state, "iot_log_debug");
-	lua_pushcfunction(state, _iot_log_ooops);
-	lua_setglobal(state, "iot_log_ooops");
-	lua_pushcfunction(state, _iot_log_error);
-	lua_setglobal(state, "iot_log_error");
-	lua_pushcfunction(state, _iot_log_fatal);
-	lua_setglobal(state, "iot_log_fatal");
-	lua_pushcfunction(state, _iot_mqtt_subscribe);
-	lua_setglobal(state, "iot_mqtt_subscribe");
-	lua_pushcfunction(state, _iot_mqtt_unsubscribe);
-	lua_setglobal(state, "iot_mqtt_unsubscribe");
-	lua_pushcfunction(state, _iot_mqtt_send);
-	lua_setglobal(state, "iot_mqtt_send");
+	const struct luaL_Reg *reg;
+
+	for(reg = _iot_builtins_functions; reg->func != NULL; reg++)
+	{
+		lua_pushcfunction(state, reg->func);
+
+	    lua_setglobal(state, reg->name);
+	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
@@ -448,7 +529,7 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 		""																									"\n"
 		"function int_init_success(iot_uid)"																"\n"
 		""																									"\n"
-		"	local ok, message = pcall(iot_init_success, string.format('Hi! I\\'m %%s.', iot_get_uid()))"	"\n"
+		"	local ok, message = pcall(iot_init_success, string.format('Hi! I\\'m %s.', iot_get_uid()))"		"\n"
 		""																									"\n"
 		"	if not ok then"																					"\n"
 		"		iot_log_ooops(message)"																		"\n"
@@ -491,19 +572,107 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 		"-----------------------------------------------------------------------------"						"\n"
 	);
 
-	if(ret > 0)
+	if(ret != LUA_OK)
 	{
-		iot_log(IOT_LOG_TYPE_ERROR, "Cannot not execute internal Lua script `%s`\n", script_fname);
+		iot_log(IOT_LOG_TYPE_FATAL, "Cannot not execute internal Lua script `%s`\n", script_fname);
 	}
+
+	lua_pop(state, lua_gettop(state));
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
 	ret = luaL_dofile(state, script_fname);
 
-	if(ret > 0)
+	if(ret != LUA_OK)
 	{
 		iot_log(IOT_LOG_TYPE_ERROR, "Cannot not execute Lua script `%s`\n", script_fname);
 	}
+
+	lua_pop(state, lua_gettop(state));
+
+	/*----------------------------------------------------------------------------------------------------------------*/
+
+	/**/	lua_getglobal(state, "int_init_success");
+	/**/
+	/**/	if(lua_isfunction(state, -1)) {
+	/**/		_lua_iot->pFuncInitSuccess = (void *) state;
+	/**/		lua_pop(state, 1);
+	/**/	}
+	/**/	else {
+	/**/		iot_log(IOT_LOG_TYPE_FATAL, "Cannot not load Python function `int_init_success`\n");
+	/**/	}
+	/**/
+	/**/	/*--------------------------------------------------------------------------------------------------------*/
+	/**/
+	/**/	lua_getglobal(state, "int_init_failure");
+	/**/
+	/**/	if(lua_isfunction(state, -1)) {
+	/**/		_lua_iot->pFuncInitFailure = (void *) state;
+	/**/		lua_pop(state, 1);
+	/**/	}
+	/**/	else {
+	/**/		iot_log(IOT_LOG_TYPE_FATAL, "Cannot not load Python function `int_init_failure`\n");
+	/**/	}
+	/**/
+	/**/	/*--------------------------------------------------------------------------------------------------------*/
+	/**/
+	/**/	lua_getglobal(state, "int_loop");
+	/**/
+	/**/	if(lua_isfunction(state, -1)) {
+	/**/		_lua_iot->pFuncLoop = (void *) state;
+	/**/		lua_pop(state, 1);
+	/**/	}
+	/**/	else {
+	/**/		iot_log(IOT_LOG_TYPE_FATAL, "Cannot not load Python function `int_loop`\n");
+	/**/	}
+	/**/
+	/**/	/*--------------------------------------------------------------------------------------------------------*/
+	/**/
+	/**/	lua_getglobal(state, "iot_connection_opened");
+	/**/
+	/**/	if(lua_isfunction(state, -1)) {
+	/**/		_lua_iot->pFuncConnectionOpened = (void *) state;
+	/**/		lua_pop(state, 1);
+	/**/	}
+	/**/	else {
+	/**/		iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not load Python function `iot_connection_opened`\n");
+	/**/	}
+	/**/
+	/**/	/*--------------------------------------------------------------------------------------------------------*/
+	/**/
+	/**/	lua_getglobal(state, "iot_connection_lost");
+	/**/
+	/**/	if(lua_isfunction(state, -1)) {
+	/**/		_lua_iot->pFuncConnectionLost = (void *) state;
+	/**/		lua_pop(state, 1);
+	/**/	}
+	/**/	else {
+	/**/		iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not load Python function `iot_connection_lost`\n");
+	/**/	}
+	/**/
+	/**/	/*--------------------------------------------------------------------------------------------------------*/
+	/**/
+	/**/	lua_getglobal(state, "int_message");
+	/**/
+	/**/	if(lua_isfunction(state, -1)) {
+	/**/		_lua_iot->pFuncMessage = (void *) state;
+	/**/		lua_pop(state, 1);
+	/**/	}
+	/**/	else {
+	/**/		iot_log(IOT_LOG_TYPE_FATAL, "Cannot not load Python function `int_message`\n");
+	/**/	}
+	/**/
+	/**/	/*--------------------------------------------------------------------------------------------------------*/
+	/**/
+	/**/	lua_getglobal(state, "iot_delivery");
+	/**/
+	/**/	if(lua_isfunction(state, -1)) {
+	/**/		_lua_iot->pFuncDelivery = (void *) state;
+	/**/		lua_pop(state, 1);
+	/**/	}
+	/**/	else {
+	/**/		iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not load Python function `iot_delivery`\n");
+	/**/	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 	/* INITIALIZE MQTT                                                                                                */
@@ -545,14 +714,20 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		if(iot->pFuncLoop)
-		{
-			iot_mqtt_lock(&iot->mqtt);
+		iot_mqtt_lock(&iot->mqtt);
 
-			/* TODO */
+		/**/	lua_getglobal(state, "int_loop");
+		/**/
+		/**/	lua_pushnumber(state, iot_mqtt_is_connected(&iot->mqtt));
+		/**/
+		/**/	if(lua_pcall(state, 1, 0, 0) != LUA_OK)
+		/**/	{
+		/**/		iot_log(IOT_LOG_TYPE_OOOPS, "Error running function `int_loop`: %s\n", lua_tostring(state, -1));
+		/**/	}
+		/**/
+		/**/	lua_pop(state, lua_gettop(state));
 
-			iot_mqtt_unlock(&iot->mqtt);
-		}
+		iot_mqtt_unlock(&iot->mqtt);
 
 		/*------------------------------------------------------------------------------------------------------------*/
 	}

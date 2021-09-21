@@ -713,7 +713,7 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 
 	if(ret > 0)
 	{
-		iot_log(IOT_LOG_TYPE_ERROR, "Cannot not execute internal Python script `%s`\n", script_fname);
+		iot_log(IOT_LOG_TYPE_FATAL, "Cannot not execute internal Python script `%s`\n", script_fname);
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -818,7 +818,6 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 	/**/	{
 	/**/		iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not load Python function `iot_delivery`\n");
 	/**/	}
-	/**/
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
