@@ -110,9 +110,9 @@ static int_t _iot_config_get_str(lua_State *state)
 static int_t _iot_config_get_int(lua_State *state)
 {
 	STR_t key = luaL_checkstring(state, 1);
-	int_t val = luaL_optnumber(state, 2, 0x00);
+	int_t val = luaL_optinteger(state, 2, 0x00);
 
-	lua_pushnumber(state, iot_config_get_int(_lua_iot->config, key, val));
+	lua_pushinteger(state, iot_config_get_int(_lua_iot->config, key, val));
 
 	return 1;
 }
@@ -198,7 +198,7 @@ static int_t _iot_log_fatal(lua_State *state)
 static int_t _iot_mqtt_subscribe(lua_State *state)
 {
 	STR_t topic = luaL_checkstring(state, 1);
-	int_t qos = luaL_optnumber(state, 2, 0);
+	int_t qos = luaL_optinteger(state, 2, 0);
 
 	if(iot_mqtt_subscribe(
 		&_lua_iot->mqtt,
@@ -219,7 +219,7 @@ static int_t _iot_mqtt_subscribe(lua_State *state)
 static int_t _iot_mqtt_unsubscribe(lua_State *state)
 {
 	STR_t topic = luaL_checkstring(state, 1);
-	int_t qos = luaL_optnumber(state, 2, 0);
+	int_t qos = luaL_optinteger(state, 2, 0);
 
 	if(iot_mqtt_unsubscribe(
 		&_lua_iot->mqtt,
@@ -282,8 +282,8 @@ static int_t _iot_mqtt_send(lua_State *state)
 
 	STR_t topic = luaL_checkstring(state, 1);
 	STR_t payload = luaL_checkstring(state, 2);
-	int_t /**/qos/**/ = luaL_optnumber(state, 3, 0);
-	int_t retained = luaL_optnumber(state, 4, 0);
+	int_t /**/qos/**/ = luaL_optinteger(state, 3, 0);
+	int_t retained = luaL_optinteger(state, 4, 0);
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
@@ -464,7 +464,7 @@ static void _iot_delivery_callback(iot_mqtt_t *mqtt, int_t token)
 	{
 		lua_getglobal(state, "iot_delivery");
 
-		lua_pushnumber(state, token);
+		lua_pushinteger(state, token);
 
 		if(lua_pcall(state, 1, 0, 0) != LUA_OK)
 		{
@@ -718,7 +718,7 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 
 		/**/	lua_getglobal(state, "int_loop");
 		/**/
-		/**/	lua_pushnumber(state, iot_mqtt_is_connected(&iot->mqtt));
+		/**/	lua_pushboolean(state, iot_mqtt_is_connected(&iot->mqtt));
 		/**/
 		/**/	if(lua_pcall(state, 1, 0, 0) != LUA_OK)
 		/**/	{
