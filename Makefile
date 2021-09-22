@@ -2,10 +2,6 @@ SHELL := /bin/bash
 
 ########################################################################################################################
 
-PYTHON_LIBDIR := $(shell python3 -c 'import sys, sysconfig; sys.stdout.write("%s" % sysconfig.get_config_var("LIBDIR"))')
-
-########################################################################################################################
-
 CC ?= gcc
 STRIP ?= strip
 
@@ -15,8 +11,14 @@ RANLIB ?= ranlib
 PYTHON_CFLAGS ?= $(shell python3-config --cflags)
 PYTHON_LDFLAGS ?= $(shell python3-config --ldflags)
 
+LUA_CFLAGS ?= 
+
+LUA_LDFLAGS ?= -llua
+
+########################################################################################################################
+
 ifeq ($(shell uname -s),Darwin)
-	PYTHON_LDFLAGS+=$(PYTHON_LIBDIR)/libpython*.dylib
+	PYTHON_LDFLAGS+=$(shell python3 -c 'import sys, sysconfig; sys.stdout.write("%s" % sysconfig.get_config_var("LIBDIR"))')/libpython*.dylib
 endif
 
 ########################################################################################################################
@@ -28,10 +30,10 @@ LDFLAGS_WITHOUT_SSL_PY=-L lib $(PYTHON_LDFLAGS) -pthread
 
 ########################################################################################################################
 
-CFLAGS_LUA=-std=c89 -fPIC -O3 -Wall -Wextra -Wno-unused-result -Wno-unused-parameter -I include -Dinline=__inline__ -DMQTTAsync_setConnectedCallback=MQTTAsync_setConnected
+CFLAGS_LUA=-std=c99 -fPIC -O3 $(LUA_CFLAGS) -Wall -Wextra -Wno-unused-result -Wno-unused-parameter -I include -Dinline=__inline__ -DMQTTAsync_setConnectedCallback=MQTTAsync_setConnected
 
-LDFLAGS_WITH_SSL_LUA=-L lib -L /opt/local/lib -llua -lssl -lcrypto -pthread
-LDFLAGS_WITHOUT_SSL_LUA=-L lib -llua -pthread
+LDFLAGS_WITH_SSL_LUA=-L lib -L /opt/local/lib $(LUA_LDFLAGS) -lssl -lcrypto -pthread
+LDFLAGS_WITHOUT_SSL_LUA=-L lib $(LUA_LDFLAGS) -pthread
 
 ########################################################################################################################
 
@@ -51,7 +53,7 @@ wombat-iot-py-with-ssl: wombat-iot-py.a
 	# WOMBAT-IOT WITH SSL                                                                                              #
 	####################################################################################################################
 
-	$(CC) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot-py -lpaho-mqtt3as $(LDFLAGS_WITH_SSL_PY)
+	$(CC) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot-py -lpaho-mqtt3as -DIS_PY $(LDFLAGS_WITH_SSL_PY)
 
 	$(STRIP) bin/wombat-iot
 
@@ -63,7 +65,7 @@ wombat-iot-py-without-ssl: wombat-iot-py.a
 	# WOMBAT-IOT WITHOUT SSL                                                                                           #
 	####################################################################################################################
 
-	$(CC) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot-py -lpaho-mqtt3a $(LDFLAGS_WITHOUT_SSL_PY)
+	$(CC) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot-py -lpaho-mqtt3a -DIS_PY $(LDFLAGS_WITHOUT_SSL_PY)
 
 	$(STRIP) bin/wombat-iot
 
@@ -75,7 +77,7 @@ wombat-iot-lua-with-ssl: wombat-iot-lua.a
 	# WOMBAT-IOT WITH SSL                                                                                              #
 	####################################################################################################################
 
-	$(CC) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot-lua -lpaho-mqtt3as $(LDFLAGS_WITH_SSL_LUA)
+	$(CC) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot-lua -lpaho-mqtt3as -DIS_LUA $(LDFLAGS_WITH_SSL_LUA)
 
 	$(STRIP) bin/wombat-iot
 
@@ -87,7 +89,7 @@ wombat-iot-lua-without-ssl: wombat-iot-lua.a
 	# WOMBAT-IOT WITHOUT SSL                                                                                           #
 	####################################################################################################################
 
-	$(CC) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot-lua -lpaho-mqtt3a $(LDFLAGS_WITHOUT_SSL_LUA)
+	$(CC) -o bin/wombat-iot src/wombat-iot.c -lwombat-iot-lua -lpaho-mqtt3a -DIS_LUA $(LDFLAGS_WITHOUT_SSL_LUA)
 
 	$(STRIP) bin/wombat-iot
 

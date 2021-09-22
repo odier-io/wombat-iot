@@ -28,7 +28,7 @@ chmod a+x setup.py
 ./setup.py --setup-lua-without-ssl
 ```
 
-Environment variables for cross-compiling : `CC`, `STRIP`, `AR`, `RANLIB`, `PYTHON_CFLAGS`, `PYTHON_LDFLAGS`.
+Environment variables for cross-compiling : `CC`, `STRIP`, `AR`, `RANLIB`, `PYTHON_CFLAGS`, `PYTHON_LDFLAGS`, `LUA_CFLAGS`, `LUA_LDFLAGS`.
 
 Creating the main main file
 ===========================
