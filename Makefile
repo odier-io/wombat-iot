@@ -25,15 +25,15 @@ endif
 
 CFLAGS_PY=-std=c99 -fPIC -O3 $(PYTHON_CFLAGS) -Wall -Wextra -Wno-unused-result -Wno-unused-parameter -I include -Dinline=__inline__ -DMQTTAsync_setConnectedCallback=MQTTAsync_setConnected
 
-LDFLAGS_WITH_SSL_PY=-L lib -L /opt/local/lib $(PYTHON_LDFLAGS) -lssl -lcrypto -pthread
-LDFLAGS_WITHOUT_SSL_PY=-L lib $(PYTHON_LDFLAGS) -pthread
+LDFLAGS_WITH_SSL_PY=-L lib -L /opt/local/lib $(PYTHON_LDFLAGS) -lssl -lcrypto -pthread -lm
+LDFLAGS_WITHOUT_SSL_PY=-L lib $(PYTHON_LDFLAGS) -pthread -lm
 
 ########################################################################################################################
 
 CFLAGS_LUA=-std=c99 -fPIC -O3 $(LUA_CFLAGS) -Wall -Wextra -Wno-unused-result -Wno-unused-parameter -I include -Dinline=__inline__ -DMQTTAsync_setConnectedCallback=MQTTAsync_setConnected
 
-LDFLAGS_WITH_SSL_LUA=-L lib -L /opt/local/lib $(LUA_LDFLAGS) -lssl -lcrypto -pthread
-LDFLAGS_WITHOUT_SSL_LUA=-L lib $(LUA_LDFLAGS) -pthread
+LDFLAGS_WITH_SSL_LUA=-L lib -L /opt/local/lib $(LUA_LDFLAGS) -lssl -lcrypto -pthread -lm
+LDFLAGS_WITHOUT_SSL_LUA=-L lib $(LUA_LDFLAGS) -pthread -lm
 
 ########################################################################################################################
 
