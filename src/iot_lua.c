@@ -514,7 +514,7 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 
 	const struct luaL_Reg *reg;
 
-	for(reg = _iot_builtins_functions; reg->func != NULL; reg++)
+	for(reg = _iot_builtins_functions; reg->name != NULL && reg->func != NULL; reg++)
 	{
 		lua_pushcfunction(state, reg->func);
 
