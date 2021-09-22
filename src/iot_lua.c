@@ -501,7 +501,7 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 	/* INITIALIZE LUA                                                                                                 */
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	lua_State *state = lua_newstate(__alloc, NULL);
+	lua_State *state = luaL_newstate();
 
 	if(state == NULL)
 	{
