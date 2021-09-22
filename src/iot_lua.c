@@ -37,13 +37,6 @@ static iot_t *_lua_iot;
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-static void *__alloc(void *ud, void *ptr, size_t osize, size_t nsize)
-{
-	return iot_realloc(ptr, nsize);
-}
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
 static int_t _iot_service_stop(lua_State *state)
 {
 	iot_log(IOT_LOG_TYPE_DEBUG, "Stopping service `" IOT_NAME "-iot`...\n");
