@@ -129,6 +129,15 @@ then
 
   cd lua-*/
 
+  sed -i.bak 's/CC= gcc/CC ?= gcc/g' ./src/Makefile
+  sed -i.bak 's/AR= ar rcu/AR ?= ar/g' ./src/Makefile
+  sed -i.bak 's/RANLIB= ranlib/RANLIB ?= ranlib/g' ./src/Makefile
+
+  sed -i.bak 's/CFLAGS= -O2 -Wall -Wextra -DLUA_COMPAT_5_2 $(SYSCFLAGS) $(MYCFLAGS)/CFLAGS ?= -O2 -Wall -Wextra -DLUA_COMPAT_5_2 $(SYSCFLAGS) $(MYCFLAGS)/g' ./src/Makefile
+  sed -i.bak 's/LDFLAGS= $(SYSLDFLAGS) $(MYLDFLAGS)/LDFLAGS ?= $(SYSLDFLAGS) $(MYLDFLAGS)/g' ./src/Makefile
+
+  sed -i.bak 's/$(AR)/$(AR) rcu/g' ./src/Makefile
+
   make posix
 
   ######################################################################################################################

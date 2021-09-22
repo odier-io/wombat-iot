@@ -83,11 +83,10 @@ int main(int argc, char **argv)
 	int_t c;
 
 	STR_t config_fname = IOT_NAME "-iot.ini";
-#ifdef IS_PY
-	STR_t script_fname = IOT_NAME "-iot.py";
-#endif
 #ifdef IS_LUA
 	STR_t script_fname = IOT_NAME "-iot.lua";
+#else
+	STR_t script_fname = IOT_NAME "-iot.py";
 #endif
 
 	while((c = getopt_long(argc, argv, "c:s:vh", long_options, NULL)) != -1)
