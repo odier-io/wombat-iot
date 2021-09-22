@@ -559,7 +559,7 @@ Description=Wombat-IOT
 After=network.target
 
 [Service]
-ExecStart=%s --config=%s --script=%s
+ExecStart=%s --config=%s %s
 WorkingDirectory=%s
 StandardOutput=null
 StandardError=inherit
