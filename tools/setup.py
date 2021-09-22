@@ -433,7 +433,7 @@ WOMBAT_IOT_PY = '''
 
 def iot_init_success(message):
 
-    iot_log_debug('Success: %s' % message)
+    iot_log_debug('Success: Hi! I\\'m %s' % message)
 
 ########################################################################################################################
 
@@ -483,7 +483,7 @@ WOMBAT_IOT_LUA = '''
 
 function iot_init_success(message)
 
-    iot_log_debug(string.format('Success: %s', message))
+    iot_log_debug(string.format('Success: Hi! I\\'m %s', message))
 
 end
 

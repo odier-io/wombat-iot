@@ -37,7 +37,7 @@ static void version(void)
 
 static void help(STR_t program_name)
 {
-	printf("%s [--config=<file>] [--script=<file>] [--version] [--help]\n", program_name);
+	printf("%s [--config=<file>] [--version] [--help] <script>\n", program_name);
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -72,7 +72,6 @@ int main(int argc, char **argv)
 
 	static struct option long_options[] = {
 		{"config", required_argument, NULL, 'c'},
-		{"script", required_argument, NULL, 's'},
 		{"version", no_argument, NULL, 'v'},
 		{"help", no_argument, NULL, 'h'},
 		{NULL, 0, NULL, 0}
@@ -83,22 +82,13 @@ int main(int argc, char **argv)
 	int_t c;
 
 	STR_t config_fname = IOT_NAME "-iot.ini";
-#ifdef IS_LUA
-	STR_t script_fname = IOT_NAME "-iot.lua";
-#else
-	STR_t script_fname = IOT_NAME "-iot.py";
-#endif
 
-	while((c = getopt_long(argc, argv, "c:s:vh", long_options, NULL)) != -1)
+	while((c = getopt_long(argc, argv, "c:vh", long_options, NULL)) != -1)
 	{
 		switch(c)
 		{
 			case 'c':
 				config_fname = optarg;
-				break;
-
-			case 's':
-				script_fname = optarg;
 				break;
 
 			case 'v':
@@ -113,6 +103,19 @@ int main(int argc, char **argv)
 				help(argv[0]);
 				return 1;
 		}
+	}
+
+	/*----------------------------------------------------------------------------------------------------------------*/
+
+	STR_t script_fname = argv[optind];
+
+	if(script_fname == NULL)
+	{
+#ifdef IS_LUA
+		script_fname = IOT_NAME "-iot.lua";
+#else
+		script_fname = IOT_NAME "-iot.py";
+#endif
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/

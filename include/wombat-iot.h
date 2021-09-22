@@ -223,10 +223,10 @@ typedef struct iot_s
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	void *pFuncLoop;
-	/**/
 	void *pFuncInitSuccess;
 	void *pFuncInitFailure;
+	/**/
+	void *pFuncLoop;
 	/**/
 	void *pFuncConnectionOpened;
 	void *pFuncConnectionLost;

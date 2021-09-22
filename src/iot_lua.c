@@ -338,13 +338,13 @@ static void _iot_init_success_callback(iot_mqtt_t *mqtt, STR_t iot_uid)
 
 	if(state != NULL)
 	{
-		lua_getglobal(state, "int_init_success");
+		lua_getglobal(state, "iot_init_success");
 
 		lua_pushstring(state, iot_uid);
 
 		if(lua_pcall(state, 1, 0, 0) != LUA_OK)
 		{
-			iot_log(IOT_LOG_TYPE_OOOPS, "Error running function `int_init_success`: %s\n", lua_tostring(state, -1));
+			iot_log(IOT_LOG_TYPE_OOOPS, "Error running function `iot_init_success`: %s\n", lua_tostring(state, -1));
 		}
 
 		lua_pop(state, lua_gettop(state));
@@ -359,13 +359,13 @@ static void _iot_init_failure_callback(iot_mqtt_t *mqtt, STR_t message)
 
 	if(state != NULL)
 	{
-		lua_getglobal(state, "int_init_failure");
+		lua_getglobal(state, "iot_init_failure");
 
 		lua_pushstring(state, message);
 
 		if(lua_pcall(state, 1, 0, 0) != LUA_OK)
 		{
-			iot_log(IOT_LOG_TYPE_OOOPS, "Error running function `int_init_failure`: %s\n", lua_tostring(state, -1));
+			iot_log(IOT_LOG_TYPE_OOOPS, "Error running function `iot_init_failure`: %s\n", lua_tostring(state, -1));
 		}
 
 		lua_pop(state, lua_gettop(state));
@@ -424,14 +424,14 @@ static int_t _iot_message_callback(iot_mqtt_t *mqtt, size_t topic_size, STR_t to
 
 	if(state != NULL)
 	{
-		lua_getglobal(state, "int_message");
+		lua_getglobal(state, "iot_message");
 
 		lua_pushlstring(state, topic_str, topic_size);
 		lua_pushlstring(state, payload_buff, payload_size);
 
 		if(lua_pcall(state, 2, 1, 0) != LUA_OK)
 		{
-			iot_log(IOT_LOG_TYPE_OOOPS, "Error running function `int_message`: %s\n", lua_tostring(state, -1));
+			iot_log(IOT_LOG_TYPE_OOOPS, "Error running function `iot_message`: %s\n", lua_tostring(state, -1));
 		}
 		else
 		{
@@ -516,222 +516,198 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	ret = luaL_dostring(
-		state,
-		"-----------------------------------------------------------------------------"						"\n"
-		""																									"\n"
-		"function int_init_success(iot_uid)"																"\n"
-		""																									"\n"
-		"	local ok, message = pcall(iot_init_success, string.format('Hi! I\\'m %s.', iot_get_uid()))"		"\n"
-		""																									"\n"
-		"	if not ok then"																					"\n"
-		"		iot_log_ooops(message)"																		"\n"
-		"	end"																							"\n"
-		"end"																								"\n"
-		""																									"\n"
-		"-----------------------------------------------------------------------------"						"\n"
-		""																									"\n"
-		"function int_init_failure(message)"																"\n"
-		""																									"\n"
-		"	local ok, message = pcall(iot_init_success, message)"											"\n"
-		""																									"\n"
-		"	if not ok then"																					"\n"
-		"		iot_log_ooops(message)"																		"\n"
-		"	end"																							"\n"
-		"end"																								"\n"
-		""																									"\n"
-		"-----------------------------------------------------------------------------"						"\n"
-		""																									"\n"
-		"function int_loop(connected)"																		"\n"
-		""																									"\n"
-		"	local ok, message = pcall(iot_loop, connected)"													"\n"
-		""																									"\n"
-		"	if not ok then"																					"\n"
-		"		iot_log_ooops(message)"																		"\n"
-		"	end"																							"\n"
-		"end"																								"\n"
-		""																									"\n"
-		"-----------------------------------------------------------------------------"						"\n"
-		""																									"\n"
-		"function int_message(topic, payload)"																"\n"
-		""																									"\n"
-		"	local ok, message = pcall(iot_message, topic, payload)"											"\n"
-		""																									"\n"
-		"	if not ok then"																					"\n"
-		"		iot_log_ooops(message)"																		"\n"
-		"	end"																							"\n"
-		"end"																								"\n"
-		""																									"\n"
-		"-----------------------------------------------------------------------------"						"\n"
-	);
-
-	if(ret != LUA_OK)
-	{
-		iot_log(IOT_LOG_TYPE_FATAL, "Cannot not execute internal Lua script `%s`\n", script_fname);
-	}
-
-	lua_pop(state, lua_gettop(state));
-
-	/*----------------------------------------------------------------------------------------------------------------*/
-
 	ret = luaL_dofile(state, script_fname);
 
 	if(ret != LUA_OK)
 	{
 		iot_log(IOT_LOG_TYPE_ERROR, "Cannot not execute Lua script `%s`\n", script_fname);
+
+		lua_pop(state, lua_gettop(state));
+
+		goto __err;
 	}
 
 	lua_pop(state, lua_gettop(state));
 
-	/*----------------------------------------------------------------------------------------------------------------*/
+	goto __ok;
 
-	/**/	lua_getglobal(state, "int_init_success");
+	/*----------------------------------------------------------------------------------------------------------------*/
+__ok:
+	/**/	lua_getglobal(state, "iot_init_success");
 	/**/
-	/**/	if(lua_isfunction(state, -1)) {
-	/**/		_lua_iot->pFuncInitSuccess = (void *) state;
-	/**/		lua_pop(state, 1);
-	/**/	}
-	/**/	else {
-	/**/		iot_log(IOT_LOG_TYPE_FATAL, "Cannot not load Python function `int_init_success`\n");
-	/**/	}
-	/**/
-	/**/	/*--------------------------------------------------------------------------------------------------------*/
-	/**/
-	/**/	lua_getglobal(state, "int_init_failure");
-	/**/
-	/**/	if(lua_isfunction(state, -1)) {
-	/**/		_lua_iot->pFuncInitFailure = (void *) state;
-	/**/		lua_pop(state, 1);
-	/**/	}
-	/**/	else {
-	/**/		iot_log(IOT_LOG_TYPE_FATAL, "Cannot not load Python function `int_init_failure`\n");
+	/**/	if(lua_isfunction(state, -1))
+	/**/	{
+	/**/		_lua_iot->pFuncInitSuccess = (void *) state; lua_pop(state, 1);
 	/**/	}
 	/**/
 	/**/	/*--------------------------------------------------------------------------------------------------------*/
 	/**/
-	/**/	lua_getglobal(state, "int_loop");
+	/**/	lua_getglobal(state, "iot_init_failure");
 	/**/
-	/**/	if(lua_isfunction(state, -1)) {
-	/**/		_lua_iot->pFuncLoop = (void *) state;
-	/**/		lua_pop(state, 1);
+	/**/	if(lua_isfunction(state, -1))
+	/**/	{
+	/**/		_lua_iot->pFuncInitFailure = (void *) state; lua_pop(state, 1);
 	/**/	}
-	/**/	else {
-	/**/		iot_log(IOT_LOG_TYPE_FATAL, "Cannot not load Python function `int_loop`\n");
+	/**/
+	/**/	/*--------------------------------------------------------------------------------------------------------*/
+	/**/
+	/**/	lua_getglobal(state, "iot_loop");
+	/**/
+	/**/	if(lua_isfunction(state, -1))
+	/**/	{
+	/**/		_lua_iot->pFuncLoop = (void *) state; lua_pop(state, 1);
 	/**/	}
 	/**/
 	/**/	/*--------------------------------------------------------------------------------------------------------*/
 	/**/
 	/**/	lua_getglobal(state, "iot_connection_opened");
 	/**/
-	/**/	if(lua_isfunction(state, -1)) {
-	/**/		_lua_iot->pFuncConnectionOpened = (void *) state;
-	/**/		lua_pop(state, 1);
-	/**/	}
-	/**/	else {
-	/**/		iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not load Python function `iot_connection_opened`\n");
+	/**/	if(lua_isfunction(state, -1))
+	/**/	{
+	/**/		_lua_iot->pFuncConnectionOpened = (void *) state; lua_pop(state, 1);
 	/**/	}
 	/**/
 	/**/	/*--------------------------------------------------------------------------------------------------------*/
 	/**/
 	/**/	lua_getglobal(state, "iot_connection_lost");
 	/**/
-	/**/	if(lua_isfunction(state, -1)) {
-	/**/		_lua_iot->pFuncConnectionLost = (void *) state;
-	/**/		lua_pop(state, 1);
-	/**/	}
-	/**/	else {
-	/**/		iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not load Python function `iot_connection_lost`\n");
+	/**/	if(lua_isfunction(state, -1))
+	/**/	{
+	/**/		_lua_iot->pFuncConnectionLost = (void *) state; lua_pop(state, 1);
 	/**/	}
 	/**/
 	/**/	/*--------------------------------------------------------------------------------------------------------*/
 	/**/
-	/**/	lua_getglobal(state, "int_message");
+	/**/	lua_getglobal(state, "iot_message");
 	/**/
-	/**/	if(lua_isfunction(state, -1)) {
-	/**/		_lua_iot->pFuncMessage = (void *) state;
-	/**/		lua_pop(state, 1);
-	/**/	}
-	/**/	else {
-	/**/		iot_log(IOT_LOG_TYPE_FATAL, "Cannot not load Python function `int_message`\n");
+	/**/	if(lua_isfunction(state, -1))
+	/**/	{
+	/**/		_lua_iot->pFuncMessage = (void *) state; lua_pop(state, 1);
 	/**/	}
 	/**/
 	/**/	/*--------------------------------------------------------------------------------------------------------*/
 	/**/
 	/**/	lua_getglobal(state, "iot_delivery");
 	/**/
-	/**/	if(lua_isfunction(state, -1)) {
-	/**/		_lua_iot->pFuncDelivery = (void *) state;
-	/**/		lua_pop(state, 1);
-	/**/	}
-	/**/	else {
-	/**/		iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not load Python function `iot_delivery`\n");
+	/**/	if(lua_isfunction(state, -1))
+	/**/	{
+	/**/		_lua_iot->pFuncDelivery = (void *) state; lua_pop(state, 1);
 	/**/	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
-	/* INITIALIZE MQTT                                                                                                */
-	/*----------------------------------------------------------------------------------------------------------------*/
 
-	ret = iot_mqtt_initialize(
-		&iot->mqtt,
-		uid,
-		mqtt_server_uri,
-		mqtt_server_user,
-		mqtt_server_pass,
-		mqtt_connect_timeout,
-		mqtt_disconnect_timeout,
-		mqtt_log_level,
-		_iot_init_success_callback,
-		_iot_init_failure_callback,
-		_iot_connection_opened_callback,
-		_iot_connection_lost_callback,
-		_iot_message_callback,
-		_iot_delivery_callback
-	);
-
-	if(ret < 0)
-	{
-		iot_log(IOT_LOG_TYPE_ERROR, "Cannot not initialize MQTT\n");
-
-		goto __err;
-	}
-
-	/*----------------------------------------------------------------------------------------------------------------*/
-	/* MAIN LOOP                                                                                                      */
-	/*----------------------------------------------------------------------------------------------------------------*/
-
-	while(iot->mqtt.alive)
+	if(iot->pFuncInitSuccess != NULL || iot->pFuncInitFailure != NULL || iot->pFuncLoop != NULL || iot->pFuncConnectionOpened != NULL || iot->pFuncConnectionLost != NULL || iot->pFuncMessage != NULL || iot->pFuncDelivery != NULL)
 	{
 		/*------------------------------------------------------------------------------------------------------------*/
-
-		usleep(1000 * sleep_ms);
-
+		/* DISPLAY DEBUG INFORMATION                                                                                  */
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		iot_mqtt_lock(&iot->mqtt);
+		if(iot->pFuncInitSuccess == NULL)
+		{
+			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_init_success`\n");
+		}
 
-		/**/	lua_getglobal(state, "int_loop");
-		/**/
-		/**/	lua_pushboolean(state, iot_mqtt_is_connected(&iot->mqtt));
-		/**/
-		/**/	if(lua_pcall(state, 1, 0, 0) != LUA_OK)
-		/**/	{
-		/**/		iot_log(IOT_LOG_TYPE_OOOPS, "Error running function `int_loop`: %s\n", lua_tostring(state, -1));
-		/**/	}
-		/**/
-		/**/	lua_pop(state, lua_gettop(state));
+		if(iot->pFuncInitFailure == NULL)
+		{
+			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_init_failure`\n");
+		}
 
-		iot_mqtt_unlock(&iot->mqtt);
+		if(iot->pFuncLoop == NULL)
+		{
+			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_loop`\n");
+		}
+
+		if(iot->pFuncConnectionOpened == NULL)
+		{
+			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_connection_opened`\n");
+		}
+
+		if(iot->pFuncConnectionLost == NULL)
+		{
+			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_connection_lost`\n");
+		}
+
+		if(iot->pFuncMessage == NULL)
+		{
+			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_message`\n");
+		}
+
+		if(iot->pFuncDelivery == NULL)
+		{
+			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_delivery`\n");
+		}
 
 		/*------------------------------------------------------------------------------------------------------------*/
-	}
+		/* INITIALIZE MQTT                                                                                            */
+		/*------------------------------------------------------------------------------------------------------------*/
 
-	/*----------------------------------------------------------------------------------------------------------------*/
-	/* FINALIZE MQTT                                                                                                  */
-	/*----------------------------------------------------------------------------------------------------------------*/
+		ret = iot_mqtt_initialize(
+			&iot->mqtt,
+			uid,
+			mqtt_server_uri,
+			mqtt_server_user,
+			mqtt_server_pass,
+			mqtt_connect_timeout,
+			mqtt_disconnect_timeout,
+			mqtt_log_level,
+			_iot_init_success_callback,
+			_iot_init_failure_callback,
+			_iot_connection_opened_callback,
+			_iot_connection_lost_callback,
+			_iot_message_callback,
+			_iot_delivery_callback
+		);
 
-	if(iot_mqtt_finalize(&iot->mqtt) < 0)
-	{
-		iot_log(IOT_LOG_TYPE_ERROR, "Cannot not finalize MQTT\n");
+		if(ret < 0)
+		{
+			iot_log(IOT_LOG_TYPE_ERROR, "Cannot not initialize MQTT\n");
+
+			goto __err;
+		}
+
+		/*------------------------------------------------------------------------------------------------------------*/
+		/* MAIN LOOP                                                                                                  */
+		/*------------------------------------------------------------------------------------------------------------*/
+
+		while(iot->mqtt.alive)
+		{
+			/*--------------------------------------------------------------------------------------------------------*/
+
+			usleep(1000 * sleep_ms);
+
+			/*--------------------------------------------------------------------------------------------------------*/
+
+			iot_mqtt_lock(&iot->mqtt);
+
+			if(iot->pFuncLoop)
+			{
+				/**/	lua_getglobal(state, "iot_loop");
+				/**/
+				/**/	lua_pushboolean(state, iot_mqtt_is_connected(&iot->mqtt));
+				/**/
+				/**/	if(lua_pcall(state, 1, 0, 0) != LUA_OK)
+				/**/	{
+				/**/		iot_log(IOT_LOG_TYPE_OOOPS, "Error running function `iot_loop`: %s\n", lua_tostring(state, -1));
+				/**/	}
+				/**/
+				/**/	lua_pop(state, lua_gettop(state));
+			}
+
+			iot_mqtt_unlock(&iot->mqtt);
+
+			/*--------------------------------------------------------------------------------------------------------*/
+		}
+
+		/*------------------------------------------------------------------------------------------------------------*/
+		/* FINALIZE MQTT                                                                                              */
+		/*------------------------------------------------------------------------------------------------------------*/
+
+		if(iot_mqtt_finalize(&iot->mqtt) < 0)
+		{
+			iot_log(IOT_LOG_TYPE_ERROR, "Cannot not finalize MQTT\n");
+		}
+
+		/*------------------------------------------------------------------------------------------------------------*/
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/

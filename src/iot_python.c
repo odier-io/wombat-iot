@@ -623,106 +623,13 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	ret = PyRun_SimpleString(
-		"#############################################################################"						"\n"
-		""																									"\n"
-		"import json"																						"\n"
-		""																									"\n"
-		"#############################################################################"						"\n"
-		""																									"\n"
-		"def int_init_success(iot_uid):"																	"\n"
-		""																									"\n"
-		"	try:"																							"\n"
-		""																									"\n"
-		"		iot_init_success('Hi! I\\'m %s.' % iot_get_uid())"											"\n"
-		""																									"\n"
-		"	except Exception as e:"																			"\n"
-		""																									"\n"
-		"		iot_log_ooops(e.__str__())"																	"\n"
-		""																									"\n"
-		"#############################################################################"						"\n"
-		""																									"\n"
-		"def int_init_failure(message):"																	"\n"
-		""																									"\n"
-		"	try:"																							"\n"
-		""																									"\n"
-		"		iot_init_failure(message)"																	"\n"
-		""																									"\n"
-		"	except Exception as e:"																			"\n"
-		""																									"\n"
-		"		iot_log_ooops(e.__str__())"																	"\n"
-		""																									"\n"
-		"#############################################################################"						"\n"
-		""																									"\n"
-		"def int_loop(connected):"																			"\n"
-		""																									"\n"
-		"	try:"																							"\n"
-		""																									"\n"
-		"		iot_loop(connected)"																		"\n"
-		""																									"\n"
-		"	except Exception as e:"																			"\n"
-		""																									"\n"
-		"		iot_log_ooops(e.__str__())"																	"\n"
-		""																									"\n"
-		"#############################################################################"						"\n"
-		""																									"\n"
-		"def int_message(topic, payload):"																	"\n"
-		""																									"\n"
-		"	try:"																							"\n"
-		""																									"\n"
-		"		if topic == '%s/cmd' % iot_get_uid():"														"\n"
-		""																									"\n"
-		"			_json = json.loads(payload)"															"\n"
-		""																									"\n"
-		"			_type = _json.get('type', '')"															"\n"
-		""																									"\n"
-		"			##################################################################"						"\n"
-		""																									"\n"
-		"			if   _type == 'stop':"																	"\n"
-		""																									"\n"
-		"				iot_service_stop()"																	"\n"
-		""																									"\n"
-		"			##################################################################"						"\n"
-		""																									"\n"
-		"			elif _type == 'restart':"																"\n"
-		""																									"\n"
-		"				iot_service_restart()"																"\n"
-		""																									"\n"
-		"			##################################################################"						"\n"
-		""																									"\n"
-		"			elif _type == 'reboot':"																"\n"
-		""																									"\n"
-		"				iot_machine_reboot()"																"\n"
-		""																									"\n"
-		"			##################################################################"						"\n"
-		""																									"\n"
-		"			else:"																					"\n"
-		""																									"\n"
-		"				return iot_message(topic, _json)"													"\n"
-		""																									"\n"
-		"		else:"																						"\n"
-		""																									"\n"
-		"			return iot_message(topic, payload)"														"\n"
-		""																									"\n"
-		"	except Exception as e:"																			"\n"
-		""																									"\n"
-		"		iot_log_error(e.__str__())"																	"\n"
-		""																									"\n"
-		"#############################################################################"						"\n"
-	);
-
-	if(ret > 0)
-	{
-		iot_log(IOT_LOG_TYPE_FATAL, "Cannot not execute internal Python script `%s`\n", script_fname);
-	}
-
-	/*----------------------------------------------------------------------------------------------------------------*/
-
 	FILE *fp = fopen(script_fname, "rt");
 
 	if(fp == NULL)
 	{
 		iot_log(IOT_LOG_TYPE_ERROR, "Cannot not load Python script `%s`\n", script_fname);
+
+		goto __err1;
 	}
 	else
 	{
@@ -731,6 +638,8 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 		if(ret < 0)
 		{
 			iot_log(IOT_LOG_TYPE_ERROR, "Cannot not execute Python script `%s`\n", script_fname);
+
+			goto __err1;
 		}
 	}
 
@@ -745,35 +654,23 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	/**/	if(PyObject_HasAttrString(pMainModule, "int_init_success"))
+	/**/	if(PyObject_HasAttrString(pMainModule, "iot_init_success"))
 	/**/	{
-	/**/		iot->pFuncInitSuccess = PyObject_GetAttrString(pMainModule, "int_init_success");
-	/**/	}
-	/**/	else
-	/**/	{
-	/**/		iot_log(IOT_LOG_TYPE_FATAL, "Cannot not load Python function `int_init_success`\n");
+	/**/		iot->pFuncInitSuccess = PyObject_GetAttrString(pMainModule, "iot_init_success");
 	/**/	}
 	/**/
 	/**/	/*--------------------------------------------------------------------------------------------------------*/
 	/**/
-	/**/	if(PyObject_HasAttrString(pMainModule, "int_init_failure"))
+	/**/	if(PyObject_HasAttrString(pMainModule, "iot_init_failure"))
 	/**/	{
-	/**/		iot->pFuncInitFailure = PyObject_GetAttrString(pMainModule, "int_init_failure");
-	/**/	}
-	/**/	else
-	/**/	{
-	/**/		iot_log(IOT_LOG_TYPE_FATAL, "Cannot not load Python function `int_init_failure`\n");
+	/**/		iot->pFuncInitFailure = PyObject_GetAttrString(pMainModule, "iot_init_failure");
 	/**/	}
 	/**/
 	/**/	/*--------------------------------------------------------------------------------------------------------*/
 	/**/
-	/**/	if(PyObject_HasAttrString(pMainModule, "int_loop"))
+	/**/	if(PyObject_HasAttrString(pMainModule, "iot_loop"))
 	/**/	{
-	/**/		iot->pFuncLoop = PyObject_GetAttrString(pMainModule, "int_loop");
-	/**/	}
-	/**/	else
-	/**/	{
-	/**/		iot_log(IOT_LOG_TYPE_FATAL, "Cannot not load Python function `int_loop`\n");
+	/**/		iot->pFuncLoop = PyObject_GetAttrString(pMainModule, "iot_loop");
 	/**/	}
 	/**/
 	/**/	/*--------------------------------------------------------------------------------------------------------*/
@@ -782,30 +679,19 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 	/**/	{
 	/**/		iot->pFuncConnectionOpened = PyObject_GetAttrString(pMainModule, "iot_connection_opened");
 	/**/	}
-	/**/	else
-	/**/	{
-	/**/		iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not load Python function `iot_connection_opened`\n");
-	/**/	}
+	/**/
 	/**/	/*--------------------------------------------------------------------------------------------------------*/
 	/**/
 	/**/	if(PyObject_HasAttrString(pMainModule, "iot_connection_lost"))
 	/**/	{
 	/**/		iot->pFuncConnectionLost = PyObject_GetAttrString(pMainModule, "iot_connection_lost");
 	/**/	}
-	/**/	else
-	/**/	{
-	/**/		iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not load Python function `iot_connection_lost`\n");
-	/**/	}
 	/**/
 	/**/	/*--------------------------------------------------------------------------------------------------------*/
 	/**/
-	/**/	if(PyObject_HasAttrString(pMainModule, "int_message"))
+	/**/	if(PyObject_HasAttrString(pMainModule, "iot_message"))
 	/**/	{
-	/**/		iot->pFuncMessage = PyObject_GetAttrString(pMainModule, "int_message");
-	/**/	}
-	/**/	else
-	/**/	{
-	/**/		iot_log(IOT_LOG_TYPE_FATAL, "Cannot not load Python function `int_message`\n");
+	/**/		iot->pFuncMessage = PyObject_GetAttrString(pMainModule, "iot_message");
 	/**/	}
 	/**/
 	/**/	/*--------------------------------------------------------------------------------------------------------*/
@@ -814,92 +700,134 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 	/**/	{
 	/**/		iot->pFuncDelivery = PyObject_GetAttrString(pMainModule, "iot_delivery");
 	/**/	}
-	/**/	else
-	/**/	{
-	/**/		iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not load Python function `iot_delivery`\n");
-	/**/	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
 	Py_DECREF(pMainModule);
 
 	/*----------------------------------------------------------------------------------------------------------------*/
-	/* INITIALIZE MQTT                                                                                                */
-	/*----------------------------------------------------------------------------------------------------------------*/
 
-	ret = iot_mqtt_initialize(
-		&iot->mqtt,
-		uid,
-		mqtt_server_uri,
-		mqtt_server_user,
-		mqtt_server_pass,
-		mqtt_connect_timeout,
-		mqtt_disconnect_timeout,
-		mqtt_log_level,
-		_iot_init_success_callback,
-		_iot_init_failure_callback,
-		_iot_connection_opened_callback,
-		_iot_connection_lost_callback,
-		_iot_message_callback,
-		_iot_delivery_callback
-	);
-
-	if(ret < 0)
-	{
-		iot_log(IOT_LOG_TYPE_ERROR, "Cannot not initialize MQTT\n");
-
-		goto __err;
-	}
-
-	/*----------------------------------------------------------------------------------------------------------------*/
-	/* MAIN LOOP                                                                                                      */
-	/*----------------------------------------------------------------------------------------------------------------*/
-
-	while(iot->mqtt.alive)
+	if(iot->pFuncInitSuccess != NULL || iot->pFuncInitFailure != NULL || iot->pFuncLoop != NULL || iot->pFuncConnectionOpened != NULL || iot->pFuncConnectionLost != NULL || iot->pFuncMessage != NULL || iot->pFuncDelivery != NULL)
 	{
 		/*------------------------------------------------------------------------------------------------------------*/
-
-		usleep(1000 * sleep_ms);
-
+		/* DISPLAY DEBUG INFORMATION                                                                                  */
 		/*------------------------------------------------------------------------------------------------------------*/
 
-		if(iot->pFuncLoop)
+		if(iot->pFuncInitSuccess == NULL)
 		{
-			iot_mqtt_lock(&iot->mqtt);
+			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_init_success`\n");
+		}
 
-			/**/	PyObject *pParam = PyBool_FromLong(iot_mqtt_is_connected(&iot->mqtt));
-			/**/
-			/**/	if(pParam != NULL)
-			/**/	{
-			/**/		PyObject *pResult = PyObject_CallFunctionObjArgs(_python_iot->pFuncLoop, pParam, NULL);
-			/**/
-			/**/		if(pResult != NULL)
-			/**/		{
-			/**/			Py_DECREF(pResult);
-			/**/		}
-			/**/
-			/**/		Py_DECREF(pParam);
-			/**/	}
+		if(iot->pFuncInitFailure == NULL)
+		{
+			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_init_failure`\n");
+		}
 
-			iot_mqtt_unlock(&iot->mqtt);
+		if(iot->pFuncLoop == NULL)
+		{
+			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_loop`\n");
+		}
+
+		if(iot->pFuncConnectionOpened == NULL)
+		{
+			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_connection_opened`\n");
+		}
+
+		if(iot->pFuncConnectionLost == NULL)
+		{
+			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_connection_lost`\n");
+		}
+
+		if(iot->pFuncMessage == NULL)
+		{
+			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_message`\n");
+		}
+
+		if(iot->pFuncDelivery == NULL)
+		{
+			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_delivery`\n");
 		}
 
 		/*------------------------------------------------------------------------------------------------------------*/
-	}
+		/* INITIALIZE MQTT                                                                                            */
+		/*------------------------------------------------------------------------------------------------------------*/
 
-	/*----------------------------------------------------------------------------------------------------------------*/
-	/* FINALIZE MQTT                                                                                                  */
-	/*----------------------------------------------------------------------------------------------------------------*/
+		ret = iot_mqtt_initialize(
+			&iot->mqtt,
+			uid,
+			mqtt_server_uri,
+			mqtt_server_user,
+			mqtt_server_pass,
+			mqtt_connect_timeout,
+			mqtt_disconnect_timeout,
+			mqtt_log_level,
+			_iot_init_success_callback,
+			_iot_init_failure_callback,
+			_iot_connection_opened_callback,
+			_iot_connection_lost_callback,
+			_iot_message_callback,
+			_iot_delivery_callback
+		);
 
-	if(iot_mqtt_finalize(&iot->mqtt) < 0)
-	{
-		iot_log(IOT_LOG_TYPE_ERROR, "Cannot not finalize MQTT\n");
+		if(ret < 0)
+		{
+			iot_log(IOT_LOG_TYPE_ERROR, "Cannot not initialize MQTT\n");
+
+			goto __err2;
+		}
+
+		/*------------------------------------------------------------------------------------------------------------*/
+		/* MAIN LOOP                                                                                                  */
+		/*------------------------------------------------------------------------------------------------------------*/
+
+		while(iot->mqtt.alive)
+		{
+			/*--------------------------------------------------------------------------------------------------------*/
+
+			usleep(1000 * sleep_ms);
+
+			/*--------------------------------------------------------------------------------------------------------*/
+
+			if(iot->pFuncLoop)
+			{
+				iot_mqtt_lock(&iot->mqtt);
+
+				/**/	PyObject *pParam = PyBool_FromLong(iot_mqtt_is_connected(&iot->mqtt));
+				/**/
+				/**/	if(pParam != NULL)
+				/**/	{
+				/**/		PyObject *pResult = PyObject_CallFunctionObjArgs(_python_iot->pFuncLoop, pParam, NULL);
+				/**/
+				/**/		if(pResult != NULL)
+				/**/		{
+				/**/			Py_DECREF(pResult);
+				/**/		}
+				/**/
+				/**/		Py_DECREF(pParam);
+				/**/	}
+
+				iot_mqtt_unlock(&iot->mqtt);
+			}
+
+			/*--------------------------------------------------------------------------------------------------------*/
+		}
+
+		/*------------------------------------------------------------------------------------------------------------*/
+		/* FINALIZE MQTT                                                                                              */
+		/*------------------------------------------------------------------------------------------------------------*/
+
+		if(iot_mqtt_finalize(&iot->mqtt) < 0)
+		{
+			iot_log(IOT_LOG_TYPE_ERROR, "Cannot not finalize MQTT\n");
+		}
+
+		/*----------------------------------------------------------------------------------------------------------------*/
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 	/* FINALIZE PYTHON                                                                                                */
 	/*----------------------------------------------------------------------------------------------------------------*/
-__err:
+__err2:
 	if(iot->pFuncDelivery != NULL)
 	{
 		Py_XDECREF(iot->pFuncDelivery);
@@ -936,7 +864,7 @@ __err:
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
-
+__err1:
 	Py_Finalize();
 
 	/*----------------------------------------------------------------------------------------------------------------*/
