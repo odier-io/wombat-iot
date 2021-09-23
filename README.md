@@ -28,7 +28,7 @@ chmod a+x setup.py
 ./setup.py --setup-lua-without-ssl
 ```
 
-Environment variables for cross-compiling : `CC`, `STRIP`, `AR`, `RANLIB`, `PYTHON_CFLAGS`, `PYTHON_LDFLAGS`, `LUA_CFLAGS`, `LUA_LDFLAGS`.
+Environment variables for cross-compiling: `CC`, `STRIP`, `AR`, `RANLIB`, `PYTHON_CFLAGS`, `PYTHON_LDFLAGS`, `LUA_CFLAGS`, `LUA_LDFLAGS`.
 
 Creating the main main file
 ===========================
@@ -61,8 +61,8 @@ sudo systemctl restart wombat-iot
 sudo systemctl status wombat-iot
 ```
 
-Callbacks (Python syntax)
-=========================
+Callbacks (Python version)
+==========================
 
 ```python
 #############################################################################
@@ -95,6 +95,56 @@ def iot_connection_opened(message: str) -> None:
 ```
 
 † This function must return `True` or `False` indicating whether or not the message has been safely received by the client application.
+
+Callbacks (Lua version)
+=======================
+
+```lua
+-----------------------------------------------------------------------------
+- Thing                                                                     -
+-----------------------------------------------------------------------------
+
+function iot_init_success(message)
+
+end
+
+function iot_init_failure(message)
+
+end
+
+-----------------------------------------------------------------------------
+
+function iot_loop(connected)
+
+end
+
+-----------------------------------------------------------------------------
+- MQTT                                                                      -
+-----------------------------------------------------------------------------
+
+function iot_connection_opened(message)
+
+end
+
+function iot_connection_lost(message)
+
+end
+
+------------------------------------------------------------------------------------------------------------------------
+
+function iot_message(topic, payload) †
+
+end
+
+function iot_delivery(token)
+
+end
+
+------------------------------------------------------------------------------------------------------------------------
+
+```
+
+† This function must return `true` or `false` indicating whether or not the message has been safely received by the client application.
 
 API (Python syntax)
 ===================
