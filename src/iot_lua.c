@@ -23,6 +23,8 @@
 #include <string.h>
 #include <unistd.h>
 
+/*--------------------------------------------------------------------------------------------------------------------*/
+
 #include "../include/lua.h"
 #include "../include/lualib.h"
 #include "../include/lauxlib.h"
@@ -531,7 +533,7 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 	/**/
 	/**/	if(lua_isfunction(state, -1))
 	/**/	{
-	/**/		_lua_iot->pFuncInitSuccess = (void *) state; lua_pop(state, 1);
+	/**/		lua_pop(state, 1); _lua_iot->pFuncInitSuccess = (void *) state;
 	/**/	}
 	/**/
 	/**/	/*--------------------------------------------------------------------------------------------------------*/
@@ -540,7 +542,7 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 	/**/
 	/**/	if(lua_isfunction(state, -1))
 	/**/	{
-	/**/		_lua_iot->pFuncInitFailure = (void *) state; lua_pop(state, 1);
+	/**/		lua_pop(state, 1); _lua_iot->pFuncInitFailure = (void *) state;
 	/**/	}
 	/**/
 	/**/	/*--------------------------------------------------------------------------------------------------------*/
@@ -549,7 +551,7 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 	/**/
 	/**/	if(lua_isfunction(state, -1))
 	/**/	{
-	/**/		_lua_iot->pFuncLoop = (void *) state; lua_pop(state, 1);
+	/**/		lua_pop(state, 1); _lua_iot->pFuncLoop = (void *) state;
 	/**/	}
 	/**/
 	/**/	/*--------------------------------------------------------------------------------------------------------*/
@@ -558,7 +560,7 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 	/**/
 	/**/	if(lua_isfunction(state, -1))
 	/**/	{
-	/**/		_lua_iot->pFuncConnectionOpened = (void *) state; lua_pop(state, 1);
+	/**/		lua_pop(state, 1); _lua_iot->pFuncConnectionOpened = (void *) state;
 	/**/	}
 	/**/
 	/**/	/*--------------------------------------------------------------------------------------------------------*/
@@ -567,7 +569,7 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 	/**/
 	/**/	if(lua_isfunction(state, -1))
 	/**/	{
-	/**/		_lua_iot->pFuncConnectionLost = (void *) state; lua_pop(state, 1);
+	/**/		lua_pop(state, 1); _lua_iot->pFuncConnectionLost = (void *) state;
 	/**/	}
 	/**/
 	/**/	/*--------------------------------------------------------------------------------------------------------*/
@@ -576,7 +578,7 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 	/**/
 	/**/	if(lua_isfunction(state, -1))
 	/**/	{
-	/**/		_lua_iot->pFuncMessage = (void *) state; lua_pop(state, 1);
+	/**/		lua_pop(state, 1); _lua_iot->pFuncMessage = (void *) state;
 	/**/	}
 	/**/
 	/**/	/*--------------------------------------------------------------------------------------------------------*/
@@ -585,7 +587,7 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 	/**/
 	/**/	if(lua_isfunction(state, -1))
 	/**/	{
-	/**/		_lua_iot->pFuncDelivery = (void *) state; lua_pop(state, 1);
+	/**/		lua_pop(state, 1); _lua_iot->pFuncDelivery = (void *) state;
 	/**/	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/

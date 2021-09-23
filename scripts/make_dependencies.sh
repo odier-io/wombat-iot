@@ -4,7 +4,7 @@
 
 PAHO_TARBALL=v1.3.9.tar.gz
 
-LUA_TARBALL=lua-5.3.6.tar.gz
+LUA_TARBALL=lua-5.4.3.tar.gz
 
 ########################################################################################################################
 
@@ -133,7 +133,7 @@ then
   sed -i.bak 's/AR= ar rcu/AR ?= ar/g' ./src/Makefile
   sed -i.bak 's/RANLIB= ranlib/RANLIB ?= ranlib/g' ./src/Makefile
 
-  sed -i.bak 's/CFLAGS= -O2 -Wall -Wextra -DLUA_COMPAT_5_2 $(SYSCFLAGS) $(MYCFLAGS)/CFLAGS ?= -O2 -Wall -Wextra -DLUA_COMPAT_5_2 $(SYSCFLAGS) $(MYCFLAGS)/g' ./src/Makefile
+  sed -i.bak 's/CFLAGS= -O2 -Wall -Wextra -DLUA_COMPAT_5_3 $(SYSCFLAGS) $(MYCFLAGS)/CFLAGS ?= -O2 -Wall -Wextra $(SYSCFLAGS) $(MYCFLAGS)/g' ./src/Makefile
   sed -i.bak 's/LDFLAGS= $(SYSLDFLAGS) $(MYLDFLAGS)/LDFLAGS ?= $(SYSLDFLAGS) $(MYLDFLAGS)/g' ./src/Makefile
 
   sed -i.bak 's/$(AR)/$(AR) rcu/g' ./src/Makefile
@@ -161,7 +161,7 @@ fi
 
 ########################################################################################################################
 
-rm -fr $WOMBAT_IOT_HOME/lua-*/
+#rm -fr $WOMBAT_IOT_HOME/lua-*/
 
 ########################################################################################################################
 
