@@ -146,8 +146,8 @@ end
 
 † This function must return `true` or `false` indicating whether or not the message has been safely received by the client application.
 
-API (Python syntax)
-===================
+API (Python version)
+====================
 
 ```python
 #############################################################################
