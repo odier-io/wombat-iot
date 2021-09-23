@@ -521,18 +521,12 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 	if(ret != LUA_OK)
 	{
 		iot_log(IOT_LOG_TYPE_ERROR, "Cannot not execute Lua script `%s`\n", script_fname);
-
-		lua_pop(state, lua_gettop(state));
-
-		goto __err;
 	}
 
 	lua_pop(state, lua_gettop(state));
 
-	goto __ok;
-
 	/*----------------------------------------------------------------------------------------------------------------*/
-__ok:
+
 	/**/	lua_getglobal(state, "iot_init_success");
 	/**/
 	/**/	if(lua_isfunction(state, -1))
