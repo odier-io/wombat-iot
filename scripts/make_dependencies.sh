@@ -129,31 +129,40 @@ then
 
   cd lua-*/
 
-  sed -i.bak 's/CC= gcc/CC ?= gcc/g' ./src/Makefile
-  sed -i.bak 's/AR= ar rcu/AR ?= ar/g' ./src/Makefile
-  sed -i.bak 's/RANLIB= ranlib/RANLIB ?= ranlib/g' ./src/Makefile
-
-  sed -i.bak 's/CFLAGS= -O2 -Wall -Wextra -DLUA_COMPAT_5_3 $(SYSCFLAGS) $(MYCFLAGS)/CFLAGS ?= -O2 -Wall -Wextra $(SYSCFLAGS) $(MYCFLAGS)/g' ./src/Makefile
-  sed -i.bak 's/LDFLAGS= $(SYSLDFLAGS) $(MYLDFLAGS)/LDFLAGS ?= $(SYSLDFLAGS) $(MYLDFLAGS)/g' ./src/Makefile
-
-  sed -i.bak 's/$(AR)/$(AR) rcu/g' ./src/Makefile
-
-  make posix
-
-  ######################################################################################################################
-
   mkdir -p ../lib
-
-  cp src/liblua.a ../lib
-
-  ######################################################################################################################
-
   mkdir -p ../include
 
-  cp src/lua.h ../include
-  cp src/lualib.h ../include
-  cp src/luaconf.h ../include
-  cp src/lauxlib.h ../include
+  ######################################################################################################################
+
+  CC=${CC:-'gcc'}
+  AR=${AR:-'ar'}
+  RANLIB=${RANLIB:-'ranlib'}
+  CFLAGS=${CFLAGS:-'-std=c99 -fPIC -O3'}
+
+  ######################################################################################################################
+
+  for filename in ./src/*.c
+  do
+    if [[ $filename != './src/lua.c' ]] && [[ $filename != './src/luac.c' ]]
+    then
+      echo "Compiling \`${filename}\`..."
+
+      $CC $CFLAGS -DLUA_USE_POSIX -c -o ${filename%.c}.o $filename
+    fi
+  done
+
+  ######################################################################################################################
+
+  $AR rcu ../lib/liblua.a ./src/*.o
+
+  $RANLIB ../lib/liblua.a
+
+  ######################################################################################################################
+
+  cp ./src/lua.h ../include
+  cp ./src/lualib.h ../include
+  cp ./src/luaconf.h ../include
+  cp ./src/lauxlib.h ../include
 
   ######################################################################################################################
 ) || exit 1
@@ -161,7 +170,7 @@ fi
 
 ########################################################################################################################
 
-#rm -fr $WOMBAT_IOT_HOME/lua-*/
+rm -fr $WOMBAT_IOT_HOME/lua-*/
 
 ########################################################################################################################
 

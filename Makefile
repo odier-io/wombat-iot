@@ -12,7 +12,6 @@ PYTHON_CFLAGS ?= $(shell python3-config --cflags)
 PYTHON_LDFLAGS ?= $(shell python3-config --ldflags)
 
 LUA_CFLAGS ?= 
-
 LUA_LDFLAGS ?= -llua
 
 ########################################################################################################################
@@ -112,7 +111,9 @@ wombat-iot-py.a:
 
 	####################################################################################################################
 
-	$(AR) rcs lib/libwombat-iot-py.a src/str.o src/log.o src/config.o src/mqtt.o src/iot_python.o && $(RANLIB) lib/libwombat-iot-py.a
+	$(AR) rcu lib/libwombat-iot-py.a src/str.o src/log.o src/config.o src/mqtt.o src/iot_python.o
+
+	$(RANLIB) lib/libwombat-iot-py.a
 
 ########################################################################################################################
 
@@ -137,7 +138,9 @@ wombat-iot-lua.a:
 
 	####################################################################################################################
 
-	$(AR) rcs lib/libwombat-iot-lua.a src/str.o src/log.o src/config.o src/mqtt.o src/iot_lua.o && $(RANLIB) lib/libwombat-iot-lua.a
+	$(AR) rcu lib/libwombat-iot-lua.a src/str.o src/log.o src/config.o src/mqtt.o src/iot_lua.o
+
+	$(RANLIB) lib/libwombat-iot-lua.a
 
 ########################################################################################################################
 
