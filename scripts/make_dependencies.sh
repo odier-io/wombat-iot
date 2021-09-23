@@ -44,9 +44,9 @@ then
 
   ######################################################################################################################
 
-  cd paho.mqtt.c-*/
-  mkdir build
-  cd build
+  cd ./paho.mqtt.c-*/
+  mkdir ./build/
+  cd ./build/
 
   if [[ -n $(uname 2>/dev/null | grep Darwin) ]]
   then
@@ -58,7 +58,6 @@ then
       CC="${CC:-clang}" CFLAGS="-fPIC -O3" cmake -DCMAKE_INSTALL_PREFIX=$WOMBAT_IOT_HOME -DPAHO_BUILD_SHARED=FALSE -DPAHO_BUILD_STATIC=TRUE -DPAHO_WITH_SSL=FALSE -DPAHO_ENABLE_TESTING=FALSE -DPAHO_ENABLE_CPACK=FALSE ..
       make paho-mqtt3a-static
     fi
-
   else
     if [[ $WITH_SSL == 1 ]]
     then
@@ -72,25 +71,25 @@ then
 
   ######################################################################################################################
 
-  mkdir -p ../../lib
+  mkdir -p ../../lib/
 
   if [[ $WITH_SSL == 1 ]]
   then
-    cp ./src/libpaho-mqtt3as.a ../../lib
+    cp ./src/libpaho-mqtt3as.a ../../lib/
   else
-    cp ./src/libpaho-mqtt3a.a ../../lib
+    cp ./src/libpaho-mqtt3a.a ../../lib/
   fi
 
   ######################################################################################################################
 
-  mkdir -p ../../include
+  mkdir -p ../../include/
 
-  cp ../src/MQTTAsync.h ../../include
-  cp ../src/MQTTClientPersistence.h ../../include
-  cp ../src/MQTTExportDeclarations.h ../../include
-  cp ../src/MQTTProperties.h ../../include
-  cp ../src/MQTTReasonCodes.h ../../include
-  cp ../src/MQTTSubscribeOpts.h ../../include
+  cp ../src/MQTTAsync.h ../../include/
+  cp ../src/MQTTClientPersistence.h ../../include/
+  cp ../src/MQTTExportDeclarations.h ../../include/
+  cp ../src/MQTTProperties.h ../../include/
+  cp ../src/MQTTReasonCodes.h ../../include/
+  cp ../src/MQTTSubscribeOpts.h ../../include/
 
   ######################################################################################################################
 ) || exit 1
@@ -127,10 +126,10 @@ then
 
   ######################################################################################################################
 
-  cd lua-*/
+  cd ./lua-*/
 
-  mkdir -p ../lib
-  mkdir -p ../include
+  mkdir -p ../lib/
+  mkdir -p ../include/
 
   ######################################################################################################################
 
@@ -141,13 +140,22 @@ then
 
   ######################################################################################################################
 
+  if [[ -n $(uname 2>/dev/null | grep Darwin) ]]
+  then
+    PLATFORM='LUA_USE_MACOSX'
+  else
+    PLATFORM='LUA_USE_LINUX'
+  fi
+
+  ######################################################################################################################
+
   for filename in ./src/*.c
   do
     if [[ $filename != './src/lua.c' ]] && [[ $filename != './src/luac.c' ]]
     then
       echo "Compiling \`${filename}\`..."
 
-      $CC $CFLAGS -DLUA_USE_POSIX -c -o ${filename%.c}.o $filename
+      $CC $CFLAGS -D$PLATFORM -c -o ${filename%.c}.o $filename
     fi
   done
 
@@ -159,10 +167,10 @@ then
 
   ######################################################################################################################
 
-  cp ./src/lua.h ../include
-  cp ./src/lualib.h ../include
-  cp ./src/luaconf.h ../include
-  cp ./src/lauxlib.h ../include
+  cp ./src/lua.h ../include/
+  cp ./src/lualib.h ../include/
+  cp ./src/luaconf.h ../include/
+  cp ./src/lauxlib.h ../include/
 
   ######################################################################################################################
 ) || exit 1
