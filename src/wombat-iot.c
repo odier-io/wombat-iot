@@ -122,7 +122,11 @@ int main(int argc, char **argv)
 	/* INITIALIZE IOT                                                                                                 */
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	printf("Starting " IOT_NAME "-IoT...\n");
+#ifdef IS_LUA
+	printf("Starting " IOT_NAME "-IoT (Lua)...\n");
+#else
+	printf("Starting " IOT_NAME "-IoT (Python)...\n");
+#endif
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
