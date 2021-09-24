@@ -281,8 +281,6 @@ static PyObject *_iot_mqtt_send(PyObject *self, PyObject *args, PyObject *kwargs
 
 	if(PyArg_ParseTupleAndKeywords(args, kwargs, "ss|ipOO", arg_names, &topic, &payload, &/**/qos/**/, &retained) != 0)
 	{
-		/*------------------------------------------------------------------------------------------------------------*/
-
 		if(iot_mqtt_send(
 			&_python_iot->mqtt,
 			topic,
