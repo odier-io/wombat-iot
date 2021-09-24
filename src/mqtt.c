@@ -501,7 +501,7 @@ static void _mqtt_message_failure_callback(void *context, MQTTAsync_failureData 
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
-
+#include <unistd.h>
 int_t iot_mqtt_send(iot_mqtt_t *mqtt, iot_mqtt_message_success_callback_t message_success_callback, iot_mqtt_message_failure_callback_t message_failure_callback, void *context, STR_t topic, size_t payload_size, BUFF_t payload_buff, int_t qos, int_t retained)
 {
 	int_t ret;
@@ -542,6 +542,8 @@ int_t iot_mqtt_send(iot_mqtt_t *mqtt, iot_mqtt_message_success_callback_t messag
 	{
 		return -1;
 	}
+
+	usleep(1000000);
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
