@@ -188,7 +188,7 @@ def iot_log_fatal(message: str) -> None:
 def iot_mqtt_subscribe(topic: str, qos = 0) -> None:
 def iot_mqtt_unsubscribe(topic: str, qos = 0) -> None:
 
-def iot_mqtt_send(topic: str, payload: str, qos = 0, retained = False, success_callback = None, failure_callback = None) -> None:
+def iot_mqtt_send(topic: str, payload: str, qos = 0, retained = False) -> None:
 
 #############################################################################
 ```

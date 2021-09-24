@@ -143,22 +143,6 @@ typedef int_t (* iot_mqtt_message_callback_t)(
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-typedef void (* iot_mqtt_message_success_callback_t)(
-	void *context,
-	struct iot_mqtt_s *mqtt,
-	int_t token
-);
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-typedef void (* iot_mqtt_message_failure_callback_t)(
-	void *context,
-	struct iot_mqtt_s *mqtt,
-	STR_t message
-);
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
 typedef void (* iot_mqtt_delivery_callback_t)(
 	struct iot_mqtt_s *mqtt,
 	int_t token
@@ -385,9 +369,6 @@ int_t iot_mqtt_unsubscribe(
 
 int_t iot_mqtt_send(
 	struct iot_mqtt_s *mqtt,
-	iot_mqtt_message_success_callback_t message_success_callback, /* Nullable */
-	iot_mqtt_message_failure_callback_t message_failure_callback, /* Nullable */
-	void *context, /* Nullable */
 	STR_t topic,
 	size_t payload_size,
 	BUFF_t payload_buff,

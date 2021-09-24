@@ -270,130 +270,21 @@ static PyObject *_iot_mqtt_unsubscribe(PyObject *self, PyObject *args, PyObject 
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-struct _iot_mqtt_send_callback_context_s
-{
-	PyObject *success_callback;
-
-	PyObject *failure_callback;
-};
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-static void _iot_mqtt_message_success_callback(void *context, iot_mqtt_t *mqtt, int_t token)
-{
-	struct _iot_mqtt_send_callback_context_s *mqtt_send_callback_context = (struct _iot_mqtt_send_callback_context_s *) context;
-
-	/*----------------------------------------------------------------------------------------------------------------*/
-
-	if(mqtt_send_callback_context->success_callback != NULL)
-	{
-		PyObject *pParam = PyLong_FromLong(token);
-
-		if(pParam != NULL)
-		{
-			PyObject *pResult = PyObject_CallFunctionObjArgs(mqtt_send_callback_context->success_callback, pParam, NULL);
-
-			if(pResult != NULL)
-			{
-				Py_DECREF(pResult);
-			}
-
-			Py_DECREF(pParam);
-		}
-
-		Py_DECREF(mqtt_send_callback_context->success_callback);
-	}
-
-	/*----------------------------------------------------------------------------------------------------------------*/
-
-	if(mqtt_send_callback_context->failure_callback != NULL)
-	{
-		Py_DECREF(mqtt_send_callback_context->failure_callback);
-	}
-
-	/*----------------------------------------------------------------------------------------------------------------*/
-
-	iot_free(mqtt_send_callback_context);
-}
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-static void _iot_mqtt_message_failure_callback(void *context, iot_mqtt_t *mqtt, STR_t message)
-{
-	struct _iot_mqtt_send_callback_context_s *mqtt_send_callback_context = (struct _iot_mqtt_send_callback_context_s *) context;
-
-	/*----------------------------------------------------------------------------------------------------------------*/
-
-	if(mqtt_send_callback_context->failure_callback != NULL)
-	{
-		PyObject *pParam = PyUnicode_DecodeUTF8(message, strlen(message), "strict");
-
-		if(pParam != NULL)
-		{
-			PyObject *pResult = PyObject_CallFunctionObjArgs(mqtt_send_callback_context->failure_callback, pParam, NULL);
-
-			if(pResult != NULL)
-			{
-				Py_DECREF(pResult);
-			}
-
-			Py_DECREF(pParam);
-		}
-
-		Py_DECREF(mqtt_send_callback_context->failure_callback);
-	}
-
-	/*----------------------------------------------------------------------------------------------------------------*/
-
-	if(mqtt_send_callback_context->success_callback != NULL)
-	{
-		Py_DECREF(mqtt_send_callback_context->success_callback);
-	}
-
-	/*----------------------------------------------------------------------------------------------------------------*/
-
-	iot_free(mqtt_send_callback_context);
-}
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
 static PyObject *_iot_mqtt_send(PyObject *self, PyObject *args, PyObject *kwargs)
 {
 	STR_t topic;
 	STR_t payload;
 	int_t /**/qos/**/ = 0;
 	int_t retained = 0;
-	PyObject *success_callback = NULL;
-	PyObject *failure_callback = NULL;
 
-	static str_t arg_names[] = {"topic", "payload", "qos", "retained", "success_callback", "failure_callback", NULL};
+	static str_t arg_names[] = {"topic", "payload", "qos", "retained", NULL};
 
-	if(PyArg_ParseTupleAndKeywords(args, kwargs, "ss|ipOO", arg_names, &topic, &payload, &/**/qos/**/, &retained, &success_callback, &failure_callback) != 0)
+	if(PyArg_ParseTupleAndKeywords(args, kwargs, "ss|ipOO", arg_names, &topic, &payload, &/**/qos/**/, &retained) != 0)
 	{
-		/*------------------------------------------------------------------------------------------------------------*/
-
-		if(success_callback != NULL) {
-			Py_INCREF(success_callback);
-		}
-
-		if(failure_callback != NULL) {
-			Py_INCREF(failure_callback);
-		}
-
-		/*------------------------------------------------------------------------------------------------------------*/
-
-		struct _iot_mqtt_send_callback_context_s *mqtt_send_callback_context = (struct _iot_mqtt_send_callback_context_s *) iot_malloc(sizeof(struct _iot_mqtt_send_callback_context_s));
-
-		mqtt_send_callback_context->success_callback = success_callback;
-		mqtt_send_callback_context->failure_callback = failure_callback;
-
 		/*------------------------------------------------------------------------------------------------------------*/
 
 		if(iot_mqtt_send(
 			&_python_iot->mqtt,
-			_iot_mqtt_message_success_callback,
-			_iot_mqtt_message_failure_callback,
-			mqtt_send_callback_context,
 			topic,
 			strlen(payload),
 			/*--*/(payload),

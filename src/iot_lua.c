@@ -232,45 +232,6 @@ static int_t _iot_mqtt_unsubscribe(lua_State *state)
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-struct _iot_mqtt_send_callback_context_s
-{
-	void *success_callback;
-
-	void *failure_callback;
-};
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-static void _iot_mqtt_message_success_callback(void *context, iot_mqtt_t *mqtt, int_t token)
-{
-	struct _iot_mqtt_send_callback_context_s *mqtt_send_callback_context = (struct _iot_mqtt_send_callback_context_s *) context;
-
-	/*----------------------------------------------------------------------------------------------------------------*/
-
-	/* TODO */
-
-	/*----------------------------------------------------------------------------------------------------------------*/
-
-	iot_free(mqtt_send_callback_context);
-}
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-static void _iot_mqtt_message_failure_callback(void *context, iot_mqtt_t *mqtt, STR_t message)
-{
-	struct _iot_mqtt_send_callback_context_s *mqtt_send_callback_context = (struct _iot_mqtt_send_callback_context_s *) context;
-
-	/*----------------------------------------------------------------------------------------------------------------*/
-
-	/* TODO */
-
-	/*----------------------------------------------------------------------------------------------------------------*/
-
-	iot_free(mqtt_send_callback_context);
-}
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
 static int_t _iot_mqtt_send(lua_State *state)
 {
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -282,18 +243,8 @@ static int_t _iot_mqtt_send(lua_State *state)
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	struct _iot_mqtt_send_callback_context_s *mqtt_send_callback_context = (struct _iot_mqtt_send_callback_context_s *) iot_malloc(sizeof(struct _iot_mqtt_send_callback_context_s));
-
-	mqtt_send_callback_context->success_callback = NULL; /* TODO */
-	mqtt_send_callback_context->failure_callback = NULL; /* TODO */
-
-	/*----------------------------------------------------------------------------------------------------------------*/
-
 	if(iot_mqtt_send(
 		&_lua_iot->mqtt,
-		_iot_mqtt_message_success_callback,
-		_iot_mqtt_message_failure_callback,
-		mqtt_send_callback_context,
 		topic,
 		strlen(payload),
 		/*--*/(payload),

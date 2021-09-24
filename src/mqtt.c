@@ -453,56 +453,7 @@ int_t iot_mqtt_unsubscribe(iot_mqtt_t *mqtt, STR_t topic, int_t qos)
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-struct _mqtt_send_callback_context_s
-{
-	void *context;
-
-	iot_mqtt_t *mqtt;
-
-	iot_mqtt_message_success_callback_t message_success_callback;
-
-	iot_mqtt_message_failure_callback_t message_failure_callback;
-};
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-static void _mqtt_message_success_callback(void *context, MQTTAsync_successData *response)
-{
-	struct _mqtt_send_callback_context_s *send_callback_context = (struct _mqtt_send_callback_context_s *) context;
-
-	/*----------------------------------------------------------------------------------------------------------------*/
-
-	if(send_callback_context->message_success_callback != NULL)
-	{
-		send_callback_context->message_success_callback(send_callback_context->context, send_callback_context->mqtt, response->token);
-	}
-
-	/*----------------------------------------------------------------------------------------------------------------*/
-
-	iot_free(send_callback_context);
-}
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-
-static void _mqtt_message_failure_callback(void *context, MQTTAsync_failureData *response)
-{
-	struct _mqtt_send_callback_context_s *send_callback_context = (struct _mqtt_send_callback_context_s *) context;
-
-	/*----------------------------------------------------------------------------------------------------------------*/
-
-	if(send_callback_context->message_failure_callback != NULL)
-	{
-		send_callback_context->message_failure_callback(send_callback_context->context, send_callback_context->mqtt, response->message != NULL ? response->message : "unknown");
-	}
-
-	/*----------------------------------------------------------------------------------------------------------------*/
-
-	iot_free(send_callback_context);
-}
-
-/*--------------------------------------------------------------------------------------------------------------------*/
-#include <unistd.h>
-int_t iot_mqtt_send(iot_mqtt_t *mqtt, iot_mqtt_message_success_callback_t message_success_callback, iot_mqtt_message_failure_callback_t message_failure_callback, void *context, STR_t topic, size_t payload_size, BUFF_t payload_buff, int_t qos, int_t retained)
+int_t iot_mqtt_send(iot_mqtt_t *mqtt, STR_t topic, size_t payload_size, BUFF_t payload_buff, int_t qos, int_t retained)
 {
 	int_t ret;
 
@@ -517,22 +468,7 @@ int_t iot_mqtt_send(iot_mqtt_t *mqtt, iot_mqtt_message_success_callback_t messag
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	struct _mqtt_send_callback_context_s *send_callback_context = (struct _mqtt_send_callback_context_s *) iot_malloc(sizeof(struct _mqtt_send_callback_context_s));
-
-	send_callback_context->context = context;
-	send_callback_context->mqtt    = mqtt   ;
-
-	send_callback_context->message_success_callback = message_success_callback;
-	send_callback_context->message_failure_callback = message_failure_callback;
-
-	/*----------------------------------------------------------------------------------------------------------------*/
-
 	MQTTAsync_responseOptions response_options = MQTTAsync_responseOptions_initializer;
-
-	response_options.context = send_callback_context;
-
-	response_options.onSuccess = _mqtt_message_success_callback;
-	response_options.onFailure = _mqtt_message_failure_callback;
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
@@ -542,8 +478,6 @@ int_t iot_mqtt_send(iot_mqtt_t *mqtt, iot_mqtt_message_success_callback_t messag
 	{
 		return -1;
 	}
-
-	usleep(1000000);
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
