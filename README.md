@@ -130,7 +130,7 @@ function iot_connection_lost(message)
 
 end
 
-------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------
 
 function iot_message(topic, payload) †
 
@@ -140,8 +140,7 @@ function iot_delivery(token)
 
 end
 
-------------------------------------------------------------------------------------------------------------------------
-
+-----------------------------------------------------------------------------
 ```
 
 † This function must return `true` or `false` indicating whether or not the message has been safely received by the client application.
