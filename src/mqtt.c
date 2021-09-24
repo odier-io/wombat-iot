@@ -474,11 +474,7 @@ static void _mqtt_message_success_callback(void *context, MQTTAsync_successData 
 
 	if(send_callback_context->message_success_callback != NULL)
 	{
-		iot_mqtt_lock(send_callback_context->mqtt);
-
 		send_callback_context->message_success_callback(send_callback_context->context, send_callback_context->mqtt, response->token);
-
-		iot_mqtt_unlock(send_callback_context->mqtt);
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
@@ -496,11 +492,7 @@ static void _mqtt_message_failure_callback(void *context, MQTTAsync_failureData 
 
 	if(send_callback_context->message_failure_callback != NULL)
 	{
-		iot_mqtt_lock(send_callback_context->mqtt);
-
 		send_callback_context->message_failure_callback(send_callback_context->context, send_callback_context->mqtt, response->message != NULL ? response->message : "unknown");
-
-		iot_mqtt_unlock(send_callback_context->mqtt);
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
