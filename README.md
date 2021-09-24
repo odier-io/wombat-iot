@@ -81,15 +81,15 @@ def iot_loop(connected: bool) -> None:
 # MQTT                                                                      #
 #############################################################################
 
-def iot_message(topic: str, payload: str) -> bool†:
-
-def iot_delivery(token: str) -> None:
-
-#############################################################################
+def iot_connection_opened(message: str) -> None:
 
 def iot_connection_lost(message: str) -> None:
 
-def iot_connection_opened(message: str) -> None:
+#############################################################################
+
+def iot_message(topic: str, payload: str) -> bool†:
+
+def iot_delivery(token: str) -> None:
 
 #############################################################################
 ```
