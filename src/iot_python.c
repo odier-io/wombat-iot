@@ -766,18 +766,21 @@ __err1:
 
 STR_t iot_lang_version(void)
 {
-	static char result[8];
+	static char result[16];
 
-	str_t p = stpncpy(result, iot_strip((str_t) Py_GetVersion()), sizeof(result));
+	/*----------------------------------------------------------------------------------------------------------------*/
+
+	str_t p = strncpy(result, Py_GetVersion(), sizeof(result));
+
+	if(p != NULL) *(p + sizeof(result) - 1) = '\0';
+
+	/*----------------------------------------------------------------------------------------------------------------*/
 
 	str_t q = strchr(result, ' ');
 
-	if(q == NULL) {
-		p[sizeof(result) - 1] = '\0';
-	}
-	else {
-		q[0x0000000000000000] = '\0';
-	}
+	if(q != NULL) *(q + 0x0000000000000000) = '\0';
+
+	/*----------------------------------------------------------------------------------------------------------------*/
 
 	return result;
 }
