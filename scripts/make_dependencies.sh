@@ -136,7 +136,7 @@ then
   CC=${CC:-'gcc'}
   AR=${AR:-'ar'}
   RANLIB=${RANLIB:-'ranlib'}
-  CFLAGS=${CFLAGS:-'-std=c99 -fPIC -O3'}
+  CFLAGS=${CFLAGS:-'-std=c99 -O3'}
 
   ######################################################################################################################
 
@@ -155,7 +155,7 @@ then
     then
       echo "Compiling \`${filename}\`..."
 
-      $CC $CFLAGS -D$PLATFORM -c -o ${filename%.c}.o $filename
+      $CC $CFLAGS -fPIC -D$PLATFORM -c -o ${filename%.c}.o $filename
     fi
   done
 
