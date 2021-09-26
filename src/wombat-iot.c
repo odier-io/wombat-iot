@@ -120,7 +120,7 @@ int main(int argc, char **argv)
 	/* INITIALIZE IOT                                                                                                 */
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	printf("Starting " IOT_NAME "-IoT (%s, Paho %s, SSL %s)...\n", iot_lang_version(), iot_mqtt_version(), iot_mqtt_ssl_version());
+	printf("Starting " IOT_NAME "-IoT (%s, Paho %s, SSL %s)...\n\n", iot_lang_version(), iot_mqtt_version(), iot_mqtt_ssl_version());
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
