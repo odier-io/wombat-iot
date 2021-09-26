@@ -111,7 +111,7 @@ wombat-iot-py.a:
 
 	####################################################################################################################
 
-	$(AR) rcu lib/libwombat-iot-py.a src/str.o src/log.o src/config.o src/mqtt.o src/iot_python.o
+	$(AR) rcs lib/libwombat-iot-py.a src/str.o src/log.o src/config.o src/mqtt.o src/iot_python.o
 
 	$(RANLIB) lib/libwombat-iot-py.a
 
@@ -138,7 +138,7 @@ wombat-iot-lua.a:
 
 	####################################################################################################################
 
-	$(AR) rcu lib/libwombat-iot-lua.a src/str.o src/log.o src/config.o src/mqtt.o src/iot_lua.o
+	$(AR) rcs lib/libwombat-iot-lua.a src/str.o src/log.o src/config.o src/mqtt.o src/iot_lua.o
 
 	$(RANLIB) lib/libwombat-iot-lua.a
 
