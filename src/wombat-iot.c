@@ -111,11 +111,7 @@ int main(int argc, char **argv)
 
 	if(script_fname == NULL)
 	{
-#ifdef IS_LUA
-		script_fname = IOT_NAME "-iot.lua";
-#else
-		script_fname = IOT_NAME "-iot.py";
-#endif
+		script_fname = IOT_NAME "-iot." IOT_SCRIPT_EXT;
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
