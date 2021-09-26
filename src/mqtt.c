@@ -301,7 +301,9 @@ int_t iot_mqtt_initialize(iot_mqtt_t *mqtt, STR_t iot_uid, STR_t server_uri, STR
 
 	MQTTAsync_connectOptions connect_options = MQTTAsync_connectOptions_initializer;
 
-	connect_options.ssl = iot_mqtt_ssl_enabled() ? &ssl_options : NULL;
+	connect_options.ssl = strcmp("N/A", iot_mqtt_ssl_version()) != 0 ? &ssl_options
+	                                                                 : NULL
+	;
 
 	connect_options.automaticReconnect = 0x0000000000001;
 	connect_options.connectTimeout = connect_timeout;
@@ -387,7 +389,24 @@ int_t iot_mqtt_finalize(iot_mqtt_t *mqtt)
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-int_t iot_mqtt_ssl_enabled(void)
+STR_t iot_mqtt_version(void)
+{
+	MQTTAsync_nameValue *nameValue;
+
+	for(nameValue = MQTTAsync_getVersionInfo(); nameValue->name != NULL; nameValue++)
+	{
+		if(strcmp(nameValue->name, "Version") == 0)
+		{
+			return nameValue->value;
+		}
+	}
+
+	return "N/A";
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
+STR_t iot_mqtt_ssl_version(void)
 {
 	MQTTAsync_nameValue *nameValue;
 
@@ -395,11 +414,11 @@ int_t iot_mqtt_ssl_enabled(void)
 	{
 		if(strcmp(nameValue->name, "OpenSSL version") == 0)
 		{
-			return 1;
+			return nameValue->value;
 		}
 	}
 
-	return 0;
+	return "N/A";
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
