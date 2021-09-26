@@ -48,7 +48,7 @@ static iot_t iot;
 
 static void __exit(int_t signal)
 {
-	iot_log(IOT_LOG_TYPE_DEBUG, "Stopping " IOT_NAME "-IoT...\n");
+	iot_log(IOT_LOG_TYPE_INFO, "Stopping " IOT_NAME "-IoT...\n");
 
 	iot_stop(&iot);
 }

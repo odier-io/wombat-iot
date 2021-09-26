@@ -27,6 +27,10 @@
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+static iot_log_type_t _level = IOT_LOG_TYPE_INFO;
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
 static pthread_mutex_t _mutex = PTHREAD_MUTEX_INITIALIZER;
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -37,20 +41,32 @@ int_t _iot_vlog(iot_log_type_t type, STR_t file_name, int_t file_line, STR_t for
 
 	/**/	switch(type)
 	/**/	{
-	/**/		case IOT_LOG_TYPE_DEBUG:
-	/**/			fprintf(stderr, "DEBUG, %s:%d - ", file_name, file_line);
+	/**/		case IOT_LOG_TYPE_INFO:
+	/**/			if(_level >= IOT_LOG_TYPE_INFO) {
+	/**/				fprintf(stderr, "INFO, %s:%d - ", file_name, file_line);
+	/**/				vfprintf(stderr, format, ap);
+	/**/			}
 	/**/			break;
 	/**/
-	/**/		case IOT_LOG_TYPE_OOOPS:
-	/**/			fprintf(stderr, "OOOPS, %s:%d - ", file_name, file_line);
+	/**/		case IOT_LOG_TYPE_WARNING:
+	/**/			if(_level >= IOT_LOG_TYPE_WARNING) {
+	/**/				fprintf(stderr, "WARNING, %s:%d - ", file_name, file_line);
+	/**/				vfprintf(stderr, format, ap);
+	/**/			}
 	/**/			break;
 	/**/
 	/**/		case IOT_LOG_TYPE_ERROR:
-	/**/			fprintf(stderr, "ERROR, %s:%d - ", file_name, file_line);
+	/**/			if(_level >= IOT_LOG_TYPE_ERROR) {
+	/**/				fprintf(stderr, "ERROR, %s:%d - ", file_name, file_line);
+	/**/				vfprintf(stderr, format, ap);
+	/**/			}
 	/**/			break;
 	/**/
 	/**/		case IOT_LOG_TYPE_FATAL:
-	/**/			fprintf(stderr, "FATAL, %s:%d - ", file_name, file_line);
+	/**/			if(_level >= IOT_LOG_TYPE_FATAL) {
+	/**/				fprintf(stderr, "FATAL, %s:%d - ", file_name, file_line);
+	/**/				vfprintf(stderr, format, ap);
+	/**/			}
 	/**/			break;
 	/**/
 	/**/		default:
@@ -58,8 +74,6 @@ int_t _iot_vlog(iot_log_type_t type, STR_t file_name, int_t file_line, STR_t for
 	/**/
 	/**/			return -EINVAL;
 	/**/	}
-	/**/
-	/**/	vfprintf(stderr, format, ap);
 
 	pthread_mutex_unlock(&_mutex);
 

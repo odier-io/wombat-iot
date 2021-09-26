@@ -48,7 +48,7 @@ static iot_t *_python_iot;
 
 static PyObject *_iot_service_stop(PyObject *self, PyObject *args)
 {
-	iot_log(IOT_LOG_TYPE_DEBUG, "Stopping service `" IOT_NAME "-iot`...\n");
+	iot_log(IOT_LOG_TYPE_INFO, "Stopping service `" IOT_NAME "-iot`...\n");
 
 	system("sudo systemctl stop " IOT_NAME "-iot");
 
@@ -61,7 +61,7 @@ static PyObject *_iot_service_stop(PyObject *self, PyObject *args)
 
 static PyObject *_iot_service_restart(PyObject *self, PyObject *args)
 {
-	iot_log(IOT_LOG_TYPE_DEBUG, "Restarting service `" IOT_NAME "-iot`...\n");
+	iot_log(IOT_LOG_TYPE_INFO, "Restarting service `" IOT_NAME "-iot`...\n");
 
 	system("sudo systemctl restart " IOT_NAME "-iot");
 
@@ -74,7 +74,7 @@ static PyObject *_iot_service_restart(PyObject *self, PyObject *args)
 
 static PyObject *_iot_machine_reboot(PyObject *self, PyObject *args)
 {
-	iot_log(IOT_LOG_TYPE_DEBUG, "Rebooting machine...\n");
+	iot_log(IOT_LOG_TYPE_INFO, "Rebooting machine...\n");
 
 	system("sudo reboot");
 
@@ -149,7 +149,7 @@ static PyObject *_iot_log_debug(PyObject *self, PyObject *args)
 		STR_t file_name = PyFrame_GetFileName(pFrameObject);
 		int_t line_number = PyFrame_GetLineNumber(pFrameObject);
 
-		_iot_log(IOT_LOG_TYPE_DEBUG, file_name, line_number, "%s\n", message);
+		_iot_log(IOT_LOG_TYPE_INFO, file_name, line_number, "%s\n", message);
 	}
 
 	Py_INCREF(Py_None);
@@ -170,7 +170,7 @@ static PyObject *_iot_log_ooops(PyObject *self, PyObject *args)
 		STR_t file_name = PyFrame_GetFileName(pFrameObject);
 		int_t line_number = PyFrame_GetLineNumber(pFrameObject);
 
-		_iot_log(IOT_LOG_TYPE_OOOPS, file_name, line_number, "%s\n", message);
+		_iot_log(IOT_LOG_TYPE_WARNING, file_name, line_number, "%s\n", message);
 	}
 
 	Py_INCREF(Py_None);
@@ -607,37 +607,37 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 
 		if(iot->pFuncInitSuccess == NULL)
 		{
-			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_init_success`\n");
+			iot_log(IOT_LOG_TYPE_INFO, "Cannot not find Python function `iot_init_success`\n");
 		}
 
 		if(iot->pFuncInitFailure == NULL)
 		{
-			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_init_failure`\n");
+			iot_log(IOT_LOG_TYPE_INFO, "Cannot not find Python function `iot_init_failure`\n");
 		}
 
 		if(iot->pFuncLoop == NULL)
 		{
-			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_loop`\n");
+			iot_log(IOT_LOG_TYPE_INFO, "Cannot not find Python function `iot_loop`\n");
 		}
 
 		if(iot->pFuncConnectionOpened == NULL)
 		{
-			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_connection_opened`\n");
+			iot_log(IOT_LOG_TYPE_INFO, "Cannot not find Python function `iot_connection_opened`\n");
 		}
 
 		if(iot->pFuncConnectionLost == NULL)
 		{
-			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_connection_lost`\n");
+			iot_log(IOT_LOG_TYPE_INFO, "Cannot not find Python function `iot_connection_lost`\n");
 		}
 
 		if(iot->pFuncMessage == NULL)
 		{
-			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_message`\n");
+			iot_log(IOT_LOG_TYPE_INFO, "Cannot not find Python function `iot_message`\n");
 		}
 
 		if(iot->pFuncDelivery == NULL)
 		{
-			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_delivery`\n");
+			iot_log(IOT_LOG_TYPE_INFO, "Cannot not find Python function `iot_delivery`\n");
 		}
 
 		/*------------------------------------------------------------------------------------------------------------*/

@@ -34,20 +34,24 @@ static void _trace_callback(enum MQTTASYNC_TRACE_LEVELS level, str_t message)
 {
 	switch(level)
 	{
-		case MQTTASYNC_TRACE_FATAL:
-			iot_log(IOT_LOG_TYPE_FATAL, "%s\n", message);
+		case MQTTASYNC_TRACE_PROTOCOL:
+			iot_log(IOT_LOG_TYPE_INFO, "%s\n", message);
 			break;
 
 		case MQTTASYNC_TRACE_ERROR:
-			iot_log(IOT_LOG_TYPE_ERROR, "%s\n", message);
+			iot_log(IOT_LOG_TYPE_WARNING, "%s\n", message);
 			break;
 
 		case MQTTASYNC_TRACE_SEVERE:
 			iot_log(IOT_LOG_TYPE_ERROR, "%s\n", message);
 			break;
 
+		case MQTTASYNC_TRACE_FATAL:
+			iot_log(IOT_LOG_TYPE_FATAL, "%s\n", message);
+			break;
+
 		default:
-			iot_log(IOT_LOG_TYPE_DEBUG, "%s\n", message);
+			/* ignored */
 			break;
 	}
 }
@@ -201,7 +205,7 @@ static void _delivery_callback(buff_t context, int_t token)
 	}
 	else
 	{
-		iot_log(IOT_LOG_TYPE_DEBUG, "Message delivery confirmed, token: %d \n", token);
+		iot_log(IOT_LOG_TYPE_INFO, "Message delivery confirmed, token: %d \n", token);
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/

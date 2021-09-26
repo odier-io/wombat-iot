@@ -41,7 +41,7 @@ static iot_t *_lua_iot;
 
 static int_t _iot_service_stop(lua_State *state)
 {
-	iot_log(IOT_LOG_TYPE_DEBUG, "Stopping service `" IOT_NAME "-iot`...\n");
+	iot_log(IOT_LOG_TYPE_INFO, "Stopping service `" IOT_NAME "-iot`...\n");
 
 	system("sudo systemctl stop " IOT_NAME "-iot");
 
@@ -52,7 +52,7 @@ static int_t _iot_service_stop(lua_State *state)
 
 static int_t _iot_service_restart(lua_State *state)
 {
-	iot_log(IOT_LOG_TYPE_DEBUG, "Restarting service `" IOT_NAME "-iot`...\n");
+	iot_log(IOT_LOG_TYPE_INFO, "Restarting service `" IOT_NAME "-iot`...\n");
 
 	system("sudo systemctl restart " IOT_NAME "-iot");
 
@@ -63,7 +63,7 @@ static int_t _iot_service_restart(lua_State *state)
 
 static int_t _iot_machine_reboot(lua_State *state)
 {
-	iot_log(IOT_LOG_TYPE_DEBUG, "Rebooting machine...\n");
+	iot_log(IOT_LOG_TYPE_INFO, "Rebooting machine...\n");
 
 	system("sudo reboot");
 
@@ -135,7 +135,7 @@ static int_t _iot_log_debug(lua_State *state)
 
 	STR_t message = luaL_checkstring(state, 1);
 
-	_iot_log(IOT_LOG_TYPE_DEBUG, debug.source, debug.currentline, "%s\n", message);
+	_iot_log(IOT_LOG_TYPE_INFO, debug.source, debug.currentline, "%s\n", message);
 
 	return 0;
 }
@@ -151,7 +151,7 @@ static int_t _iot_log_ooops(lua_State *state)
 
 	STR_t message = luaL_checkstring(state, 1);
 
-	_iot_log(IOT_LOG_TYPE_OOOPS, debug.source, debug.currentline, "%s\n", message);
+	_iot_log(IOT_LOG_TYPE_WARNING, debug.source, debug.currentline, "%s\n", message);
 
 	return 0;
 }
@@ -297,7 +297,7 @@ static void _iot_init_success_callback(iot_mqtt_t *mqtt, STR_t iot_uid)
 
 		if(lua_pcall(state, 1, 0, 0) != LUA_OK)
 		{
-			iot_log(IOT_LOG_TYPE_OOOPS, "Error running function `iot_init_success`: %s\n", lua_tostring(state, -1));
+			iot_log(IOT_LOG_TYPE_WARNING, "Error running function `iot_init_success`: %s\n", lua_tostring(state, -1));
 		}
 
 		lua_pop(state, lua_gettop(state));
@@ -318,7 +318,7 @@ static void _iot_init_failure_callback(iot_mqtt_t *mqtt, STR_t message)
 
 		if(lua_pcall(state, 1, 0, 0) != LUA_OK)
 		{
-			iot_log(IOT_LOG_TYPE_OOOPS, "Error running function `iot_init_failure`: %s\n", lua_tostring(state, -1));
+			iot_log(IOT_LOG_TYPE_WARNING, "Error running function `iot_init_failure`: %s\n", lua_tostring(state, -1));
 		}
 
 		lua_pop(state, lua_gettop(state));
@@ -339,7 +339,7 @@ static void _iot_connection_opened_callback(iot_mqtt_t *mqtt, STR_t message)
 
 		if(lua_pcall(state, 1, 0, 0) != LUA_OK)
 		{
-			iot_log(IOT_LOG_TYPE_OOOPS, "Error running function `iot_connection_opened`: %s\n", lua_tostring(state, -1));
+			iot_log(IOT_LOG_TYPE_WARNING, "Error running function `iot_connection_opened`: %s\n", lua_tostring(state, -1));
 		}
 
 		lua_pop(state, lua_gettop(state));
@@ -360,7 +360,7 @@ static void _iot_connection_lost_callback(iot_mqtt_t *mqtt, STR_t message)
 
 		if(lua_pcall(state, 1, 0, 0) != LUA_OK)
 		{
-			iot_log(IOT_LOG_TYPE_OOOPS, "Error running function `iot_connection_lost`: %s\n", lua_tostring(state, -1));
+			iot_log(IOT_LOG_TYPE_WARNING, "Error running function `iot_connection_lost`: %s\n", lua_tostring(state, -1));
 		}
 
 		lua_pop(state, lua_gettop(state));
@@ -384,7 +384,7 @@ static int_t _iot_message_callback(iot_mqtt_t *mqtt, size_t topic_size, STR_t to
 
 		if(lua_pcall(state, 2, 1, 0) != LUA_OK)
 		{
-			iot_log(IOT_LOG_TYPE_OOOPS, "Error running function `iot_message`: %s\n", lua_tostring(state, -1));
+			iot_log(IOT_LOG_TYPE_WARNING, "Error running function `iot_message`: %s\n", lua_tostring(state, -1));
 		}
 		else
 		{
@@ -414,7 +414,7 @@ static void _iot_delivery_callback(iot_mqtt_t *mqtt, int_t token)
 
 		if(lua_pcall(state, 1, 0, 0) != LUA_OK)
 		{
-			iot_log(IOT_LOG_TYPE_OOOPS, "Error running function `iot_delivery`: %s\n", lua_tostring(state, -1));
+			iot_log(IOT_LOG_TYPE_WARNING, "Error running function `iot_delivery`: %s\n", lua_tostring(state, -1));
 		}
 
 		lua_pop(state, lua_gettop(state));
@@ -551,37 +551,37 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 
 		if(iot->pFuncInitSuccess == NULL)
 		{
-			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_init_success`\n");
+			iot_log(IOT_LOG_TYPE_INFO, "Cannot not find Python function `iot_init_success`\n");
 		}
 
 		if(iot->pFuncInitFailure == NULL)
 		{
-			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_init_failure`\n");
+			iot_log(IOT_LOG_TYPE_INFO, "Cannot not find Python function `iot_init_failure`\n");
 		}
 
 		if(iot->pFuncLoop == NULL)
 		{
-			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_loop`\n");
+			iot_log(IOT_LOG_TYPE_INFO, "Cannot not find Python function `iot_loop`\n");
 		}
 
 		if(iot->pFuncConnectionOpened == NULL)
 		{
-			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_connection_opened`\n");
+			iot_log(IOT_LOG_TYPE_INFO, "Cannot not find Python function `iot_connection_opened`\n");
 		}
 
 		if(iot->pFuncConnectionLost == NULL)
 		{
-			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_connection_lost`\n");
+			iot_log(IOT_LOG_TYPE_INFO, "Cannot not find Python function `iot_connection_lost`\n");
 		}
 
 		if(iot->pFuncMessage == NULL)
 		{
-			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_message`\n");
+			iot_log(IOT_LOG_TYPE_INFO, "Cannot not find Python function `iot_message`\n");
 		}
 
 		if(iot->pFuncDelivery == NULL)
 		{
-			iot_log(IOT_LOG_TYPE_DEBUG, "Cannot not find Python function `iot_delivery`\n");
+			iot_log(IOT_LOG_TYPE_INFO, "Cannot not find Python function `iot_delivery`\n");
 		}
 
 		/*------------------------------------------------------------------------------------------------------------*/
@@ -634,7 +634,7 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 				/**/
 				/**/	if(lua_pcall(state, 1, 0, 0) != LUA_OK)
 				/**/	{
-				/**/		iot_log(IOT_LOG_TYPE_OOOPS, "Error running function `iot_loop`: %s\n", lua_tostring(state, -1));
+				/**/		iot_log(IOT_LOG_TYPE_WARNING, "Error running function `iot_loop`: %s\n", lua_tostring(state, -1));
 				/**/	}
 				/**/
 				/**/	lua_pop(state, lua_gettop(state));

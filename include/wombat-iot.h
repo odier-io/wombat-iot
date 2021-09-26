@@ -66,13 +66,13 @@
 
 typedef enum iot_log_type_e
 {
-	IOT_LOG_TYPE_DEBUG
+	IOT_LOG_TYPE_INFO = 0
 	,
-	IOT_LOG_TYPE_OOOPS
+	IOT_LOG_TYPE_WARNING = 1
 	,
-	IOT_LOG_TYPE_ERROR
+	IOT_LOG_TYPE_ERROR = 2
 	,
-	IOT_LOG_TYPE_FATAL
+	IOT_LOG_TYPE_FATAL = 3
 
 } iot_log_type_t;
 
