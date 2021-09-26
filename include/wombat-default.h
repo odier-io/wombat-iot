@@ -27,6 +27,7 @@
 #define IOT_DEFAULT_IOT_UID							"N/A"
 #define IOT_DEFAULT_IOT_DESCR						"N/A"
 #define IOT_DEFAULT_IOT_SLEEP_MS					1000
+#define IOT_DEFAULT_IOT_LOG_LEVEL					0
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 

@@ -35,6 +35,13 @@ static pthread_mutex_t _mutex = PTHREAD_MUTEX_INITIALIZER;
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+void iot_set_log_level(iot_log_type_t level)
+{
+	_level = level;
+}
+
+/*--------------------------------------------------------------------------------------------------------------------*/
+
 int_t _iot_vlog(iot_log_type_t type, STR_t file_name, int_t file_line, STR_t format, va_list ap)
 {
 	pthread_mutex_lock(&_mutex);
@@ -42,28 +49,28 @@ int_t _iot_vlog(iot_log_type_t type, STR_t file_name, int_t file_line, STR_t for
 	/**/	switch(type)
 	/**/	{
 	/**/		case IOT_LOG_TYPE_INFO:
-	/**/			if(_level >= IOT_LOG_TYPE_INFO) {
+	/**/			if(IOT_LOG_TYPE_INFO >= _level) {
 	/**/				fprintf(stderr, "INFO, %s:%d - ", file_name, file_line);
 	/**/				vfprintf(stderr, format, ap);
 	/**/			}
 	/**/			break;
 	/**/
 	/**/		case IOT_LOG_TYPE_WARNING:
-	/**/			if(_level >= IOT_LOG_TYPE_WARNING) {
+	/**/			if(IOT_LOG_TYPE_WARNING >= _level) {
 	/**/				fprintf(stderr, "WARNING, %s:%d - ", file_name, file_line);
 	/**/				vfprintf(stderr, format, ap);
 	/**/			}
 	/**/			break;
 	/**/
 	/**/		case IOT_LOG_TYPE_ERROR:
-	/**/			if(_level >= IOT_LOG_TYPE_ERROR) {
+	/**/			if(IOT_LOG_TYPE_ERROR >= _level) {
 	/**/				fprintf(stderr, "ERROR, %s:%d - ", file_name, file_line);
 	/**/				vfprintf(stderr, format, ap);
 	/**/			}
 	/**/			break;
 	/**/
 	/**/		case IOT_LOG_TYPE_FATAL:
-	/**/			if(_level >= IOT_LOG_TYPE_FATAL) {
+	/**/			if(IOT_LOG_TYPE_FATAL >= _level) {
 	/**/				fprintf(stderr, "FATAL, %s:%d - ", file_name, file_line);
 	/**/				vfprintf(stderr, format, ap);
 	/**/			}
