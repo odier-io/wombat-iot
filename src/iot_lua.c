@@ -670,7 +670,7 @@ __err:
 
 STR_t iot_lang_version(void)
 {
-	return LUA_VERSION_MAJOR "." LUA_VERSION_MINOR "." LUA_VERSION_RELEASE;
+	return "Lua " LUA_VERSION_MAJOR "." LUA_VERSION_MINOR "." LUA_VERSION_RELEASE;
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/

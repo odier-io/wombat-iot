@@ -52,7 +52,7 @@ wombat-iot-py-with-ssl: wombat-iot-py.a
 	# WOMBAT-IOT WITH SSL                                                                                              #
 	####################################################################################################################
 
-	$(CC) $(CFLAGS_PY) -DIS_PY -o bin/wombat-iot src/wombat-iot.c ./lib/libwombat-iot-py.a ./lib/libpaho-mqtt3as.a $(LDFLAGS_WITH_SSL_PY)
+	$(CC) $(CFLAGS_PY) -o bin/wombat-iot src/wombat-iot.c ./lib/libwombat-iot-py.a ./lib/libpaho-mqtt3as.a $(LDFLAGS_WITH_SSL_PY)
 
 	$(STRIP) bin/wombat-iot
 
@@ -64,7 +64,7 @@ wombat-iot-py-without-ssl: wombat-iot-py.a
 	# WOMBAT-IOT WITHOUT SSL                                                                                           #
 	####################################################################################################################
 
-	$(CC) $(CFLAGS_PY) -DIS_PY -o bin/wombat-iot src/wombat-iot.c ./lib/libwombat-iot-py.a ./lib/libpaho-mqtt3a.a $(LDFLAGS_WITHOUT_SSL_PY)
+	$(CC) $(CFLAGS_PY) -o bin/wombat-iot src/wombat-iot.c ./lib/libwombat-iot-py.a ./lib/libpaho-mqtt3a.a $(LDFLAGS_WITHOUT_SSL_PY)
 
 	$(STRIP) bin/wombat-iot
 
@@ -76,7 +76,7 @@ wombat-iot-lua-with-ssl: wombat-iot-lua.a
 	# WOMBAT-IOT WITH SSL                                                                                              #
 	####################################################################################################################
 
-	$(CC) $(CFLAGS_LUA) -DIS_LUA -o bin/wombat-iot src/wombat-iot.c ./lib/libwombat-iot-lua.a ./lib/libpaho-mqtt3as.a $(LDFLAGS_WITH_SSL_LUA) -ldl
+	$(CC) $(CFLAGS_LUA) -o bin/wombat-iot src/wombat-iot.c ./lib/libwombat-iot-lua.a ./lib/libpaho-mqtt3as.a $(LDFLAGS_WITH_SSL_LUA) -ldl
 
 	$(STRIP) bin/wombat-iot
 
@@ -88,7 +88,7 @@ wombat-iot-lua-without-ssl: wombat-iot-lua.a
 	# WOMBAT-IOT WITHOUT SSL                                                                                           #
 	####################################################################################################################
 
-	$(CC) $(CFLAGS_LUA) -DIS_LUA -o bin/wombat-iot src/wombat-iot.c ./lib/libwombat-iot-lua.a ./lib/libpaho-mqtt3a.a $(LDFLAGS_WITHOUT_SSL_LUA) -ldl
+	$(CC) $(CFLAGS_LUA) -o bin/wombat-iot src/wombat-iot.c ./lib/libwombat-iot-lua.a ./lib/libpaho-mqtt3a.a $(LDFLAGS_WITHOUT_SSL_LUA) -ldl
 
 	$(STRIP) bin/wombat-iot
 
