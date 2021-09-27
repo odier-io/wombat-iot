@@ -192,10 +192,57 @@ def iot_log_fatal(message: str) -> None:
 # MQTT (these functions can raise IOError)                                  #
 #############################################################################
 
-def iot_mqtt_subscribe(topic: str, qos = 0) -> None:
-def iot_mqtt_unsubscribe(topic: str, qos = 0) -> None:
+def iot_mqtt_subscribe(topic: str, qos: int = 0) -> None:
+def iot_mqtt_unsubscribe(topic: str, qos: int: int = 0) -> None:
 
-def iot_mqtt_send(topic: str, payload: str, qos = 0, retained = False) -> None:
+def iot_mqtt_send(topic: str, payload: str, qos: int = 0, retained: bool = False) -> None:
 
 #############################################################################
+```
+
+API (Lua version)
+=================
+
+```lua
+-----------------------------------------------------------------------------
+-- Service                                                                 --
+-----------------------------------------------------------------------------
+
+function iot_service_stop() -> nil
+function iot_service_restart() -> nil
+
+-----------------------------------------------------------------------------
+-- Thing                                                                   --
+-----------------------------------------------------------------------------
+
+function iot_get_uid() -> string
+function iot_get_descr() -> string
+
+-----------------------------------------------------------------------------
+-- Config                                                                  --
+-----------------------------------------------------------------------------
+
+function iot_config_get_str(key: string, val: string = '') -> string
+function iot_config_get_int(key: string, val: number = 0x0) -> number
+function iot_config_get_flt(key: string, val: number = 0.0) -> number
+
+-----------------------------------------------------------------------------
+-- Log                                                                     --
+-----------------------------------------------------------------------------
+
+function iot_log_debug(message: string) -> nil
+function iot_log_ooops(message: string) -> nil
+function iot_log_error(message: string) -> nil
+function iot_log_fatal(message: string) -> nil
+
+-----------------------------------------------------------------------------
+-- MQTT                                                                    --
+-----------------------------------------------------------------------------
+
+function iot_mqtt_subscribe(topic: string, qos: number = 0) -> nil
+function iot_mqtt_unsubscribe(topic: string, qos: number = 0) -> nil
+
+function iot_mqtt_send(topic: string, payload: string, qos: number = 0, retained: boolean = false) -> nil
+
+-----------------------------------------------------------------------------
 ```
