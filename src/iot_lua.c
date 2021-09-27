@@ -27,6 +27,8 @@
 
 #include "../include/lua.h"
 #include "../include/lualib.h"
+#include "../include/luajson.h"
+
 #include "../include/lauxlib.h"
 
 /*--------------------------------------------------------------------------------------------------------------------*/
@@ -298,9 +300,9 @@ static void _iot_init_success_callback(iot_mqtt_t *mqtt, STR_t iot_uid)
 		if(lua_pcall(state, 1, 0, 0) != LUA_OK)
 		{
 			iot_log(IOT_LOG_TYPE_WARNING, "Error running function `iot_init_success`: %s\n", lua_tostring(state, -1));
-		}
 
-		lua_pop(state, lua_gettop(state));
+			lua_pop(state, 1);
+		}
 	}
 }
 
@@ -319,9 +321,9 @@ static void _iot_init_failure_callback(iot_mqtt_t *mqtt, STR_t message)
 		if(lua_pcall(state, 1, 0, 0) != LUA_OK)
 		{
 			iot_log(IOT_LOG_TYPE_WARNING, "Error running function `iot_init_failure`: %s\n", lua_tostring(state, -1));
-		}
 
-		lua_pop(state, lua_gettop(state));
+			lua_pop(state, 1);
+		}
 	}
 }
 
@@ -340,9 +342,9 @@ static void _iot_connection_opened_callback(iot_mqtt_t *mqtt, STR_t message)
 		if(lua_pcall(state, 1, 0, 0) != LUA_OK)
 		{
 			iot_log(IOT_LOG_TYPE_WARNING, "Error running function `iot_connection_opened`: %s\n", lua_tostring(state, -1));
-		}
 
-		lua_pop(state, lua_gettop(state));
+			lua_pop(state, 1);
+		}
 	}
 }
 
@@ -361,9 +363,9 @@ static void _iot_connection_lost_callback(iot_mqtt_t *mqtt, STR_t message)
 		if(lua_pcall(state, 1, 0, 0) != LUA_OK)
 		{
 			iot_log(IOT_LOG_TYPE_WARNING, "Error running function `iot_connection_lost`: %s\n", lua_tostring(state, -1));
-		}
 
-		lua_pop(state, lua_gettop(state));
+			lua_pop(state, 1);
+		}
 	}
 }
 
@@ -394,7 +396,7 @@ static int_t _iot_message_callback(iot_mqtt_t *mqtt, size_t topic_size, STR_t to
 			}
 		}
 
-		lua_pop(state, lua_gettop(state));
+		lua_pop(state, 1);
 	}
 
 	return result;
@@ -415,9 +417,9 @@ static void _iot_delivery_callback(iot_mqtt_t *mqtt, int_t token)
 		if(lua_pcall(state, 1, 0, 0) != LUA_OK)
 		{
 			iot_log(IOT_LOG_TYPE_WARNING, "Error running function `iot_delivery`: %s\n", lua_tostring(state, -1));
-		}
 
-		lua_pop(state, lua_gettop(state));
+			lua_pop(state, 1);
+		}
 	}
 }
 
@@ -469,14 +471,35 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
+	lua_getglobal(state, "package");
+
+	lua_getfield(state, -1, "preload");
+
+	ret = luaL_loadstring(state, (STR_t) json_module_buff);
+
+	if(ret != LUA_OK)
+	{
+		iot_log(IOT_LOG_TYPE_ERROR, "Cannot not execute Lua-JSON script `%s`: %s\n", script_fname, lua_tostring(state, -1));
+
+		lua_pop(state, 3);
+	}
+	else
+	{
+		lua_setfield(state, -2, "json");
+
+		lua_pop(state, 2);
+	}
+
+	/*----------------------------------------------------------------------------------------------------------------*/
+
 	ret = luaL_dofile(state, script_fname);
 
 	if(ret != LUA_OK)
 	{
 		iot_log(IOT_LOG_TYPE_ERROR, "Cannot not execute Lua script `%s`: %s\n", script_fname, lua_tostring(state, -1));
-	}
 
-	lua_pop(state, lua_gettop(state));
+		lua_pop(state, 1);
+	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
@@ -624,10 +647,10 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 
 			/*--------------------------------------------------------------------------------------------------------*/
 
-			iot_mqtt_lock(&iot->mqtt);
-
 			if(iot->pFuncLoop)
 			{
+				iot_mqtt_lock(&iot->mqtt);
+
 				/**/	lua_getglobal(state, "iot_loop");
 				/**/
 				/**/	lua_pushboolean(state, iot_mqtt_is_connected(&iot->mqtt));
@@ -635,12 +658,12 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 				/**/	if(lua_pcall(state, 1, 0, 0) != LUA_OK)
 				/**/	{
 				/**/		iot_log(IOT_LOG_TYPE_WARNING, "Error running function `iot_loop`: %s\n", lua_tostring(state, -1));
-				/**/	}
 				/**/
-				/**/	lua_pop(state, lua_gettop(state));
-			}
+				/**/		lua_pop(state, 1);
+				/**/	}
 
-			iot_mqtt_unlock(&iot->mqtt);
+				iot_mqtt_unlock(&iot->mqtt);
+			}
 
 			/*--------------------------------------------------------------------------------------------------------*/
 		}
