@@ -54,7 +54,7 @@ Creating the configuration file
 ./setup.py --create-ini --mqtt-url=<URL> --mqtt-username=<USERNAME> --mqtt-password=<PASSWORD>
 ```
 
-See the available options there: `include/wombat-default.h`.
+See the available options there: [`include/wombat-default.h`](https://github.com/odier-io/wombat-iot/blob/master/include/wombat-default.h#L25) and [`src/wombat-iot.c`](https://github.com/odier-io/wombat-iot/blob/master/src/wombat-iot.c#L135).
 
 Creating the systemd service file
 =================================
