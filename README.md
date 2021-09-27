@@ -11,7 +11,7 @@ Installing Wombat-IOT
 =====================
 
 Two flavors:
-  * Lua
+  * Lua †
   * Python
 
 Dependencies: `cmake`, `python3-dev`, ` openssl-dev` (optional).
@@ -33,6 +33,8 @@ chmod a+x setup.py
 ```
 
 Environment variables for cross-compiling: `CC`, `STRIP`, `AR`, `RANLIB`, `PYTHON_CFLAGS`, `PYTHON_LDFLAGS`, `LUA_CFLAGS`, `LUA_LDFLAGS`.
+
+† Lua is extended with the [`json.lua`](https://github.com/rxi/json.lua) JavaScript Objet Notation (JSON) parser.
 
 Creating the main main file
 ===========================
