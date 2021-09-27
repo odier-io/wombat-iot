@@ -423,6 +423,8 @@ static void _iot_connection_lost_callback(iot_mqtt_t *mqtt, STR_t message)
 
 static int_t _iot_message_callback(iot_mqtt_t *mqtt, size_t topic_size, STR_t topic_str, size_t payload_size, BUFF_t payload_buff)
 {
+	int_t result = 1;
+
 	if(_python_iot->pFuncMessage != NULL)
 	{
 		PyObject *pParam1 = PyUnicode_DecodeUTF8(topic_str, topic_size, "strict");
@@ -439,7 +441,7 @@ static int_t _iot_message_callback(iot_mqtt_t *mqtt, size_t topic_size, STR_t to
 				{
 					if(PyLong_Check(pResult))
 					{
-						return PyLong_AsLong(pResult);
+						result = PyLong_AsLong(pResult);
 					}
 
 					Py_DECREF(pResult);
@@ -452,7 +454,7 @@ static int_t _iot_message_callback(iot_mqtt_t *mqtt, size_t topic_size, STR_t to
 		}
 	}
 
-	return 1;
+	return result;
 }
 
 /*--------------------------------------------------------------------------------------------------------------------*/
