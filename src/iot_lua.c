@@ -475,7 +475,7 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 
 	lua_getfield(state, -1, "preload");
 
-	ret = luaL_loadstring(state, (STR_t) json_module_buff);
+	ret = luaL_loadbuffer(state, json_module_buff, JSON_MODULE_SIZE, "json.lua");
 
 	if(ret != LUA_OK)
 	{
