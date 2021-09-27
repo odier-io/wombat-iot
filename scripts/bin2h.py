@@ -24,9 +24,8 @@ def main():
     ####################################################################################################################
 
     parser.add_argument('--version', action = 'version', version = '%(prog)s ' + __version__)
-    parser.add_argument('file',                        help = 'file name')
-    parser.add_argument('symb',                        help = 'symbol name')
-    parser.add_argument('zero', action = 'store_true', help = 'zero terminal')
+    parser.add_argument('file', help = 'file name')
+    parser.add_argument('symb', help = 'symbol name')
 
     args = parser.parse_args()
 
@@ -35,12 +34,6 @@ def main():
     with open(args.file, 'rb') as fd:
 
         data_in = bytearray(fd.read())
-
-    ####################################################################################################################
-
-    if args.zero:
-
-        data_in.append(0)
 
     ####################################################################################################################
 
