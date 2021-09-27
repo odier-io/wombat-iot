@@ -36,6 +36,8 @@ Environment variables for cross-compiling: `CC`, `STRIP`, `AR`, `RANLIB`, `PYTHO
 
 † Lua is extended with the [`json.lua`](https://github.com/rxi/json.lua) JavaScript Objet Notation (JSON) parser.
 
+![json.lua](https://cloud.githubusercontent.com/assets/3920290/9281532/99e5e0cc-42bd-11e5-8fce-eaff2f7fc681.png)
+
 Creating the main main file
 ===========================
 
