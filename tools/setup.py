@@ -121,11 +121,11 @@ def setup(verbose, mode, with_ssl):
 
     ####################################################################################################################
 
-    subprocess.check_call(   'cp bin/* %s'    % binDir, cwd = gitDir, shell = True)
+    subprocess.check_call('cp bin/wombat-iot %s' % binDir, cwd = gitDir, shell = True)
 
-    subprocess.check_call(  'cp lib/*.a %s'   % libDir, cwd = gitDir, shell = True)
+    subprocess.check_call(   'cp lib/*.a %s'     % libDir, cwd = gitDir, shell = True)
 
-    subprocess.check_call('cp include/*.h %s' % incDir, cwd = gitDir, shell = True)
+    subprocess.check_call( 'cp include/*.h %s'   % incDir, cwd = gitDir, shell = True)
 
     ####################################################################################################################
 
