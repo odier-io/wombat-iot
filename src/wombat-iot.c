@@ -136,7 +136,7 @@ int main(int argc, char **argv)
 
 	STR_t uid = iot_config_get_str(&config, "iot::uid", IOT_DEFAULT_IOT_UID);
 	STR_t descr = iot_config_get_str(&config, "iot::descr", IOT_DEFAULT_IOT_DESCR);
-	int_t sleep_ms = iot_config_get_int(&config, "iot::sleep_ms", IOT_DEFAULT_IOT_SLEEP_MS);
+	int_t loop_ms = iot_config_get_int(&config, "iot::loop_ms", IOT_DEFAULT_IOT_LOOP_MS);
 	int_t log_level = iot_config_get_int(&config, "iot::log_level", IOT_DEFAULT_IOT_LOG_LEVEL);
 
 	STR_t mqtt_server_uri = iot_config_get_str(&config, "mqtt::server_url", IOT_DEFAULT_MQTT_SERVER_URL);
@@ -165,7 +165,7 @@ int main(int argc, char **argv)
 		script_fname,
 		uid,
 		descr,
-		sleep_ms,
+		loop_ms,
 		mqtt_server_uri,
 		mqtt_server_user,
 		mqtt_server_pass,

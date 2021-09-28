@@ -425,7 +425,7 @@ static void _iot_delivery_callback(iot_mqtt_t *mqtt, int_t token)
 
 /*--------------------------------------------------------------------------------------------------------------------*/
 
-void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, STR_t descr, int_t sleep_ms, STR_t mqtt_server_uri, STR_t mqtt_server_user, STR_t mqtt_server_pass, int_t mqtt_connect_timeout, int_t mqtt_disconnect_timeout, int_t mqtt_log_level)
+void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, STR_t descr, int_t loop_ms, STR_t mqtt_server_uri, STR_t mqtt_server_user, STR_t mqtt_server_pass, int_t mqtt_connect_timeout, int_t mqtt_disconnect_timeout, int_t mqtt_log_level)
 {
 	int_t ret;
 
@@ -643,7 +643,7 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 		{
 			/*--------------------------------------------------------------------------------------------------------*/
 
-			usleep(1000 * sleep_ms);
+			usleep(1000 * loop_ms);
 
 			/*--------------------------------------------------------------------------------------------------------*/
 

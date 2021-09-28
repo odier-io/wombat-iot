@@ -409,7 +409,7 @@ void iot_loop(
 	STR_t script_fname,
 	STR_t uid,
 	STR_t descr,
-	int_t sleep_ms,
+	int_t loop_ms,
 	STR_t mqtt_server_uri,
 	STR_t mqtt_server_user, /* Nullable */
 	STR_t mqtt_server_pass, /* Nullable */
