@@ -167,11 +167,6 @@ LUALIB_API int luaL_loadmodulebuffer(lua_State *L, const char *buff, size_t size
 
 	return result;
 }
-
-LUALIB_API int luaL_loadmodulestring(lua_State *L, const char *s, const char *modname, const char *filename)
-{
-	return luaL_loadmodulebuffer(L, s, strlen(s), modname, filename);
-}
 EOF
 
   ######################################################################################################################
