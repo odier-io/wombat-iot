@@ -471,23 +471,13 @@ void iot_loop(iot_t *iot, iot_config_t *config, STR_t script_fname, STR_t uid, S
 
 	/*----------------------------------------------------------------------------------------------------------------*/
 
-	lua_getglobal(state, "package");
-
-	lua_getfield(state, -1, "preload");
-
-	ret = luaL_loadbuffer(state, (STR_t) json_module_buff, (size_t) JSON_MODULE_SIZE, "json.lua");
+	ret = luaL_loadmodulebuffer(state, (STR_t) json_module_buff, (size_t) JSON_MODULE_SIZE, "json", "json.lua");
 
 	if(ret != LUA_OK)
 	{
-		iot_log(IOT_LOG_TYPE_ERROR, "Cannot not execute Lua-JSON script, %s\n", lua_tostring(state, -1));
+		iot_log(IOT_LOG_TYPE_ERROR, "Cannot not execute Lua module, %s\n", lua_tostring(state, -1));
 
-		lua_pop(state, 3);
-	}
-	else
-	{
-		lua_setfield(state, -2, "json");
-
-		lua_pop(state, 2);
+		lua_pop(state, 1);
 	}
 
 	/*----------------------------------------------------------------------------------------------------------------*/

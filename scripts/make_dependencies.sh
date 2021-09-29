@@ -149,6 +149,44 @@ then
 
   ######################################################################################################################
 
+  cat >> ./src/lauxlib.c << EOF
+LUALIB_API int luaL_loadmodulebuffer(lua_State *L, const char *buff, size_t size, const char *modname, const char *filename)
+{
+	lua_getglobal(L, "package");
+
+	lua_getfield(L, -1, "preload");
+
+	int result = luaL_loadbufferx(L, buff, size, filename, NULL);
+
+	if(result == LUA_OK)
+	{
+		lua_setfield(L, -2, modname);
+	}
+
+	lua_pop(L, 2);
+
+	return result;
+}
+
+LUALIB_API int luaL_loadmodulestring(lua_State *L, const char *s, const char *modname, const char *filename)
+{
+	return luaL_loadmodulebuffer(L, s, strlen(s), modname, filename);
+}
+EOF
+
+  ######################################################################################################################
+
+  cat >> ./src/lauxlib.h << EOF
+#ifndef lauxlib_wombat_iot_h
+#define lauxlib_wombat_iot_h
+
+LUALIB_API int luaL_loadmodulebuffer(lua_State *L, const char *buff, size_t size, const char *modname, const char *filename);
+
+#endif
+EOF
+
+  ######################################################################################################################
+
   for filename in ./src/*.c
   do
     if [[ $filename != './src/lua.c' ]] && [[ $filename != './src/luac.c' ]]
